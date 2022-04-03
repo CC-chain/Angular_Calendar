@@ -17,7 +17,7 @@ Tree Structure
       └── styles
 ```
 - **media** : The media directory is used to store supporting files for the application. Things like requirement documentation, text outlines, etc. 
-    - **src**: Source files for the root-level application project.
+- **src**: Source files for the root-level application project.
       - **styles**: The styles directory is used to store scss style sheets for the application. It can contain themes, Bootstrap, Angular Material, and any other styles.
       - **app**: Contains the component files in which your application logic and data are defined. 
           - **core**: This module is for classes used by app.module. Resources which are always loaded such as route guards, HTTP interceptors, and application level services.
