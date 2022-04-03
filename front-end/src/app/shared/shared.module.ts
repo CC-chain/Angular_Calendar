@@ -33,6 +33,7 @@ import {
   faAsterisk
 } from '@fortawesome/free-solid-svg-icons';
 import { faMediumM, faGithub } from '@fortawesome/free-brands-svg-icons';
+import { ControlMessagesComponent } from './component/control-messages/control-messages.component';
 
 @NgModule({
   imports: [
@@ -44,7 +45,9 @@ import { faMediumM, faGithub } from '@fortawesome/free-brands-svg-icons';
     NgbModule,
     FontAwesomeModule
   ],
-  declarations: [],
+  declarations: [
+    ControlMessagesComponent
+  ],
   exports: [
     CommonModule,
     FormsModule,
@@ -53,6 +56,7 @@ import { faMediumM, faGithub } from '@fortawesome/free-brands-svg-icons';
 
     MaterialModule,
 
+    ControlMessagesComponent,
     NgbModule,
     FontAwesomeModule,
   ]

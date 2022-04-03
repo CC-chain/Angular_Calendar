@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+
+import { ThemeService } from '@core/service/theme.service';
+import { environment } from '@env';
 
 @Component({
   selector: 'app-header',
@@ -6,10 +10,24 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
+  public version = environment.version;
+  public repoUrl = 'https://github.com/mathisGarberg/angular-folder-structure';
 
-  constructor() { }
+  public isDarkTheme$!: Observable<boolean>;
 
-  ngOnInit(): void {
+  navItems = [
+    { link: '/dashboard/home', title: 'Home' },
+    { link: '/about', title: 'About' },
+    { link: '/contact', title: 'Contact' }
+  ];
+
+  constructor(private themeService: ThemeService) {}
+
+  ngOnInit() {
+    this.isDarkTheme$ = this.themeService.getDarkTheme();
   }
 
+  toggleTheme(checked: boolean) {
+    this.themeService.setDarkTheme(checked);
+  }
 }

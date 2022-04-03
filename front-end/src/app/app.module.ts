@@ -11,6 +11,7 @@ import { LoginComponent } from '@modules/auth/page/login/login.component';
 import { AuthModule } from '@modules/auth/auth.module';
 import { CoreModule } from '@app/core/core.module';
 import { SharedModule } from '@shared/shared.module';
+import { CalendarLayoutComponent } from './layout/calendar-layout/calendar-layout.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { SharedModule } from '@shared/shared.module';
     HeaderComponent,
     FooterComponent,
     AuthLayoutComponent,
+    CalendarLayoutComponent,
   ],
   imports: [
     BrowserModule,

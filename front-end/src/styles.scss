@@ -1,26 +1,23 @@
 /* You can add global styles to this file, and also import other style files */
-@use '~@angular/material' as mat;
+@use '@angular/material' as mat;
 @import '~bootstrap/scss/bootstrap';
 @import '~@angular/material/theming';
 
 $custom-typography: mat.define-typography-config(
   $font-family: 'Open-sans, Arial, sans-serif'
 );
-
 @import './styles/styles-variables';
 @import './styles/style-reset';
-@import './styles/styles-reset.scss-theme';
+@import './styles/styles-reset-scss-theme.scss';
 
 @include mat.core();
 
-@import './themes/black-theme.scss';
-@import './themes/light-theme.scss';
+@import './styles/themes/black-theme.scss';
+@import './styles/themes/light-theme.scss';
 
-@import 'app/modules/home/page/project-item/project-container.component.scss-theme.scss';
 
 @mixin custom-components-theme($theme) {
   @include my-styles-reset-theme($theme);
-  @include my-project-container-component-theme($theme);
 }
 
 .afs-light-theme {
@@ -31,5 +28,4 @@ $custom-typography: mat.define-typography-config(
 .afs-dark-theme {
   @include mat.all-component-themes($afs-black-theme);
   @include custom-components-theme($afs-black-theme);
-}html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+}
