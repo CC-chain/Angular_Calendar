@@ -41,7 +41,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       .login(credentials)
       .pipe(
         delay(1500),
-        tap(() => this.router.navigate(['/dashboard/home'])),
+        tap(() => this.router.navigate(['/home/calendar'])),
         finalize(() => (this.isLoading = false)),
         catchError(error => of((this.error = error)))
       )
