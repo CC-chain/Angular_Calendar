@@ -46,7 +46,7 @@ import { ControlMessagesComponent } from './component/control-messages/control-m
     FontAwesomeModule
   ],
   declarations: [
-    ControlMessagesComponent
+    ControlMessagesComponent,
   ],
   exports: [
     CommonModule,

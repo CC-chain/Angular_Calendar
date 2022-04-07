@@ -1,3 +1,6 @@
 <div class="nav navbar navbar-light">
-Header
+<h1>Header</h1>
+<select #select (change)="changeColor(select.value)">
+    <option *ngFor="let lang of colorList" [value]="lang">{{lang}}</option>
+</select>
 </div>

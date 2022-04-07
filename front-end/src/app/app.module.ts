@@ -12,9 +12,10 @@ import { AuthModule } from '@modules/auth/auth.module';
 import { CoreModule } from '@app/core/core.module';
 import { SharedModule } from '@shared/shared.module';
 import { CalendarLayoutComponent } from './layout/calendar-layout/calendar-layout.component';
-
+import { CssLoaderComponent } from './shared/component/cssLoader/css-loader/css-loader.component';
 @NgModule({
   declarations: [
+    CssLoaderComponent,
     AppComponent,
     AppCustomLayoutComponent,
     HeaderComponent,
@@ -31,6 +32,6 @@ import { CalendarLayoutComponent } from './layout/calendar-layout/calendar-layou
     SharedModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent,CssLoaderComponent]
 })
 export class AppModule { }

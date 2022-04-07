@@ -10,23 +10,12 @@ $custom-typography: mat.define-typography-config(
 @import './styles/styles-variables';
 @import './styles/style-reset';
 @import './styles/styles-reset-scss-theme.scss';
-
 @include mat.core();
 
-@import './styles/themes/black-theme.scss';
-@import './styles/themes/light-theme.scss';
 
 
 @mixin custom-components-theme($theme) {
   @include my-styles-reset-theme($theme);
 }
 
-.afs-light-theme {
-  @include mat.all-component-themes($afs-light-theme);
-  @include custom-components-theme($afs-light-theme);
-}
 
-.afs-dark-theme {
-  @include mat.all-component-themes($afs-black-theme);
-  @include custom-components-theme($afs-black-theme);
-}
