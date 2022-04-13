@@ -7,7 +7,7 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { CalendarComponent } from './page/calendar/calendar/calendar.component';
 import { CalendarRoutingModule } from './calendar.routing';
-import { SharedModule } from '@app/shared/shared.module';
+import { AppSharedModule } from '@app/shared/shared.module';
 
 
 
@@ -24,7 +24,7 @@ import { SharedModule } from '@app/shared/shared.module';
       useFactory: adapterFactory,
     }),
     CalendarRoutingModule,
-    SharedModule
+    AppSharedModule
   ]
 })
 export class CalendarLayoutModule { }

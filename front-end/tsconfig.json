@@ -16,6 +16,9 @@
       "@shared/*": [
         "app/shared/*"
       ],
+      "@layout/*": [
+        "app/layout/*"
+      ],
       "@modules/*": [
         "app/modules/*"
       ],
@@ -41,12 +44,18 @@
     "lib": [
       "es2020",
       "dom"
-    ]
+    ],
+    "checkJs": true,
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "strictTemplates": true
-  }
+  },
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.spec.json" },
+  ]
 }

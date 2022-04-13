@@ -61,7 +61,7 @@ import { ControlMessagesComponent } from './component/control-messages/control-m
     FontAwesomeModule,
   ]
 })
-export class SharedModule {
+export class AppSharedModule {
   constructor(faIconLibrary: FaIconLibrary) {
     faIconLibrary.addIcons(
       faGithub,

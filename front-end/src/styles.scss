@@ -1,19 +1,28 @@
 /* You can add global styles to this file, and also import other style files */
 @use '@angular/material' as mat;
-@import '~bootstrap/scss/bootstrap';
 @import '~@angular/material/theming';
 @import "../node_modules/angular-calendar/css/angular-calendar.css";
 @import '../node_modules/flatpickr/dist/flatpickr.min.css';
-$custom-typography: mat.define-typography-config(
-  $font-family: 'Open-sans, Arial, sans-serif'
-);
 @import './styles/styles-variables';
 @import './styles/style-reset';
 @import './styles/styles-reset-scss-theme.scss';
+@import '~@coreui/coreui/dist/css/coreui.min.css';
+@import "~@coreui/coreui/scss/coreui";
+@import "~@coreui/chartjs/scss/coreui-chartjs";
+@import "styles/variables";
+@import "styles/layout";
+@import "styles/fixes";
+@import "styles/examples";
+@import "styles/custom";
+
+$enable-ltr: true;
+$enable-rtl: true;
+
+$custom-typography: mat.define-typography-config(
+  $font-family: 'Open-sans, Arial, sans-serif'
+);
+
 @include mat.core();
-
-
-
 @mixin custom-components-theme($theme) {
   @include my-styles-reset-theme($theme);
 }
