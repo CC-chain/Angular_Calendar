@@ -14,6 +14,8 @@ import { DashboardModule } from './page/dashboard/dashboard.module';
     AppSharedModule,
   ],
   providers: [
+  ],
+  declarations: [
   ]
 })
 export class AdminModule { }

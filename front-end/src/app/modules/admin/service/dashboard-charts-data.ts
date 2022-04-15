@@ -86,8 +86,76 @@ export class DashboardChartDataService {
         borderDash: [8, 5]
       }
     ];
+     const datasets = [
+      {
+        data: this.mainChart['Data1'],
+        label: 'Current',
+        ...colors[0]
+      },
+      {
+        data: this.mainChart['Data2'],
+        label: 'Previous',
+        ...colors[1]
+      },
+      {
+        data: this.mainChart['Data3'],
+        label: 'BEP',
+        ...colors[2]
+      }
+    ];
 
+    const plugins = {
+      legend: {
+        display: false
+      },
+      tooltip: {
+        callbacks: {
+          labelColor: function(context: any) {
+            return {
+              backgroundColor: context.dataset.borderColor
+            };
+          }
+        }
+      }
+    };
+
+    const options = {
+      maintainAspectRatio: false,
+      plugins,
+      scales: {
+        x: {
+          grid: {
+            drawOnChartArea: false
+          }
+        },
+        y: {
+          beginAtZero: true,
+          max: 250,
+          ticks: {
+            maxTicksLimit: 5,
+            stepSize: Math.ceil(250 / 5)
+          }
+        }
+      },
+      elements: {
+        line: {
+          tension: 0.4
+        },
+        point: {
+          radius: 0,
+          hitRadius: 10,
+          hoverRadius: 4,
+          hoverBorderWidth: 3
+        }
+      }
+    };
+
+    this.mainChart.type = 'line';
+    this.mainChart.options = options;
+    this.mainChart.data = {
+      datasets,
+      labels
+    };
+  }
   }
 
-
-}

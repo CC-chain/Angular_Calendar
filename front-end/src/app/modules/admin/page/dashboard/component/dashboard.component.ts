@@ -106,6 +106,7 @@ export class DashboardComponent implements OnInit {
 
   initCharts(): void {
     this.mainChart = this.chartsData.mainChart;
+    console.log(this.mainChart)
   }
 
   setTrafficPeriod(value: string): void {

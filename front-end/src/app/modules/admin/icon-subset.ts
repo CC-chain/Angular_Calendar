@@ -52,6 +52,7 @@ import {
   cilJustifyCenter,
   cilLayers,
   cilList,
+  cilLibrary,
   cilListNumbered,
   cilLocationPin,
   cilLockLocked,
@@ -79,6 +80,7 @@ import {
   cilSpeedometer,
   cilSpreadsheet,
   cilStar,
+  cilDescription,
   cilSun,
   cilTags,
   cilTask,
@@ -91,6 +93,7 @@ import {
 } from '@coreui/icons';
 
 export const iconSubset = {
+  cilLibrary,
   cibCcAmex,
   cibCcApplePay,
   cibCcMastercard,
@@ -155,6 +158,7 @@ export const iconSubset = {
   cilNotes,
   cilOptions,
   cilPaperclip,
+  cilDescription,
   cilPaperPlane,
   cilPen,
   cilPencil,
@@ -235,6 +239,7 @@ export enum IconSubset {
   cilItalic = 'cilItalic',
   cilJustifyCenter = 'cilJustifyCenter',
   cilLayers = 'cilLayers',
+  cilLibrary= 'cilLibrary',
   cilList = 'cilList',
   cilListNumbered = 'cilListNumbered',
   cilLocationPin = 'cilLocationPin',
