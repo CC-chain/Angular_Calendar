@@ -1,27 +1,27 @@
-# FrontEnd
+# Angular Dynamic Reservation Program
+---
+Our overall purpose in this project is to develop a fully dynamic, customizable reservation program. 
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.3.1.
-
-## Development server
-
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+Tree Structure
+------
+```
+  .
+  ├── media
+  └── src
+      ├── app
+      │   ├── core
+      │   ├── data
+      │   ├── layout
+      │   ├── module
+      │   └── shared
+      └── styles
+```
+- **media** : The media directory is used to store supporting files for the application. Things like requirement documentation, text outlines, etc. 
+- **src**: Source files for the root-level application project.
+  - **styles**: The styles directory is used to store scss style sheets for the application. It can contain themes, Bootstrap, Angular Material, and any other styles.
+  - **app**: Contains the component files in which your application logic and data are defined. 
+    - **core**: This module is for classes used by app.module. Resources which are always loaded such as route guards, HTTP interceptors, and application level services.
+    - **data**: The data module is a top level directory and holds the types (models/entities) and services (repositories) for data consumed by the application.
+    - **layout**: The layout directory contains one or more components which act as a layout or are parts of a layout such as a Header, Nav, Footer, etc.
+    - **module**: The modules directory contains a collection of modules which are each independent of each other. This allows Angular to load only the module it requires to display the request thereby saving bandwidth and speeding the entire application.
+    - **shared**: The shared module contains classes and resources which are used in more than one dynamically loaded module. By always loading with the application the shared components are ready whenever a module requests them.
