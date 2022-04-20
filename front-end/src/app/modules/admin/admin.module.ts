@@ -1,15 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { DefaultAdminLayoutComponent, DefaultFooterComponent, DefaultHeaderComponent } from '@app/layout/admin-layout';
 import { AppSharedModule } from '@app/shared/shared.module';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AdminRoutingModule } from './admin-routing.module';
-import { DashboardModule } from './page/dashboard/dashboard.module';
 
 
 
 
 @NgModule({
   imports: [
+    CommonModule,
+    FontAwesomeModule,
     AdminRoutingModule,
     AppSharedModule,
   ],

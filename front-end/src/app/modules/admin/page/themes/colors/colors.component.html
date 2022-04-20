@@ -1,1 +1,46 @@
-<p>colors works!</p>
+<c-nav variant="tabs">
+  <a [active]="true" [cTabContent]="tabContent" [routerLink] [tabPaneIdx]="0"
+    cNavLink>Login</a>
+  <a [cTabContent]="tabContent" [routerLink] [tabPaneIdx]="1" cNavLink>Profile</a>
+  <a [cTabContent]="tabContent" [routerLink] [tabPaneIdx]="2" cNavLink>Contact</a>
+</c-nav>
+<c-tab-content #tabContent="cTabContent">
+  <c-tab-pane classes="p-3">
+    <div class="fade-in">
+      <c-card class="mb-3">
+        <c-card-header>
+          <c-nav variant="tabs">
+            <a [active]="true" [cTabContent]="tabContentLogin" [routerLink]
+              [tabPaneIdx]="0"
+              cNavLink>Color</a>
+            <a [cTabContent]="tabContentLogin" [routerLink] [tabPaneIdx]="1"
+              cNavLink>Preview</a>
+          </c-nav>
+        </c-card-header>
+        <c-card-body>
+          <c-tab-content #tabContentLogin="cTabContent">
+            <c-tab-pane classes="p-3"></c-tab-pane>
+          </c-tab-content>
+          <c-row>
+            <app-app-theme-color [color]="color || '#ffff00'">
+              <h3>Brand Primasry Color</h3>
+            </app-app-theme-color>
+            <app-app-theme-color [color]="color || '#ffff00'">
+              <h3>Brand Secondary Color</h3>
+            </app-app-theme-color>
+            <app-app-theme-color [color]="color || '#ffff00'">
+              <h3>Brand Alert Color</h3>
+            </app-app-theme-color>
+            <app-app-theme-color [color]="color || '#ffff00'">
+              <h3>Brand Danger Color</h3>
+            </app-app-theme-color>
+            <button type="button" (click)="loadForm()">Refresh</button>
+          </c-row>
+        </c-card-body>
+        <c-card-footer>
+          <ng-template #layoutComponent></ng-template>
+        </c-card-footer>
+      </c-card>
+    </div>
+  </c-tab-pane>
+</c-tab-content>

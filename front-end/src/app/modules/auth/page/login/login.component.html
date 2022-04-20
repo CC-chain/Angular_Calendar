@@ -8,7 +8,7 @@
 </div>
 
 <fieldset [disabled]="isLoading">
-  <form (ngSubmit)="login()" [formGroup]="loginForm">
+  <form (ngSubmit)="_disable ? '' :login()" [formGroup]="loginForm">
       <div class="form-group">
         <label class="d-block">
           <input type="text" class="form-control" placeholder="Username" formControlName="username">

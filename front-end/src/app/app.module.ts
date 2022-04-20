@@ -44,6 +44,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 
 
 import { IconModule, IconSetService } from '@coreui/icons-angular';
+import { AdminModule } from './modules/admin/admin.module';
+import { ContextMenuModule } from 'ngx-contextmenu';
 
 const APP_CONTAINERS = [
   DefaultFooterComponent,
@@ -68,29 +70,30 @@ const APP_CONTAINERS = [
     BrowserAnimationsModule,
     CoreModule,
     AppSharedModule,
+    ContextMenuModule.forRoot(),
     ReactiveFormsModule,
     AvatarModule,
-  BadgeModule,
-  BreadcrumbModule,
-  ButtonGroupModule,
-  ButtonModule,
-  CardModule,
-  DropdownModule,
-  FooterModule,
-  FormModule,
-  GridModule,
-  HeaderModule,
-  ListGroupModule,
-  NavModule,
-  ProgressModule,
-  SharedModule,
-  SidebarModule,
-  TabsModule,
-  UtilitiesModule,
-  IconModule,
-  PerfectScrollbarModule,
+    BadgeModule,
+    BreadcrumbModule,
+    ButtonGroupModule,
+    ButtonModule,
+    CardModule,
+    DropdownModule,
+    FooterModule,
+    FormModule,
+    GridModule,
+    HeaderModule,
+    ListGroupModule,
+    NavModule,
+    ProgressModule,
+    SharedModule,
+    SidebarModule,
+    TabsModule,
+    UtilitiesModule,
+    IconModule,
+    PerfectScrollbarModule,
   ],
-    providers: [
+  providers: [
     {
       provide: LocationStrategy,
       useClass: HashLocationStrategy,
@@ -102,6 +105,10 @@ const APP_CONTAINERS = [
     IconSetService,
     Title,
   ],
-  bootstrap: [AppComponent,CssLoaderComponent]
+  bootstrap: [AppComponent, CssLoaderComponent]
 })
-export class AppModule { }
+export class AppModule {
+  getLayouts(){
+    return AuthLayoutComponent;
+  }
+ }

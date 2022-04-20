@@ -1,4 +1,4 @@
-<div class="container-fluid full-width-image">
+<div class="container-fluid full-width-image" >
   <div class="auth-container">
     <div class="auth-box">
       <div class="container">
@@ -8,6 +8,7 @@
               <fa-icon icon="user-circle" size="3x"></fa-icon>
             </h4>
             <router-outlet></router-outlet>
+            <ng-template  *ngIf="_content" #contentComponent></ng-template>
           </div>
         </div>
       </div>

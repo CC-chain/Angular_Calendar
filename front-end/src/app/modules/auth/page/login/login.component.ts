@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators, AbstractControl, FormArray } from '@angular/forms';
 import { tap, delay, finalize, catchError } from 'rxjs/operators';
@@ -12,6 +12,7 @@ import { AuthService } from '@core/service/auth.service';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit, OnDestroy {
+  @Input() _disable!: boolean;
   error!: string;
   isLoading!: boolean;
   loginForm!: FormGroup;
