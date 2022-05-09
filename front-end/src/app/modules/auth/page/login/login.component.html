@@ -1,4 +1,4 @@
-<div class="alert alert-info" role="alert">
+<div class="alert alert-info" role="alert" >
   Username: Arif \\
   Password: 12345
 </div>
@@ -8,7 +8,7 @@
 </div>
 
 <fieldset [disabled]="isLoading">
-  <form (ngSubmit)="_disable ? '' :login()" [formGroup]="loginForm">
+  <form (ngSubmit)="_disable ? '' :login()" [formGroup]="loginForm" >
       <div class="form-group">
         <label class="d-block">
           <input type="text" class="form-control" placeholder="Username" formControlName="username">
@@ -22,7 +22,7 @@
         </label>
       </div>
       <div class="form-group">
-        <button type="submit" class="btn btn-primary btn-block btn-raised" type="submit" [disabled]="loginForm.invalid">
+        <button type="submit" class="btn btn-primary btn-block btn-raised" type="submit" [disabled]="loginForm.invalid" [ngStyle]="styles | async | convertStyle:'ButtonBg'">
           <span [hidden]="isLoading">Submit</span>
           <span [hidden]="!isLoading">
             <fa-icon icon="asterisk" size="3x" [spin]="true"></fa-icon>

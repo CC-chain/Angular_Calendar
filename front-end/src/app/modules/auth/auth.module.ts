@@ -3,6 +3,9 @@ import { AuthRoutingModule } from './auth-routing.module';
 import { LoginComponent } from './page/login/login.component';
 import { RegisterComponent } from './page/register/register.component';
 import { AppSharedModule } from '@shared/shared.module';
+import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
+import { HttpClientModule } from '@angular/common/http';
+import { MockupDataService } from '@data/service/mockup-data.service';
 
 @NgModule({
   declarations: [
@@ -11,7 +14,9 @@ import { AppSharedModule } from '@shared/shared.module';
   ],
   imports: [
     AppSharedModule,
-    AuthRoutingModule
+    AuthRoutingModule,
+    HttpClientInMemoryWebApiModule.forRoot(MockupDataService),
+    HttpClientModule,
   ],
   exports: [
     LoginComponent,

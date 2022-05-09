@@ -5,42 +5,49 @@
   <a [cTabContent]="tabContent" [routerLink] [tabPaneIdx]="2" cNavLink>Contact</a>
 </c-nav>
 <c-tab-content #tabContent="cTabContent">
-  <c-tab-pane classes="p-3">
-    <div class="fade-in">
-      <c-card class="mb-3">
-        <c-card-header>
-          <c-nav variant="tabs">
-            <a [active]="true" [cTabContent]="tabContentLogin" [routerLink]
-              [tabPaneIdx]="0"
-              cNavLink>Color</a>
-            <a [cTabContent]="tabContentLogin" [routerLink] [tabPaneIdx]="1"
-              cNavLink>Preview</a>
-          </c-nav>
-        </c-card-header>
-        <c-card-body>
-          <c-tab-content #tabContentLogin="cTabContent">
-            <c-tab-pane classes="p-3"></c-tab-pane>
-          </c-tab-content>
-          <c-row>
-            <app-app-theme-color [color]="color || '#ffff00'">
-              <h3>Brand Primasry Color</h3>
-            </app-app-theme-color>
-            <app-app-theme-color [color]="color || '#ffff00'">
-              <h3>Brand Secondary Color</h3>
-            </app-app-theme-color>
-            <app-app-theme-color [color]="color || '#ffff00'">
-              <h3>Brand Alert Color</h3>
-            </app-app-theme-color>
-            <app-app-theme-color [color]="color || '#ffff00'">
-              <h3>Brand Danger Color</h3>
-            </app-app-theme-color>
-            <button type="button" (click)="loadForm()">Refresh</button>
-          </c-row>
-        </c-card-body>
-        <c-card-footer>
-          <ng-template #layoutComponent></ng-template>
-        </c-card-footer>
-      </c-card>
-    </div>
+  <c-tab-pane classes="p-1">
+    <c-card class="mb-3">
+      <c-card-header>
+        <c-nav variant="tabs">
+          <a [active]="true" [cTabContent]="tabContentLogin" [routerLink]
+            [tabPaneIdx]="0"
+            cNavLink>Background Color</a>
+          <a [cTabContent]="tabContentLogin" [routerLink] [tabPaneIdx]="1"
+            cNavLink>Preview</a>
+        </c-nav>
+      </c-card-header>
+      <c-card-body>
+        <c-tab-content #tabContentLogin="cTabContent">
+          <c-tab-pane classes="p-3">
+            <c-row>
+              <ng-template ngFor let-styleEl [ngForOf]="styles">
+                <ng-container *ngIf="isLoaded">
+                  <c-col xl='2' md='4' sm='6' xs='12' class=''>
+                    <app-app-theme-color [color]="styleEl.backgroundColor ||
+                      '#ffff00'"[styleElement]="styleEl">
+                      <h3
+                        style="text-align:center;font-size:15px;font-weight:bold">{{
+                        styleEl.name }}</h3>
+                    </app-app-theme-color>
+                  </c-col>
+                </ng-container>
+              </ng-template>
+            </c-row>
+          </c-tab-pane>
+          <c-tab-pane classes="p-3">
+
+          </c-tab-pane>
+        </c-tab-content>
+        <button type="button" [cModalToggle]="fullScreen.id" cButton (click)="loadForm()">Refresh</button>
+      </c-card-body>
+      <c-card-footer>
+        <c-modal #fullScreen id="fullscreen" [fullscreen]="true">
+        <button style="z-index: 999" [cModalToggle]="fullScreen.id" cButtonClose>Close</button>
+            <ng-template #layoutComponent></ng-template>
+        </c-modal>
+
+      </c-card-footer>
+    </c-card>
+
   </c-tab-pane>
 </c-tab-content>

@@ -1,5 +1,4 @@
-  <c-col xl='2' md='4' sm='6' xs='12' class='my-4 ms-4' >
-      <div [ngStyle]="{'background-color': color}" style='padding-top: 75%;' #bg></div>
+<div >
       <ng-content></ng-content>
-      <input type="color" (input)="changeColor($event)" [value]="backgroundColor"  />
-    </c-col>
+      <color-sketch [color]="backgroundColor" (onChangeComplete)="changeColor($event)"></color-sketch>
+</div>

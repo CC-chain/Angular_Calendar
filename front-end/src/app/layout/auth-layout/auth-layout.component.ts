@@ -1,32 +1,44 @@
-import { Component, createNgModuleRef, ElementRef, Injector, Input, OnInit, SimpleChanges, ViewChild, ViewContainerRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, createNgModuleRef, ElementRef, Injector, Input, OnInit, SimpleChanges, ViewChild, ViewContainerRef } from '@angular/core';
+import { DataCs } from '@data/schema/data';
+import { DataCsService } from '@data/service/data-cs.service';
+
 
 @Component({
   selector: 'app-auth-layout',
   templateUrl: './auth-layout.component.html',
-  styleUrls: ['./auth-layout.component.scss']
+  styleUrls: ['./auth-layout.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AuthLayoutComponent implements OnInit {
-  @Input() _content!: boolean;
   @ViewChild("contentComponent", { read: ViewContainerRef })
   contentComponent!: ViewContainerRef;
-
-  constructor(private injector: Injector) {
+  styles!: DataCs[];
+  constructor(private injector: Injector, private dataCsService : DataCsService) {
   }
 
   async loadForm() {
-    if(this._content == true){
     const { LoginComponent } = await import("@modules/auth/page/login/login.component");
     this.contentComponent.clear();
-    const {instance } = this.contentComponent.createComponent(LoginComponent);
-    instance._disable=true
-
-    }
+    const ref = this.contentComponent.createComponent(LoginComponent);
+    ref.instance._disable=true;
+    ref.changeDetectorRef.detectChanges();
   }
 
   ngOnInit(): void {
-    console.log(this._content)
-    this.loadForm();
+    this.getStyles();
   }
+
+  private getStyles() {
+    this.dataCsService.getStyles().subscribe(styles => {
+      this.styles = styles
+    });
+  }
+
+  getStyleWithName(name : string){
+    let styleObj = this.styles.filter(style => style.name == name)[0];
+    return  styleObj;
+  }
+
 
 
 }

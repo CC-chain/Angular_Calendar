@@ -1,6 +1,9 @@
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostBinding, Inject, Input, OnInit, Renderer2, SimpleChanges, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Inject, Input, OnInit, Output, Renderer2, SimpleChanges, ViewChild } from '@angular/core';
+import { DataCs } from '@app/data/schema/data';
+import { DataCsService } from '@app/data/service/data-cs.service';
 import {getStyle, rgbToHex, hexToRgb} from '@coreui/utils/src'
+import { ColorEvent } from 'ngx-color';
 import { Subject } from 'rxjs';
 @Component({
   selector: 'app-app-theme-color',
@@ -14,57 +17,35 @@ export class AppThemeColorComponent {
   public set color(value: string) {
     this.backgroundColorChange.next(value);
   }
-  @ViewChild('bg', {static : true, read: ElementRef}) private bg!: ElementRef;
-  @HostBinding('style.display') display = 'contents';
+
+  @Input() styleElement!: DataCs;
+
   public backgroundColor!: string;
   private backgroundColorChange: Subject<string> = new Subject<string>();
 
   constructor( @Inject(DOCUMENT) private document: HTMLDocument,
-    private renderer: Renderer2, detect: ChangeDetectorRef){
+    private renderer: Renderer2, detect: ChangeDetectorRef, private dataCsService : DataCsService){
       this.backgroundColorChange.subscribe( (value:string) => {
         this.backgroundColor = value;
-        this.changeInfo();
+        this.styleElement.backgroundColor = value;
+        this.dataCsService.editStyles(this.styleElement).subscribe(res => console.log("başarılı: ",res));
       })
     }
 
   ngAfterViewInit(){
-   this.backgroundColor= this.color;
-   console.log(this.color)
-   this.themeColors();
+    console.log(this.backgroundColor)
   }
 
-  changeColor(cur:Event){
-    this.backgroundColorChange.next((cur.target as HTMLInputElement).value.toString());
-  }
-  changeInfo(): void{
-    const isElExists: ElementRef = this.bg.nativeElement.parentNode.querySelector("table");
-    if(this.backgroundColor && isElExists ){
-    this.bg.nativeElement.parentNode.querySelector(".bgColor").innerHTML = hexToRgb(this.backgroundColor);
-    this.bg.nativeElement.parentNode.querySelector(".rgbToHex").innerHTML = this.backgroundColor;
-    }
+  changeColor(cur:ColorEvent){
+    let curEvent =cur.color.rgb;
+    let curRgba = `rgba(${curEvent.r},${curEvent.g},${curEvent.b},${curEvent.a})`
+    this.backgroundColorChange.next(curRgba);
+    console.log(this.backgroundColor);
   }
 
 
-
-
-  public themeColors(): void {
-        this.backgroundColor = getStyle('background-color', this.bg.nativeElement);
-        const table = this.renderer.createElement('table');
-        table.innerHTML = `
-          <table class='table w-100 tableExists '>
-            <tr>
-              <td class='text-muted'>HEX:</td>
-              <td class='font-weight-bold rgbToHex'>${rgbToHex(this.backgroundColor)}</td>
-            </tr>
-            <tr>
-              <td class='text-muted'>RGB:</td>
-              <td class='font-weight-bold bgColor'>${this.backgroundColor}</td>
-            </tr>
-          </table>
-        `;
-        this.renderer.appendChild(this.bg.nativeElement.parentNode, table);
-        // @ts-ignore
-        // el.parentNode.appendChild(table);
+  updateStyle(){
+    this.styleElement.backgroundColor = this.backgroundColor;
   }
 
 }

@@ -1,18 +1,22 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, ChangeDetectionStrategy, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators, AbstractControl, FormArray } from '@angular/forms';
-import { tap, delay, finalize, catchError } from 'rxjs/operators';
-import { of, Subscription } from 'rxjs';
+import { tap, delay, finalize, catchError, filter, timeout } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of, Subject, Subscription } from 'rxjs';
 
 import { AuthService } from '@core/service/auth.service';
+import { DataCsService } from '@app/data/service/data-cs.service';
+import { DataCs } from '@app/data/schema/data';
+import { coerceStringArray } from '@angular/cdk/coercion';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit, OnDestroy {
   @Input() _disable!: boolean;
+  styles!: Observable<DataCs[]>;
   error!: string;
   isLoading!: boolean;
   loginForm!: FormGroup;
@@ -22,12 +26,12 @@ export class LoginComponent implements OnInit, OnDestroy {
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private dataCsService: DataCsService,
+    private detector: ChangeDetectorRef,
   ) {
     this.buildForm();
   }
-
-  ngOnInit() {}
 
   get f() {
     return this.loginForm.controls;
@@ -59,4 +63,18 @@ export class LoginComponent implements OnInit, OnDestroy {
       password: ['', Validators.required]
     });
   }
+
+  ngOnInit(){
+    this.styles = this.dataCsService.getStyles();
+  }
+
+   private getStyles() {
+
+  }
+
+
+  getStyleWithName(name : string){
+
+  }
+
 }

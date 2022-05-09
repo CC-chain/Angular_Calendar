@@ -10,9 +10,7 @@ import { AuthModule } from '@modules/auth/auth.module';
 import { CoreModule } from '@app/core/core.module';
 import { AppSharedModule } from '@shared/shared.module';
 import { CalendarLayoutComponent } from './layout/calendar-layout/calendar-layout.component';
-import { CssLoaderComponent } from './shared/component/cssLoader/css-loader/css-loader.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DefaultAdminLayoutComponent, DefaultFooterComponent, DefaultHeaderComponent } from './layout/admin-layout';
@@ -44,14 +42,15 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 
 
 import { IconModule, IconSetService } from '@coreui/icons-angular';
-import { AdminModule } from './modules/admin/admin.module';
 import { ContextMenuModule } from 'ngx-contextmenu';
+import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
+import { MockupDataService } from '@data/service/mockup-data.service';
+import { HttpClientModule } from '@angular/common/http';
 
 const APP_CONTAINERS = [
   DefaultFooterComponent,
   DefaultHeaderComponent,
   DefaultAdminLayoutComponent,
-  CssLoaderComponent,
   AppCustomLayoutComponent,
   HeaderComponent,
   FooterComponent,
@@ -71,6 +70,8 @@ const APP_CONTAINERS = [
     CoreModule,
     AppSharedModule,
     ContextMenuModule.forRoot(),
+    HttpClientInMemoryWebApiModule.forRoot(MockupDataService),
+    HttpClientModule,
     ReactiveFormsModule,
     AvatarModule,
     BadgeModule,
@@ -95,17 +96,13 @@ const APP_CONTAINERS = [
   ],
   providers: [
     {
-      provide: LocationStrategy,
-      useClass: HashLocationStrategy,
-    },
-    {
       provide: PERFECT_SCROLLBAR_CONFIG,
       useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG,
     },
     IconSetService,
     Title,
   ],
-  bootstrap: [AppComponent, CssLoaderComponent]
+  bootstrap: [AppComponent]
 })
 export class AppModule {
   getLayouts(){
