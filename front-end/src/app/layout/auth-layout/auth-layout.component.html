@@ -1,16 +1,12 @@
-<div class="container-fluid" [ngStyle]="getStyleWithName('LoginBg')" >
-  <div class="auth-container" >
+<div class="container-fluid">
+  <div class="auth-container"
+    [ngStyle]="getStyleWithName('AuthLayoutContainerBg')">
     <div class="auth-box">
-      <div class="container" [ngStyle]="getStyleWithName('LoginContainerBg')">
-        <div class="card col-md-6 mt-3 mx-auto" [ngStyle]="getStyleWithName('CardBg')">
-          <div class="card-body">
-            <h4 class="card-title text-center">
-              <fa-icon icon="user-circle" size="3x"></fa-icon>
-            </h4>
-            <router-outlet></router-outlet>
-            <ng-template #contentComponent></ng-template>
-          </div>
-        </div>
+      <div class="container">
+
+        <router-outlet></router-outlet>
+        <ng-template #contentComponent></ng-template>
+
       </div>
     </div>
   </div>

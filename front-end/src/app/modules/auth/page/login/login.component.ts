@@ -65,16 +65,6 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(){
-    this.styles = this.dataCsService.getStyles();
+    this.styles = this.dataCsService.getStyles('login/');
   }
-
-   private getStyles() {
-
-  }
-
-
-  getStyleWithName(name : string){
-
-  }
-
 }

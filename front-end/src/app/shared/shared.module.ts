@@ -42,7 +42,6 @@ import { ConvertStylePipe } from './pipes/convert-style.pipe';
     FormsModule,
     ReactiveFormsModule,
     RouterModule,
-
     NgbModule,
     FontAwesomeModule
   ],

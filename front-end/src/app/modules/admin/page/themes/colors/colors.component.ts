@@ -1,8 +1,9 @@
-import { Compiler, Component, ComponentFactoryResolver, createNgModuleRef, Injector, OnInit, TemplateRef, Type, ViewChild, ViewContainerRef } from '@angular/core';
+import { Compiler, Component, ComponentFactoryResolver, ComponentRef, createNgModuleRef, Injector, OnInit, TemplateRef, Type, ViewChild, ViewContainerRef } from '@angular/core';
 import { DataCs } from '@app/data/schema/data';
 import { DataCsService } from '@app/data/service/data-cs.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-
+import { DynamicImportService } from '@shared/service/dynamic_import/dynamic-import.service'
+import { adminComponents } from '@data/schema/admin'
 @Component({
   selector: 'app-colors',
   templateUrl: './colors.component.html',
@@ -13,17 +14,33 @@ export class ColorsComponent  implements OnInit{
   layoutComponent!: ViewContainerRef;
   styles!: DataCs[];
   isLoaded : boolean = false;
+  comps = adminComponents
 
-  constructor(private injector: Injector, private dataCsService : DataCsService, private modalService : NgbModal) {
+  constructor(private injector: Injector, private dataCsService : DataCsService, private modalService : NgbModal,
+    private loadComponentService : DynamicImportService) {
   }
 
   ngOnInit() {
-    this.getStyles();
   }
 
-  private   getStyles() {
+  public editStyles(styleObj : any , dbUrl : string) {
+    console.log('edit', styleObj ,dbUrl)
+    let curStyle : any = this.styles.find(stylesObj => stylesObj.name === styleObj.name);
+    if(typeof curStyle !== "undefined" ){
+    Object.keys(curStyle).map(key  => {
+      if(styleObj.hasOwnProperty(key)){
+        curStyle[key] = styleObj[key];
+      }
+    })
+    this.dataCsService.editStyles(curStyle , dbUrl).subscribe(res => console.log("başarılı: ",res));
+    }else{
+      console.log("hata");
+    }
+  }
+
+  public getStyles(dbUrl : string) {
     let flag:boolean = false;
-    const $style =  this.dataCsService.getStyles()
+    const $style =  this.dataCsService.getStyles(dbUrl)
     $style.subscribe(styles =>
       {
         this.styles = styles
@@ -38,12 +55,15 @@ export class ColorsComponent  implements OnInit{
       }, 1000)
   }
 
-  async loadForm() {
+  async loadForm(layout : string = "") {
+    console.log(layout)
+    if(/[Ll]ayout/.test(layout))
+    setTimeout(() => this.loadComponentService.loadComponent(layout, this.layoutComponent),250);
+    else
+    setTimeout(() => this.loadComponentService.loadComponent(layout),250);
+  }
 
-    const { AuthLayoutComponent } = await import("@layout/auth-layout/auth-layout.component");
-    this.layoutComponent.clear();
-    const ref = this.layoutComponent.createComponent(AuthLayoutComponent);
-    setTimeout(() => ref.instance.loadForm(), 1000 )
-    ref.changeDetectorRef.detectChanges();
+  isValid(obj : any){
+    return typeof obj !== 'undefined'
   }
 }

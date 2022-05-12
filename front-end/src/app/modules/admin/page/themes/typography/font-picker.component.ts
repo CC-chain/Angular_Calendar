@@ -1,17 +1,13 @@
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Inject, Input, OnInit, Output, Renderer2, SimpleChanges, ViewChild } from '@angular/core';
-import { DataCs } from '@app/data/schema/data';
+import { ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnInit, Output, Renderer2 } from '@angular/core';
 import { DataCsService } from '@app/data/service/data-cs.service';
-import {getStyle, rgbToHex, hexToRgb} from '@coreui/utils/src'
-import { ColorEvent } from 'ngx-color';
 import { Subject } from 'rxjs';
-@Component({
-  selector: 'app-app-theme-color',
-  templateUrl: './app-theme-color.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
-})
-export class AppThemeColorComponent {
 
+@Component({
+  selector: 'app-font-picker',
+  templateUrl: './font-picker.component.html',
+})
+export class FontPickerComponent {
   @Input() public get $styleElement(): any{
     return this.styleElement;
   };
@@ -31,9 +27,6 @@ export class AppThemeColorComponent {
         this.styleElement = value;
       })
     }
-
-  ngAfterViewInit(){
-  }
 
   changeColor(cur:ColorEvent){
     let curEvent = cur.color.rgb;

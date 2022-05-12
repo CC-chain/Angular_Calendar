@@ -8,8 +8,9 @@ import { map, Observable } from 'rxjs';
 export class ConvertStylePipe implements PipeTransform {
 
   transform(value: DataCs[] | null , name : string): any {
-    console.log(value, name);
+    console.log("convert",value, name);
     if(value ){
+      console.log("girdi", value.find(value => value.name === name))
       return value.find(value => value.name === name);
     }
     else

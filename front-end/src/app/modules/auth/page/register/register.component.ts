@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { DataCs } from '@app/data/schema/data';
+import { DataCsService } from '@app/data/service/data-cs.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-register',
@@ -6,10 +9,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent implements OnInit {
-
-  constructor() { }
+  @Input() _disable!: boolean;
+  styles!: Observable<DataCs[]>;
+  constructor(private dataCsService : DataCsService) { }
 
   ngOnInit(): void {
+    this.styles = this.dataCsService.getStyles('register/')
   }
 
 }

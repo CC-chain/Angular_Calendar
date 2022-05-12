@@ -11,17 +11,9 @@ import { DataCsService } from '@data/service/data-cs.service';
 })
 export class AuthLayoutComponent implements OnInit {
   @ViewChild("contentComponent", { read: ViewContainerRef })
-  contentComponent!: ViewContainerRef;
+  public contentComponent!: ViewContainerRef;
   styles!: DataCs[];
   constructor(private injector: Injector, private dataCsService : DataCsService) {
-  }
-
-  async loadForm() {
-    const { LoginComponent } = await import("@modules/auth/page/login/login.component");
-    this.contentComponent.clear();
-    const ref = this.contentComponent.createComponent(LoginComponent);
-    ref.instance._disable=true;
-    ref.changeDetectorRef.detectChanges();
   }
 
   ngOnInit(): void {
@@ -29,7 +21,7 @@ export class AuthLayoutComponent implements OnInit {
   }
 
   private getStyles() {
-    this.dataCsService.getStyles().subscribe(styles => {
+    this.dataCsService.getStyles('authlayout/').subscribe(styles => {
       this.styles = styles
     });
   }

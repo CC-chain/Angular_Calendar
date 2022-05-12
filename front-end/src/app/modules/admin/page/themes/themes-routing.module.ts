@@ -19,7 +19,7 @@ const routes: Routes = [
         component: ColorsComponent,
         data: {
           title: 'Colors'
-        }
+        },
       },
       {
         path: 'typography',

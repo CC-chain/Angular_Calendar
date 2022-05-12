@@ -6,11 +6,11 @@ import { catchError, Observable, retry, throwError } from 'rxjs';
   providedIn: 'root'
 })
 export class DataCsService {
-  private dataCsUrl = 'http://localhost:4200/api/styles/';
+  private dataCsUrl = 'http://localhost:4200/api/';
   constructor(private http : HttpClient) { }
 
-  getStyles(): Observable<DataCs[]> {
-    return this.http.get<DataCs[]>(this.dataCsUrl).pipe(
+  getStyles(dbUrl : string): Observable<DataCs[]> {
+    return this.http.get<DataCs[]>(this.dataCsUrl + dbUrl).pipe(
       retry(2),
       catchError((error : HttpErrorResponse) => {
         console.error(error);
@@ -19,9 +19,9 @@ export class DataCsService {
     );
   }
 
-  createStyles(dataCs : DataCs): Observable<DataCs> {
+  createStyles(dataCs : DataCs , dbUrl : string ): Observable<DataCs> {
     dataCs.id = null;
-    return this.http.post<DataCs>(this.dataCsUrl, dataCs).pipe(
+    return this.http.post<DataCs>(this.dataCsUrl + dbUrl, dataCs).pipe(
       catchError((error : HttpErrorResponse) => {
         console.error(error);
         return throwError(() => error);
@@ -29,12 +29,13 @@ export class DataCsService {
     );
   }
 
-editStyles(dataCs : DataCs): Observable<any>{
-  return this.http.put(this.dataCsUrl + dataCs.id, dataCs);
+editStyles(dataCs : DataCs , dbUrl : string): Observable<any>{
+  console.log('geld',dataCs)
+  return this.http.put(this.dataCsUrl + dbUrl + dataCs.id, dataCs);
 }
 
-deleteStyles(id : number): Observable<any>{
-  return this.http.delete(this.dataCsUrl + id);
+deleteStyles(id : number , dbUrl : string): Observable<any>{
+  return this.http.delete(this.dataCsUrl + dbUrl + id);
 }
 
 
