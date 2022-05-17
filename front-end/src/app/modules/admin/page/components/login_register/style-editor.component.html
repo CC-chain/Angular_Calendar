@@ -1,0 +1,119 @@
+<div>
+  <button type="button" style="font-size: 12px;" class="btn btn-outline-primary btn-lg btn-block" [cModalToggle]="fullScreen.id" cButton>{{styleElement.name}}</button>
+</div>
+<c-modal #fullScreen [id]="styleElement.name + styleElement.id?.toString()" [fullscreen]="true">
+  <c-modal-header>
+    <h2 cModalTitle style="font-weight: bolder;">{{styleElement.name}}</h2>
+    <button [cModalToggle]="fullScreen.id" class="btn btn-light" cButtonClose>Exit</button>
+  </c-modal-header>
+  <c-modal-body>
+      <form (ngSubmit)="''">
+        <div class="form-group">
+          <label class="d-block">
+            <h3>Margin</h3>
+            <input type="number" placeholder="top"
+              (change)="modalData.marginTop![0]= $any($event.target).value"
+              [value]="modalData.marginTop![0]">
+            <select [value]="modalData.marginTop![1]" (change)="modalData.marginTop![1] = $any($event.target).value">
+              <option value="per">%</option>
+              <option value="em">em</option>
+              <option value="px">px</option>
+            </select>
+            <input type="number" placeholder="right"
+              (change)="modalData.marginRight![0]= $any($event.target).value"
+              [value]="modalData.marginRight![0]">
+            <select [value]="modalData.marginRight![1]" (change)="modalData.marginRight![1] = $any($event.target).value">
+              <option value="per">%</option>
+              <option value="em">em</option>
+              <option value="px">px</option>
+            </select>
+            <input type="number" placeholder="bottom"
+              (change)="modalData.marginBottom![0]= $any($event.target).value"
+              [value]="modalData.marginBottom![0]">
+            <select [value]="modalData.marginBottom![1]" (change)="modalData.marginBottom![1] = $any($event.target).value">
+              <option value="per">%</option>
+              <option value="em">em</option>
+              <option value="px">px</option>
+            </select>
+            <input type="number" placeholder="left"
+              (change)="modalData.marginLeft![0]= $any($event.target).value"
+              [value]="modalData.marginLeft![0]">
+            <select [value]="modalData.marginLeft![1]" (change)="modalData.marginLeft![1] = $any($event.target).value">
+              <option value="per">%</option>
+              <option value="em">em</option>
+              <option value="px">px</option>
+            </select>
+          </label>
+        </div>
+        <div class="form-group">
+          <label class="d-block">
+            <h3>Padding</h3>
+            <input type="number" placeholder="top"
+              (change)="modalData.paddingTop![0]= $any($event.target).value"
+              [value]="modalData.paddingTop![0]">
+            <select [value]="modalData.paddingTop![1]" (change)="modalData.paddingTop![1] = $any($event.target).value">
+              <option value="per">%</option>
+              <option value="em">em</option>
+              <option value="px">px</option>
+            </select >
+            <input type="number" placeholder="right"
+              (change)="modalData.paddingRight![0]= $any($event.target).value"
+              [value]="modalData.paddingRight![0]">
+            <select [value]="modalData.paddingRight![1]" (change)="modalData.paddingRight![1] = $any($event.target).value">
+              <option value="per">%</option>
+              <option value="em">em</option>
+              <option value="px">px</option>
+            </select>
+            <input type="number" placeholder="bottom"
+              (change)="modalData.paddingBottom![0]= $any($event.target).value"
+              [value]="modalData.paddingBottom![0]">
+            <select [value]="modalData.paddingBottom![1]" (change)="modalData.paddingBottom![1] = $any($event.target).value">
+              <option value="per">%</option>
+              <option value="em">em</option>
+              <option value="px">px</option>
+            </select>
+            <input type="number" placeholder="left"
+              (change)="modalData.paddingLeft![0]= $any($event.target).value"
+              [value]="modalData.paddingLeft![0]">
+            <select [value]="modalData.paddingLeft![1]" (change)="modalData.paddingLeft = $any($event.target).value">
+              <option value="per">%</option>
+              <option value="em">em</option>
+              <option value="px">px</option>
+            </select>
+          </label>
+        </div>
+        <div class="form-group">
+          <label class="d-block">
+            <h3>Width / Height</h3>
+            <input type="number" placeholder="Width"
+              (change)="modalData.width![0]= $any($event.target).value"
+              [value]="modalData.width![0]">
+            <select [value]="modalData.width![1]" (change)="modalData.width![1] = $any($event.target).value">
+              <option value="per">%</option>
+              <option value="em">em</option>
+              <option value="px">px</option>
+            </select>
+            <input type="number" placeholder="Height"
+              (change)="modalData.height![0]= $any($event.target).value"
+              [value]="modalData.height![0]">
+            <select [value]="modalData.height![1]" (change)="modalData.height![1] = $any($event.target).value">
+              <option value="per">%</option>
+              <option value="em">em</option>
+              <option value="px">px</option>
+            </select>
+          </label>
+        </div>
+        <div class="form-group">
+          <label class="d-block">
+            <h3>Background Image</h3>
+            <input type="file" (change)="onChange($event)" accept="image/*" />
+          </label>
+        </div>
+      </form>
+    <button (click)="onUpload()"
+      class="btn btn-success">
+      Upload
+    </button>
+  </c-modal-body>
+  <c-modal-footer> </c-modal-footer>
+</c-modal>

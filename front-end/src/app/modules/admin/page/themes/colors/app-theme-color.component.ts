@@ -1,8 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Inject, Input, OnInit, Output, Renderer2, SimpleChanges, ViewChild } from '@angular/core';
-import { DataCs } from '@app/data/schema/data';
 import { DataCsService } from '@app/data/service/data-cs.service';
-import {getStyle, rgbToHex, hexToRgb} from '@coreui/utils/src'
 import { ColorEvent } from 'ngx-color';
 import { Subject } from 'rxjs';
 @Component({

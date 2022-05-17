@@ -1,32 +1,35 @@
 <div class="card col-md-6 mt-3 mx-auto" [ngStyle]="styles | async |
-  convertStyle:'RegisterContainerBg'">
+  convertStyle:'Register Container'">
   <div class="card-body">
     <form>
       <div class="form-group">
         <label class="d-block">
-          <input type="text" class="form-control" [placeholder]="'Firstname'">
+          <input type="text" class="form-control" [placeholder]="'Firstname'" [ngStyle]="styles | async |
+  convertStyle:'Register Forms'">
         </label>
       </div>
       <div class="form-group">
         <label class="d-block">
-          <input type="text" class="form-control" [placeholder]="'Lastname'">
+          <input type="text" class="form-control" [placeholder]="'Lastname'"  [ngStyle]="styles | async |
+  convertStyle:'Register Forms'">
         </label>
       </div>
       <div class="form-group">
         <label class="d-block">
-          <input type="text" class="form-control" [placeholder]="'Username'">
+          <input type="text" class="form-control" [placeholder]="'Username'"  [ngStyle]="styles | async |
+  convertStyle:'Register Forms'">
         </label>
       </div>
       <div class="form-group">
         <label class="d-block">
-          <input type="text" class="form-control" [placeholder]="'Password'">
+          <input type="text" class="form-control" [placeholder]="'Password'"  [ngStyle]="styles | async |
+  convertStyle:'Register Forms'">
         </label>
       </div>
       <div class="form-group">
         <button class="btn " type="submit" [ngStyle]="styles |
-            async | convertStyle:'RegisterButtonBg'" [disabled]="_disable">
-          <span>Sign Up {{styles |
-            async | convertStyle:'RegisterButtonBg'}}</span>
+            async | convertStyle:'Register Button'" [disabled]="_disable">
+          <span>Sign Up </span>
         </button>
       </div>
       <a [routerLink]="['/auth/login']">Got an account already? Log in here!</a>

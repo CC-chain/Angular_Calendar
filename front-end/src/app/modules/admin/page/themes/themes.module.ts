@@ -15,7 +15,7 @@ import { GetColorPipe } from './pipe/get-color.pipe';
 import { GetSpecificsPipe } from './pipe/get-specifics.pipe';
 import {  ModelToDtoPipe } from './pipe/model-to-dto.pipe';
 import { DynamicImportService } from '@app/shared/service/dynamic_import/dynamic-import.service';
-import { FontPickerConfigInterface, FontPickerModule, FONT_PICKER_CONFIG } from 'ngx-font-picker';
+import { FontPickerConfigInterface, FontPickerModule, FONT_PICKER_CONFIG } from '@lib/font-picker/src/public-api';
 import { FontPickerComponent } from './typography/font-picker.component';
 
 const DEFAULT_FONT_PICKER_CONFIG: FontPickerConfigInterface = {

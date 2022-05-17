@@ -1,39 +1,63 @@
 <c-nav variant="pills">
   <ng-template ngFor let-comp [ngForOf]="comps">
-    <a [active]="comp.id == 1" [cTabContent]="tabContent" [routerLink] [tabPaneIdx]="comp.id -1"
-     cNavLink (click)="loadForm(comp.component)" >
-       {{comp.name}}
-     </a>
+    <a [active]="comp.id == 1" [cTabContent]="tabContent" [routerLink]
+      [tabPaneIdx]="comp.id -1"
+      cNavLink (click)="loadForm(comp.component)">
+      {{comp.name}}
+    </a>
   </ng-template>
 </c-nav>
 <c-tab-content #tabContent="cTabContent">
   <ng-template ngFor let-comp [ngForOf]="comps">
-  <c-tab-pane classes="p-1">
-    <c-card class="mb-3">
-      <c-card-header>
-        <c-nav variant="tabs">
-          <ng-template ngFor let-compChild [ngForOf]="comp.child">
-            <a [cTabContent]="tabContentChild" [active]="compChild.id == 1" [routerLink]
-           [tabPaneIdx]="compChild.id - 1" cNavLink
-           (click)="getStyles(compChild?.url || comp?.url || 'empty' )" >
-         {{compChild.name}}
-         </a>
-         </ng-template>
-        </c-nav>
-      </c-card-header>
-      <c-card-body>
-        <c-tab-content #tabContentChild="cTabContent">
-    <div [(fontPicker)]="font" [fpWidth]="'320px'" [fpPosition]="'bottom'">
-          Click to open the font picker
-      </div>
-        </c-tab-content>
-      </c-card-body>
-    </c-card>
-  </c-tab-pane>
-</ng-template>
+    <c-tab-pane classes="p-1">
+      <c-card class="mb-3">
+        <c-card-header>
+          <c-nav variant="tabs">
+            <ng-template ngFor let-compChild [ngForOf]="comp.child">
+              <a [cTabContent]="tabContentChild" [active]="compChild.id == 1"
+                [routerLink]
+                [tabPaneIdx]="compChild.id - 1" cNavLink
+                (click)="getStyles(compChild?.url || comp?.url || 'empty' )">
+                {{compChild.name}}
+              </a>
+            </ng-template>
+          </c-nav>
+        </c-card-header>
+        <c-card-body>
+          <c-tab-content #tabContentChild="cTabContent">
+            <ng-template ngFor let-compChild [ngForOf]="comp.child">
+              <c-tab-pane classes="p-3">
+                <c-row>
+                  <ng-template ngFor let-styleEl [ngForOf]="styles |
+                    getSpecifics :
+                    compChild?.style || 'backgroundColor'">
+                    <ng-container *ngIf="isLoaded">
+                      <c-col xl='2' md='4' sm='6' xs='12' class=''>
+                        <app-font-picker
+                          [$styleElement]="styleEl | modelToDto :
+                          compChild?.dto || ['name','backgroundColor']"
+                          (styleElementChange)="editStyles($event,compChild?.url
+                          || comp?.url || '')">
+                          <h3
+                            style="text-align:center;font-size:15px;font-weight:bold">{{
+                            styleEl.name }}</h3>
+                        </app-font-picker>
+                      </c-col>
+                    </ng-container>
+                  </ng-template>
+                    <button type="button" [cModalToggle]="fullScreen.id" cButton
+                      (click)="loadForm(compChild.component)">Refresh
+                      {{comp.component}}</button>
+                </c-row>
+              </c-tab-pane>
+            </ng-template>
+          </c-tab-content>
+        </c-card-body>
+      </c-card>
+    </c-tab-pane>
+  </ng-template>
   <c-modal #fullScreen id="fullscreen" [fullscreen]="true">
     <button style="z-index: 999" [cModalToggle]="fullScreen.id" cButtonClose>Close</button>
     <ng-template #layoutComponent let-modal="s"></ng-template>
   </c-modal>
 </c-tab-content>
-

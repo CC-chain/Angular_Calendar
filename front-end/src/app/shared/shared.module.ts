@@ -35,6 +35,8 @@ import {
 import { faMediumM, faGithub } from '@fortawesome/free-brands-svg-icons';
 import { ControlMessagesComponent } from './component/control-messages/control-messages.component';
 import { ConvertStylePipe } from './pipes/convert-style.pipe';
+import { DynamicContentPipe } from './pipes/dynamic-content.pipe';
+import { GetParsersPipe } from './pipes/get-parsers.pipe';
 
 @NgModule({
   imports: [
@@ -48,6 +50,8 @@ import { ConvertStylePipe } from './pipes/convert-style.pipe';
   declarations: [
     ControlMessagesComponent,
     ConvertStylePipe,
+    DynamicContentPipe,
+    GetParsersPipe,
   ],
   exports: [
     CommonModule,
@@ -59,6 +63,8 @@ import { ConvertStylePipe } from './pipes/convert-style.pipe';
     NgbModule,
     FontAwesomeModule,
     ConvertStylePipe,
+    DynamicContentPipe,
+    GetParsersPipe,
   ]
 })
 export class AppSharedModule {

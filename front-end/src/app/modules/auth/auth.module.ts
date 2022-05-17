@@ -6,7 +6,8 @@ import { AppSharedModule } from '@shared/shared.module';
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { HttpClientModule } from '@angular/common/http';
 import { MockupDataService } from '@data/service/mockup-data.service';
-
+import { DynamicHooksModule } from 'ngx-dynamic-hooks';
+import { options } from '@core/configurations/dynamic-hooks';
 @NgModule({
   declarations: [
     LoginComponent,
@@ -17,6 +18,11 @@ import { MockupDataService } from '@data/service/mockup-data.service';
     AuthRoutingModule,
     HttpClientInMemoryWebApiModule.forRoot(MockupDataService),
     HttpClientModule,
+    DynamicHooksModule.forRoot(
+      {
+        globalOptions : options
+      }
+    ),
   ],
   exports: [
     LoginComponent,

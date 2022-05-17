@@ -1,0 +1,33 @@
+<div>
+  <button type="button" style="font-size: 12px;" class="btn btn-outline-primary btn-lg btn-block" [cModalToggle]="fullScreen.id" cButton>{{customElement.name}}</button>
+</div>
+<c-modal #fullScreen [id]="customElement.name + customElement.id?.toString()" [fullscreen]="true">
+  <c-modal-header>
+    <h2 cModalTitle style="font-weight: bolder;">{{customElement.name}}</h2>
+    <button [cModalToggle]="fullScreen.id" class="btn btn-light" cButtonClose>Exit</button>
+  </c-modal-header>
+  <c-modal-body>
+    <c-row>
+      <c-col>
+        <h2>HTML</h2>
+        <textarea rows="20" cols="50" [value]="customElement.content" (change)="onChange($event,'html')">
+        </textarea>
+      </c-col>
+      <c-col>
+        <h2>JavaScript</h2>
+        <textarea rows="20" cols="50">
+          {{customElement.script}}
+        </textarea>
+      </c-col>
+      <c-col>
+        <h2>Preview</h2>
+        <div style="overflow:scroll; height:420px">
+<ngx-dynamic-hooks [content]="customElement.content" [context]="customElement" [parsers]="customElement | getParsers"></ngx-dynamic-hooks>
+        </div>
+      </c-col>
+    </c-row><div class="text-center mb-4">
+    <button type="button" class="btn btn-outline-primary btn-lg btn-block" style="width:100%" (click)="onUpdate()">Update</button>
+    </div>
+  </c-modal-body>
+
+</c-modal>

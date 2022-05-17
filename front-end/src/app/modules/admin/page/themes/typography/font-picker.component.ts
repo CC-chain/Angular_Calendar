@@ -1,52 +1,61 @@
 import { DOCUMENT } from '@angular/common';
 import { ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnInit, Output, Renderer2 } from '@angular/core';
+import { presetFonts } from '@app/data/schema/admin';
 import { DataCsService } from '@app/data/service/data-cs.service';
+import { ColorEvent } from 'ngx-color';
+import { Font, FontInterface } from '@lib/font-picker/src/public-api';
 import { Subject } from 'rxjs';
+import { DataCs } from '@app/data/schema/data';
 
 @Component({
   selector: 'app-font-picker',
   templateUrl: './font-picker.component.html',
+  styleUrls : ['./font-picker.component.scss'],
 })
 export class FontPickerComponent {
-  @Input() public get $styleElement(): any{
+  @Input() public get $styleElement(): any {
     return this.styleElement;
   };
-  public set $styleElement(value : any){
+  public set $styleElement(value: any) {
     this.styleElementSubject.next(value);
   }
   @Output() styleElementChange = new EventEmitter();
-  @Input() colorPickr!: string;
 
   public styleElement!: any;
   private styleElementSubject: Subject<any> = new Subject<any>();
+  private _presetFonts = presetFonts;
+  public presetFonts = this._presetFonts;
 
-  constructor( @Inject(DOCUMENT) private document: HTMLDocument,
-    private renderer: Renderer2, detect: ChangeDetectorRef, private dataCsService : DataCsService){
-      this.styleElementSubject.subscribe( (value: any) => {
-        console.log("girdi",JSON.stringify(value))
-        this.styleElement = value;
-      })
-    }
+  @Input() font: Font = new Font({
+    family: 'Roboto',
+    size: '14px',
+    style: 'regular 300',
+    styles: ['regular']
+  });
 
-  changeColor(cur:ColorEvent){
-    let curEvent = cur.color.rgb;
-    let curRgba = `rgba(${curEvent.r},${curEvent.g},${curEvent.b},${curEvent.a})`
-    let curObj: any = {};
-    console.log("first",this.styleElement)
-    for(var key in this.styleElement){
-      if( this.styleElement.hasOwnProperty(key) && /([\w]+|)[Cc]olor$/g.test(key)){
-        curObj[key] = curRgba;
-      }
+  public sizeSelect: boolean = true;
+  public styleSelect: boolean = true;
 
-      if(this.styleElement.hasOwnProperty(key) && /^([Nn]ame)$|^([Ii]d)$/g.test(key) ){
-        curObj[key] = this.styleElement[key];
-      }
-    }
-    console.log("last",curObj);
-    this.styleElementSubject.next(curObj);
-    this.styleElementChange.emit(this.styleElement);
-    console.log("firs2",JSON.stringify(this.styleElement))
+  constructor(@Inject(DOCUMENT) private document: HTMLDocument,
+    private renderer: Renderer2, detect: ChangeDetectorRef, private dataCsService: DataCsService) {
+    this.styleElementSubject.subscribe((value: any) => {
+      this.styleElement = value;
+    })
+  }
 
+  onFontChange(event : any ){
+    let dataEvent = this.convertFontToDataCs(event);
+    console.log("change",dataEvent)
+    this.styleElementSubject.next(dataEvent);
+    this.styleElementChange.emit(dataEvent)
+  }
+
+  private convertFontToDataCs(font : any): DataCs{
+    let fontCss : string = `${font['font-style']} ${font['font-weight']} ${font['font-size']} ${font['font-family']}`
+    let dataCss : DataCs = this.styleElement;
+    dataCss.font = fontCss;
+    console.log('he',font)
+    return dataCss;
   }
 
 }

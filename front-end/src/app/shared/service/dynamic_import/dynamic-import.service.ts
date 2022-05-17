@@ -50,4 +50,21 @@ export class DynamicImportService {
         break;
     }
   }
+
+  public async getComponent(component : string){
+    switch(component){
+      case 'LoginComponent':
+        const { LoginComponent } = await import("@modules/auth/page/login/login.component");
+        return LoginComponent;
+      case 'AuthLayoutComponent':
+        const { AuthLayoutComponent } = await import("@layout/auth-layout/auth-layout.component");
+        return AuthLayoutComponent;
+      case 'RegisterComponent':
+        const { RegisterComponent } = await import("@modules/auth/page/register/register.component")
+        return RegisterComponent;
+      default:
+        console.log('error: ', component);
+        return 'Error'
+    }
+  }
 }

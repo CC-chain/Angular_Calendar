@@ -5,6 +5,7 @@ import { User } from '@data/schema/user';
 
 interface LoginContextInterface {
   username: string;
+  mail: string;
   password: string;
   token: string;
 }

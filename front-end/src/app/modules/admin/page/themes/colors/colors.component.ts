@@ -3,7 +3,7 @@ import { DataCs } from '@app/data/schema/data';
 import { DataCsService } from '@app/data/service/data-cs.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DynamicImportService } from '@shared/service/dynamic_import/dynamic-import.service'
-import { adminComponents } from '@data/schema/admin'
+import { adminColorComponents } from '@data/schema/admin'
 @Component({
   selector: 'app-colors',
   templateUrl: './colors.component.html',
@@ -14,7 +14,7 @@ export class ColorsComponent  implements OnInit{
   layoutComponent!: ViewContainerRef;
   styles!: DataCs[];
   isLoaded : boolean = false;
-  comps = adminComponents
+  comps = adminColorComponents
 
   constructor(private injector: Injector, private dataCsService : DataCsService, private modalService : NgbModal,
     private loadComponentService : DynamicImportService) {

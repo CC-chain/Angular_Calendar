@@ -1,0 +1,55 @@
+<c-nav variant="pills">
+  <a [cTabContent]="tabContent" [routerLink] [tabPaneIdx]="0"
+  cNavLink (click)="getStyles('login/'); getCustoms('LoginComponent')" >
+  Login
+  </a>
+   <a [cTabContent]="tabContent" [routerLink] [tabPaneIdx]="1"
+  cNavLink (click)="getStyles('register/'); getCustoms('RegisterComponent')">
+  Register
+  </a>
+</c-nav>
+<c-tab-content #tabContent="cTabContent">
+<c-tab-pane classes="p-3">
+  <c-card style="font-weight: bold;">
+  <c-card-body>
+  <h2 cCardTitle>Templates</h2>
+  <c-row>
+  <ng-container *ngFor="let style of styles">
+     <c-col xl='2' md='4' sm='6' xs='12' class=''>
+    <app-style-editor [$styleElement]="style"(styleElementChange)="editStyles($event,'login/')" ></app-style-editor>
+     </c-col>
+  </ng-container>
+</c-row>
+  </c-card-body>
+  </c-card>
+    <c-card style="font-weight: bold;">
+  <c-card-body>
+  <h2 cCardTitle>Custom Components</h2>
+  <c-row>
+  <ng-container *ngFor="let custom of customs">
+     <c-col xl='2' md='4' sm='6' xs='12' class=''>
+       <app-custom-editor [$customElement]="custom" (customElementChange)="editCustoms($event,'custom/')" ></app-custom-editor>
+     </c-col>
+  </ng-container>
+</c-row>
+  </c-card-body>
+  </c-card>
+   <button type="button" [cModalToggle]="fullScreen.id" cButton
+              (click)="loadForm('LoginComponent')" >Refresh Login Page</button>
+</c-tab-pane>
+<c-tab-pane>
+  <c-row>
+  <ng-container *ngFor="let style of styles">
+     <c-col xl='2' md='4' sm='6' xs='12' class=''>
+    <app-style-editor [$styleElement]="style"(styleElementChange)="editStyles($event,'register/')" ></app-style-editor>
+     </c-col>
+  </ng-container>
+  </c-row>
+  <button type="button" [cModalToggle]="fullScreen.id" cButton
+  (click)="loadForm('RegisterComponent')" >Refresh Register Page</button>
+</c-tab-pane>
+</c-tab-content>
+<c-modal #fullScreen id="fullscreen" [fullscreen]="true">
+  <button style="z-index: 999" [cModalToggle]="fullScreen.id" cButtonClose>Close</button>
+  <ng-template #layoutComponent let-modal="s"></ng-template>
+</c-modal>

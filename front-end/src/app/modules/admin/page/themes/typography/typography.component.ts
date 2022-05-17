@@ -1,26 +1,49 @@
 import { Component, Injector, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
-import { adminComponents } from '@app/data/schema/admin';
+import { adminTypographyComponents } from '@app/data/schema/admin';
 import { DataCs } from '@app/data/schema/data';
 import { DataCsService } from '@app/data/service/data-cs.service';
 import { DynamicImportService } from '@app/shared/service/dynamic_import/dynamic-import.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { FontInterface } from 'ngx-font-picker';
-
+import { Font, FontInterface, FontPickerService } from '@lib/font-picker/src/public-api';
+import {presetFonts} from '@data/schema/admin'
 @Component({
   selector: 'app-typography',
   templateUrl: './typography.component.html',
 })
 export class TypographyComponent implements OnInit {
   public color!: string;
-  public font!: FontInterface;
   @ViewChild("layoutComponent", { read: ViewContainerRef })
   layoutComponent!: ViewContainerRef;
   styles!: DataCs[];
   isLoaded : boolean = false;
-  comps = adminComponents
+  comps = adminTypographyComponents
+
+
+  private _presetFonts =  presetFonts
+
+  public font: Font = new Font({
+    family: 'Rochester',
+    size: '14px',
+    style: 'regular',
+    styles: ['regular']
+  });
+
+  public sizeSelect: boolean = true;
+  public styleSelect: boolean = true;
+
+  public presetFonts = this._presetFonts;
+
+    public togglePresetFonts(): void {
+    this.presetFonts = this.presetFonts.length ? [] : this._presetFonts;
+  }
+
+  public toggleExtraOptions(): void {
+    this.sizeSelect = !this.sizeSelect;
+    this.styleSelect = !this.styleSelect;
+  }
 
   constructor(private injector: Injector, private dataCsService : DataCsService, private modalService : NgbModal,
-    private loadComponentService : DynamicImportService) {
+    private loadComponentService : DynamicImportService, private fontPickerService : FontPickerService) {
   }
 
   ngOnInit() {
@@ -57,6 +80,7 @@ export class TypographyComponent implements OnInit {
         }
       }, 1000)
   }
+
 
   async loadForm(layout : string = "") {
     console.log(layout)

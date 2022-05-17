@@ -1,4 +1,4 @@
-export const adminComponents = [
+export const adminColorComponents = [
   {
     id : 1,
     name : 'Authorization',
@@ -73,3 +73,43 @@ export const adminComponents = [
     name : "Widgets"
   }
   ]
+
+  export const adminTypographyComponents = [
+ {
+    id : 1,
+    name : 'Authorization',
+    component: 'AuthLayoutComponent',
+    url : 'authlayout/',
+    child : [
+      {
+        id : 1 ,
+        name : 'Login',
+        component : 'LoginComponent',
+        url : 'login/',
+        style : 'font',
+        dto : ["name", "font"]
+      },
+       {
+        id : 2,
+        name : 'Register',
+        url : 'register/',
+        component : 'RegisterComponent',
+            style : 'font',
+            dto : ["name","font"]
+      }
+    ]
+  },
+  {
+    id : 2 ,
+    name : 'Calendar'
+  },
+  {
+    id : 3,
+    name :"Web Pages",
+  },
+  {
+    id : 4,
+    name : "Widgets"
+  }
+  ]
+   export const presetFonts = ['Arial', 'Times', 'Courier', 'Lato', 'Open Sans', 'Roboto Slab'];

@@ -2,35 +2,38 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./src",
+    "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "paths": {
       "@app/*": [
-        "app/*"
+        "src/app/*"
       ],
       "@core/*": [
-        "app/core/*"
+        "src/app/core/*"
       ],
       "@shared/*": [
-        "app/shared/*"
+        "src/app/shared/*"
       ],
       "@layout/*": [
-        "app/layout/*"
+        "src/app/layout/*"
       ],
       "@modules/*": [
-        "app/modules/*"
+        "src/app/modules/*"
       ],
       "@env": [
-        "environments/environment"
+        "src/environments/environment"
       ],
       "@data/*": [
-        "app/data/*"
-      ]
+        "src/app/data/*"
+      ],
+      "@lib/*": [
+        "lib/*"
+      ],
     },
     "noImplicitOverride": true,
-    "noPropertyAccessFromIndexSignature": true,
+    "noPropertyAccessFromIndexSignature": false,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "sourceMap": true,
