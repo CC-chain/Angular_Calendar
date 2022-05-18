@@ -6,6 +6,7 @@ import { DynamicImportService } from '@app/shared/service/dynamic_import/dynamic
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Font, FontInterface, FontPickerService } from '@lib/font-picker/src/public-api';
 import {presetFonts} from '@data/schema/admin'
+import { LoadingService } from '@app/shared/service/loading/loading.service';
 @Component({
   selector: 'app-typography',
   templateUrl: './typography.component.html',
@@ -15,7 +16,7 @@ export class TypographyComponent implements OnInit {
   @ViewChild("layoutComponent", { read: ViewContainerRef })
   layoutComponent!: ViewContainerRef;
   styles!: DataCs[];
-  isLoaded : boolean = false;
+  isLoaded = this.loader.loading$;
   comps = adminTypographyComponents
 
 
@@ -43,7 +44,7 @@ export class TypographyComponent implements OnInit {
   }
 
   constructor(private injector: Injector, private dataCsService : DataCsService, private modalService : NgbModal,
-    private loadComponentService : DynamicImportService, private fontPickerService : FontPickerService) {
+    private loadComponentService : DynamicImportService, private fontPickerService : FontPickerService, public loader : LoadingService) {
   }
 
   ngOnInit() {
@@ -65,7 +66,7 @@ export class TypographyComponent implements OnInit {
   }
 
   public getStyles(dbUrl : string) {
-    let flag:boolean = false;
+    this.loader.show();
     const $style =  this.dataCsService.getStyles(dbUrl)
     $style.subscribe(styles =>
       {
@@ -73,7 +74,7 @@ export class TypographyComponent implements OnInit {
       });
       var interval = setInterval(() => {
         if(this.styles){
-          this.isLoaded = true;
+          this.loader.hide();
           clearInterval(interval);
         }else{
         console.log("gelmedi")

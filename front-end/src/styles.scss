@@ -23,6 +23,7 @@
   @import '../node_modules/@syncfusion/ej2-navigations/styles/material.css';
   @import '../node_modules/@syncfusion/ej2-popups/styles/material.css';
   @import '../node_modules/@syncfusion/ej2-richtexteditor/styles/material.css';
+  @import "~bootstrap-icons/font/bootstrap-icons.css";
 
 $enable-ltr: true;
 $enable-rtl: true;
@@ -36,4 +37,22 @@ $custom-typography: mat.define-typography-config(
   @include my-styles-reset-theme($theme);
 }
 
+.mat-progress-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 3;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    backdrop-filter: blur(4px);
+    background-color: rgba(183, 184, 186, 0.079);
+}
 

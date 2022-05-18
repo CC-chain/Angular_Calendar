@@ -1,10 +1,8 @@
-<div>
-  <button type="button" style="font-size: 12px;" class="btn btn-outline-primary btn-lg btn-block" [cModalToggle]="fullScreen.id" cButton>{{customElement.name}}</button>
-</div>
+  <button type="button" style="font-size: 12px;width:100px" class="btn btn-outline-primary" [cModalToggle]="fullScreen.id" >{{customElement.name}}</button>
 <c-modal #fullScreen [id]="customElement.name + customElement.id?.toString()" [fullscreen]="true">
   <c-modal-header>
-    <h2 cModalTitle style="font-weight: bolder;">{{customElement.name}}</h2>
-    <button [cModalToggle]="fullScreen.id" class="btn btn-light" cButtonClose>Exit</button>
+    <h2 cModalTitle style="font-weight: bolder;"><button type="button" class="btn btn-outline-danger" (click)="deleteCustom()"><fa-icon [icon]="faRemove"></fa-icon></button>  {{customElement.name}} </h2>
+    <button [cModalToggle]="fullScreen.id" class="btn btn-outline-secondary" cButtonClose>Exit</button>
   </c-modal-header>
   <c-modal-body>
     <c-row>
@@ -21,13 +19,16 @@
       </c-col>
       <c-col>
         <h2>Preview</h2>
-        <div style="overflow:scroll; height:420px">
+        <div style="overflow:scroll; height:420px; max-width: 420;">
 <ngx-dynamic-hooks [content]="customElement.content" [context]="customElement" [parsers]="customElement | getParsers"></ngx-dynamic-hooks>
         </div>
       </c-col>
-    </c-row><div class="text-center mb-4">
+    </c-row>
+    <c-row>
+      <div class="text-center mb-4">
     <button type="button" class="btn btn-outline-primary btn-lg btn-block" style="width:100%" (click)="onUpdate()">Update</button>
     </div>
+    </c-row>
   </c-modal-body>
 
 </c-modal>

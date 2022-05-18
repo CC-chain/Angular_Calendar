@@ -1,0 +1,27 @@
+<c-modal-header>
+    <h2 cModalTitle style="font-weight: bolder;">Custom Component Creation &nbsp; <input type="text" placeholder="Name..." [(ngModel)]="nameEl"/></h2>
+
+    <button [cModalToggle]="modalId" class="btn btn-light" cButtonClose>Exit</button>
+</c-modal-header>
+<c-modal-body>
+  <c-row>
+    <c-col>
+      <h2>HTML</h2>
+      <textarea rows="20" cols="50" [(ngModel)]="htmlEl">
+      </textarea>
+    </c-col>
+    <c-col>
+      <h2>JavaScript</h2>
+      <textarea rows="20" cols="50" [(ngModel)]="scriptEl">
+      </textarea>
+    </c-col>
+    <c-col>
+      <h2>Preview</h2>
+      <div style="overflow:scroll; max-height:420px; max-width:420">
+<ngx-dynamic-hooks [content]="htmlEl" [context]="scriptEl" [parsers]="customHook"></ngx-dynamic-hooks>
+      </div>
+    </c-col>
+  </c-row><div class="text-center mb-4">
+  <button type="button" class="btn btn-outline-primary btn-lg btn-block" style="width:100%" (click)="onUpdate()">Update</button>
+  </div>
+</c-modal-body>

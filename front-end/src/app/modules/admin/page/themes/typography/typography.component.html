@@ -1,11 +1,11 @@
 <c-nav variant="pills">
-  <ng-template ngFor let-comp [ngForOf]="comps">
+   <c-nav-item *ngFor="let comp of comps">
     <a [active]="comp.id == 1" [cTabContent]="tabContent" [routerLink]
       [tabPaneIdx]="comp.id -1"
       cNavLink (click)="loadForm(comp.component)">
       {{comp.name}}
     </a>
-  </ng-template>
+   </c-nav-item>
 </c-nav>
 <c-tab-content #tabContent="cTabContent">
   <ng-template ngFor let-comp [ngForOf]="comps">
@@ -13,14 +13,14 @@
       <c-card class="mb-3">
         <c-card-header>
           <c-nav variant="tabs">
-            <ng-template ngFor let-compChild [ngForOf]="comp.child">
+             <c-nav-item *ngFor="let compChild of comp.child">
               <a [cTabContent]="tabContentChild" [active]="compChild.id == 1"
                 [routerLink]
                 [tabPaneIdx]="compChild.id - 1" cNavLink
                 (click)="getStyles(compChild?.url || comp?.url || 'empty' )">
                 {{compChild.name}}
               </a>
-            </ng-template>
+             </c-nav-item>
           </c-nav>
         </c-card-header>
         <c-card-body>
@@ -28,6 +28,7 @@
             <ng-template ngFor let-compChild [ngForOf]="comp.child">
               <c-tab-pane classes="p-3">
                 <c-row>
+                  <ng-container *ngIf="(isLoaded | async) != true">
                   <ng-template ngFor let-styleEl [ngForOf]="styles |
                     getSpecifics :
                     compChild?.style || 'backgroundColor'">
@@ -45,9 +46,13 @@
                       </c-col>
                     </ng-container>
                   </ng-template>
+                  </ng-container>
+                  <div class="d-grid gap-2 mx-auto">
                     <button type="button" [cModalToggle]="fullScreen.id" cButton
+                      class="btn btn-outline-primary btn-block text-center"
                       (click)="loadForm(compChild.component)">Refresh
                       {{comp.component}}</button>
+                  </div>
                 </c-row>
               </c-tab-pane>
             </ng-template>
@@ -55,9 +60,14 @@
         </c-card-body>
       </c-card>
     </c-tab-pane>
+    <ng-container *ngIf="isLoaded | async">
+           <div class="overlay"></div>
+          <mat-progress-spinner [mode]="'indeterminate'"></mat-progress-spinner>
+    </ng-container>
   </ng-template>
   <c-modal #fullScreen id="fullscreen" [fullscreen]="true">
-    <button style="z-index: 999" [cModalToggle]="fullScreen.id" cButtonClose>Close</button>
+    <button style="z-index: 999" [cModalToggle]="fullScreen.id" class="btn
+      btn-outline-primary" cButtonClose>Close</button>
     <ng-template #layoutComponent let-modal="s"></ng-template>
   </c-modal>
 </c-tab-content>

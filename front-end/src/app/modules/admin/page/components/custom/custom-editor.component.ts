@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CustomCs } from '@app/data/schema/data';
+import { faRemove } from '@fortawesome/free-solid-svg-icons';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -15,6 +16,7 @@ export class CustomEditorComponent implements OnInit {
     this.customElementSubject.next(value);
   }
   @Output() customElementChange = new EventEmitter();
+  @Output() customElementDelete = new EventEmitter();
   public customElement!: CustomCs;
   private customElementSubject: Subject<any> = new Subject<any>();
   constructor() {
@@ -22,6 +24,7 @@ export class CustomEditorComponent implements OnInit {
       this.customElement = value;
     })
    }
+   faRemove = faRemove;
 
    onChange(val : any, specific : string){
      if(val){
@@ -36,6 +39,10 @@ export class CustomEditorComponent implements OnInit {
 
    onUpdate(){
      this.customElementChange.emit(this.customElement)
+   }
+
+   deleteCustom(){
+     this.customElementDelete.emit(this.customElement);
    }
   ngOnInit(): void {
   }

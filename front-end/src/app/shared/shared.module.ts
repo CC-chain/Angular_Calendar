@@ -30,13 +30,15 @@ import {
   faStream,
   faBook,
   faUserCircle,
-  faAsterisk
+  faAsterisk,
+  faRemove
 } from '@fortawesome/free-solid-svg-icons';
 import { faMediumM, faGithub } from '@fortawesome/free-brands-svg-icons';
 import { ControlMessagesComponent } from './component/control-messages/control-messages.component';
 import { ConvertStylePipe } from './pipes/convert-style.pipe';
 import { DynamicContentPipe } from './pipes/dynamic-content.pipe';
 import { GetParsersPipe } from './pipes/get-parsers.pipe';
+import { FilterCustomsPipe } from './pipes/filter-customs.pipe';
 
 @NgModule({
   imports: [
@@ -52,6 +54,7 @@ import { GetParsersPipe } from './pipes/get-parsers.pipe';
     ConvertStylePipe,
     DynamicContentPipe,
     GetParsersPipe,
+    FilterCustomsPipe,
   ],
   exports: [
     CommonModule,
@@ -65,6 +68,7 @@ import { GetParsersPipe } from './pipes/get-parsers.pipe';
     ConvertStylePipe,
     DynamicContentPipe,
     GetParsersPipe,
+    FilterCustomsPipe,
   ]
 })
 export class AppSharedModule {
@@ -82,6 +86,7 @@ export class AppSharedModule {
       faFilter,
       faTasks,
       faCheck,
+      faRemove,
       faSquare,
       faLanguage,
       faPaintBrush,

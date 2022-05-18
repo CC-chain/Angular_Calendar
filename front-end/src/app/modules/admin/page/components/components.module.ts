@@ -11,12 +11,16 @@ import { StyleEditorComponent } from './login_register/style-editor.component';
 import { CustomEditorComponent } from './custom/custom-editor.component';
 import { HtmlEditorService, ImageService, LinkService, RichTextEditorAllModule, ToolbarService } from '@syncfusion/ej2-angular-richtexteditor';
 import { AppSharedModule } from '@app/shared/shared.module';
+import { CustomCreatorComponent } from './custom/custom-creator.component';
+import { FormsModule } from '@angular/forms';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [
     LoginRegisterComponent,
     StyleEditorComponent,
-    CustomEditorComponent
+    CustomEditorComponent,
+    CustomCreatorComponent,
   ],
   imports: [
     CommonModule,
@@ -25,6 +29,7 @@ import { AppSharedModule } from '@app/shared/shared.module';
     CardModule,
     ModalModule,
     GridModule,
+    FormsModule,
     TabsModule,
     UtilitiesModule,
     ComponentsRoutingModule,

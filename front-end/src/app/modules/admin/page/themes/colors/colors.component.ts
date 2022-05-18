@@ -4,6 +4,7 @@ import { DataCsService } from '@app/data/service/data-cs.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DynamicImportService } from '@shared/service/dynamic_import/dynamic-import.service'
 import { adminColorComponents } from '@data/schema/admin'
+import { LoadingService } from '@shared/service/loading/loading.service'
 @Component({
   selector: 'app-colors',
   templateUrl: './colors.component.html',
@@ -13,11 +14,12 @@ export class ColorsComponent  implements OnInit{
   @ViewChild("layoutComponent", { read: ViewContainerRef })
   layoutComponent!: ViewContainerRef;
   styles!: DataCs[];
-  isLoaded : boolean = false;
+  isLoaded = this.loader.loading$;
   comps = adminColorComponents
 
   constructor(private injector: Injector, private dataCsService : DataCsService, private modalService : NgbModal,
-    private loadComponentService : DynamicImportService) {
+    private loadComponentService : DynamicImportService,
+    public loader : LoadingService) {
   }
 
   ngOnInit() {
@@ -40,6 +42,7 @@ export class ColorsComponent  implements OnInit{
 
   public getStyles(dbUrl : string) {
     let flag:boolean = false;
+    this.loader.show();
     const $style =  this.dataCsService.getStyles(dbUrl)
     $style.subscribe(styles =>
       {
@@ -47,7 +50,7 @@ export class ColorsComponent  implements OnInit{
       });
       var interval = setInterval(() => {
         if(this.styles){
-          this.isLoaded = true;
+          this.loader.hide();
           clearInterval(interval);
         }else{
         console.log("gelmedi")
