@@ -23,3 +23,11 @@ export class CustomCs {
     public targetComponent: string,
     public dependentComponents: string){ }
 }
+
+export class MetaTags {
+  constructor(
+    public price: string,
+    public customer : string,
+    public worker:string,
+  ){}
+}

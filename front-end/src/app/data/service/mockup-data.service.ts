@@ -121,6 +121,28 @@ export class MockupDataService implements InMemoryDbService {
       dependentComponents: 'CustomComponent',
     }]
 
+    let event = [{
+      id : '1',
+      start : '2022-05-04 18:30:00',
+      end: '2022-05-04 19:00:00',
+      title: 'ilk deneme',
+      allDay: false,
+      cssClass: 'disable',
+      resizable : {
+        beforeStart : true,
+        afterEnd : true
+      },
+      actions : {
+        editable : true,
+        deletable : true,
+      },
+      dragabble: true,
+      meta: {
+        price : '15TL',
+        customer : 'Arif Özçelik',
+        worker : 'Onur Akalın'
+      }
+    }]
 
     let font = [
       {
@@ -31704,7 +31726,7 @@ export class MockupDataService implements InMemoryDbService {
         ]
       }
     ]
-    return { login, register, authlayout, font, custom };
+    return { login, register, authlayout, font, custom, event };
   };
 
 }

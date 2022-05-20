@@ -134,6 +134,8 @@ export class LoginRegisterComponent implements OnInit {
 
   ngOnInit(): void {
     setTimeout(() => this.dynamicImport.loadComponent('AuthLayoutComponent', this.layoutComponent), 250);
+        this.loaded.show();
+    setTimeout(() => this.loaded.hide(),1500);
   }
 
 

@@ -1,21 +1,21 @@
+
 <c-nav variant="pills">
    <c-nav-item *ngFor="let comp of comps">
-    <a [active]="comp.id == 1" [cTabContent]="tabContent" [routerLink]
+    <a [active]="true" [cTabContent]="tabContentTypo" [routerLink]
       [tabPaneIdx]="comp.id -1"
       cNavLink (click)="loadForm(comp.component)">
       {{comp.name}}
     </a>
    </c-nav-item>
 </c-nav>
-<c-tab-content #tabContent="cTabContent">
+<c-tab-content #tabContentTypo="cTabContent">
   <ng-template ngFor let-comp [ngForOf]="comps">
     <c-tab-pane classes="p-1">
       <c-card class="mb-3">
         <c-card-header>
           <c-nav variant="tabs">
              <c-nav-item *ngFor="let compChild of comp.child">
-              <a [cTabContent]="tabContentChild" [active]="compChild.id == 1"
-                [routerLink]
+              <a [cTabContent]="tabContentChildTypo"
                 [tabPaneIdx]="compChild.id - 1" cNavLink
                 (click)="getStyles(compChild?.url || comp?.url || 'empty' )">
                 {{compChild.name}}
@@ -24,7 +24,7 @@
           </c-nav>
         </c-card-header>
         <c-card-body>
-          <c-tab-content #tabContentChild="cTabContent">
+          <c-tab-content #tabContentChildTypo="cTabContent">
             <ng-template ngFor let-compChild [ngForOf]="comp.child">
               <c-tab-pane classes="p-3">
                 <c-row>
@@ -60,14 +60,14 @@
         </c-card-body>
       </c-card>
     </c-tab-pane>
+  </ng-template>
+</c-tab-content>
     <ng-container *ngIf="isLoaded | async">
            <div class="overlay"></div>
           <mat-progress-spinner [mode]="'indeterminate'"></mat-progress-spinner>
-    </ng-container>
-  </ng-template>
+  </ng-container>
   <c-modal #fullScreen id="fullscreen" [fullscreen]="true">
     <button style="z-index: 999" [cModalToggle]="fullScreen.id" class="btn
       btn-outline-primary" cButtonClose>Close</button>
     <ng-template #layoutComponent let-modal="s"></ng-template>
   </c-modal>
-</c-tab-content>

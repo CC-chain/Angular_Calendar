@@ -48,6 +48,8 @@ export class TypographyComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.loader.show();
+    setTimeout(() => this.loader.hide(),1500);
   }
 
   public editStyles(styleObj : any , dbUrl : string) {

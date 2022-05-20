@@ -1,19 +1,19 @@
 <c-nav variant="pills">
   <c-nav-item *ngFor="let comp of comps">
-    <a [active]="comp.id == 1" [cTabContent]="tabContent" [routerLink] [tabPaneIdx]="comp.id -1"
+    <a [active]="comp.id == 1" [cTabContent]="tabContentColors" [routerLink] [tabPaneIdx]="comp.id -1"
      cNavLink (click)="loadForm(comp.component)" >
        {{comp.name}}
      </a>
   </c-nav-item>
 </c-nav>
-<c-tab-content #tabContent="cTabContent">
+<c-tab-content #tabContentColors="cTabContent">
   <ng-template ngFor let-comp [ngForOf]="comps">
   <c-tab-pane classes="p-1">
     <c-card class="mb-3">
       <c-card-header>
         <c-nav variant="tabs">
            <c-nav-item *ngFor="let compChild of comp.child">
-            <a [cTabContent]="tabContentChild"  [routerLink]
+            <a [cTabContent]="tabContentChildColors"  [routerLink]
            [tabPaneIdx]="compChild.id - 1" cNavLink
            (click)="getStyles(compChild?.url || comp?.url || 'empty' )" >
          {{compChild.name}}
@@ -22,7 +22,7 @@
         </c-nav>
       </c-card-header>
       <c-card-body>
-        <c-tab-content #tabContentChild="cTabContent">
+        <c-tab-content #tabContentChildColors="cTabContent">
           <ng-template ngFor let-compChild [ngForOf]="comp.child">
           <c-tab-pane classes="p-3">
             <c-row>
@@ -50,7 +50,7 @@
                   <c-card-header>
                     <c-nav variant="tabs">
                        <c-nav-item *ngFor="let compChild2 of compChild.child">
-                        <a [cTabContent]="tabContentChild2" [active]="compChild2.id == 1" [routerLink]
+                        <a [cTabContent]="tabContentChildColors2" [routerLink]
                        [tabPaneIdx]="compChild2.id - 1" cNavLink
                        (click)="getStyles( compChild?.url || 'empty' )">
                      {{compChild2.name}}
@@ -59,7 +59,7 @@
                     </c-nav>
                   </c-card-header>
                   <c-card-body>
-                    <c-tab-content #tabContentChild2="cTabContent">
+                    <c-tab-content #tabContentChildColors2="cTabContent">
                     <ng-template ngFor let-compChild2 [ngForOf]="compChild.child">
                       <c-tab-pane classes="p-3">
                         <c-row>

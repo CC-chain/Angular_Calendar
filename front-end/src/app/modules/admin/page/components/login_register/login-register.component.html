@@ -1,14 +1,19 @@
 <c-nav variant="pills">
-  <a [cTabContent]="tabContent" [routerLink] [tabPaneIdx]="0"
+  <a [cTabContent]="tabContent" [routerLink] [tabPaneIdx]="0" [active]="true" hidden>
+</a>
+  <a [cTabContent]="tabContent" [routerLink] [tabPaneIdx]="1"
     cNavLink (click)="getStyles('login/'); getCustoms('LoginComponent')">
     Login
   </a>
-  <a [cTabContent]="tabContent" [routerLink] [tabPaneIdx]="1"
+  <a [cTabContent]="tabContent" [routerLink] [tabPaneIdx]="2"
     cNavLink (click)="getStyles('register/'); getCustoms('RegisterComponent')">
     Register
   </a>
 </c-nav>
 <c-tab-content #tabContent="cTabContent">
+  <c-tab-pane>
+
+  </c-tab-pane>
   <c-tab-pane classes="p-3">
     <ng-container *ngIf="((isLoaded | async) != true)">
       <c-card style="font-weight: bold;">
@@ -69,7 +74,10 @@
       </c-card>
       <c-card style="font-weight: bold;">
         <c-card-body>
-          <h2 cCardTitle>Custom Components</h2>
+          <h2 cCardTitle>Custom Components <button type="button"
+                [cModalToggle]="customRegisterComponents.id" class="btn
+                btn-outline-primary btn-sm" style="margin-left:5px"><i class="bi
+                  bi-plus-circle"></i></button></h2>
           <c-row>
             <ng-container *ngFor="let custom of customs | filterCustoms :
               'RegisterComponent'">
@@ -106,6 +114,7 @@
 </c-modal>
 <c-modal #customRegisterComponents id="customRegisterComponent"
   [fullscreen]="true">
-  <button class="btn btn-outline-primary" style="z-index: 999"
-    [cModalToggle]="customRegisterComponents.id" cButtonClose>Close</button>
+  <app-custom-creator [modalId]="customLoginComponents.id"
+    [targetComponent]="'RegisterComponent'"
+    (customElementChange)="addCustoms($event,'custom/')"></app-custom-creator>
 </c-modal>
