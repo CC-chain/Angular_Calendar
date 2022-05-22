@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { faSleigh } from '@fortawesome/free-solid-svg-icons';
+import { getRandomId } from '@syncfusion/ej2/base';
 import { CalendarEvent } from 'angular-calendar';
 import { Subject, timestamp } from 'rxjs';
 
@@ -54,25 +56,24 @@ export class CalendarEditComponent implements OnInit {
   }
 
   eventChange(event: any , prop : string){
-    console.log(prop === 'color')
     switch(prop){
       case 'color':
-        console.log(event)
         this.modalData.event.color!.primary = event;
         this.modalData.event.color!.secondary = event
         break;
       case 'afterEnd':
-        this.modalData.event.resizable!.afterEnd = (event.target as HTMLInputElement).checked;
+        this.modalData.event.resizable!.afterEnd = event;
         break;
       case 'beforeStart':
-        this.modalData.event.resizable!.beforeStart = (event.target as HTMLInputElement).checked;
+        this.modalData.event.resizable!.beforeStart = event
         break;
       case 'start':
-        this.modalData.event.start = new Date((event.target as HTMLInputElement).value);
+        this.modalData.event.start = new Date(event);
         break
       case 'end':
-        this.modalData.event.end = new Date((event.target as HTMLInputElement).value);
-        break
+        this.modalData.event.end = new Date(event);
+        break;
     }
+    console.log(this.modalData.event)
   }
 }

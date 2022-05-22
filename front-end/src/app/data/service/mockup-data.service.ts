@@ -9,7 +9,7 @@ export class MockupDataService implements InMemoryDbService {
       {
         id: 1,
         name: 'Login Container',
-        backgroundColor: 'rgba(42,42,0,1)',
+        backgroundColor: '',
         font: 'italic small-caps 700 12px Rochester',
         margin: '',
         padding: '',
@@ -20,9 +20,9 @@ export class MockupDataService implements InMemoryDbService {
       {
         id: 2,
         name: 'Login Button',
-        backgroundColor: 'rgba(42, 42, 42, 0.8)',
-        color: 'rgba(150,0,0,1)',
-        borderColor: 'rgba(150,123,0,1)',
+        backgroundColor: '',
+        color: '',
+        borderColor: '',
         font: 'italic small-caps 700 12px Rochester',
         margin: '',
         padding: '',
@@ -33,8 +33,8 @@ export class MockupDataService implements InMemoryDbService {
       {
         id: 3,
         name: 'Login Forms',
-        backgroundColor : 'rgba(150,0,0,1)',
-        color: 'rgba(150,0,0,1)',
+        backgroundColor : '',
+        color: '',
         borderColor: '',
         font: '',
         margin: '',
@@ -48,7 +48,7 @@ export class MockupDataService implements InMemoryDbService {
       {
         id: 1,
         name: 'Register Container',
-        backgroundColor: 'rgba(52,52,52,1)',
+        backgroundColor: '',
         font: 'italic small-caps 700 12px Rochester',
         borderColor: '',
         margin: '',
@@ -60,8 +60,8 @@ export class MockupDataService implements InMemoryDbService {
       {
         id: 2,
         name: 'Register Button',
-        backgroundColor: 'rgba(42, 42, 42, 0.8)',
-        color: 'rgba(0,0,0,1)',
+        backgroundColor: '',
+        color: '',
         font: 'italic small-caps 700 12px Rochester',
         borderColor: '',
         margin: '',
@@ -73,8 +73,8 @@ export class MockupDataService implements InMemoryDbService {
        {
         id: 3,
         name: 'Register Forms',
-        backgroundColor : 'rgba(150,0,0,1)',
-        color: 'rgba(150,0,0,1)',
+        backgroundColor : '',
+        color: '',
         borderColor: '',
         font: '',
         margin: '',
@@ -123,11 +123,12 @@ export class MockupDataService implements InMemoryDbService {
 
     let event = [{
       id : '1',
-      start : '2022-05-04 18:30:00',
-      end: '2022-05-04 19:00:00',
+      start : '2022-05-20 18:30:00',
+      end: '2022-05-20 20:00:00',
       title: 'ilk deneme',
       allDay: false,
-      cssClass: 'disable',
+      cssClass: '',
+      color: '#cfa125',
       resizable : {
         beforeStart : true,
         afterEnd : true
@@ -136,13 +137,56 @@ export class MockupDataService implements InMemoryDbService {
         editable : true,
         deletable : true,
       },
-      dragabble: true,
+      draggable: true,
+      meta: {
+        price : '15TL',
+        customer : 'Arif Özçelik',
+        worker : 'Onur Akalın',
+        disabledDay : true
+      }
+    },
+  {
+      id : '2',
+      start : '2022-05-20 16:30:00',
+      end: '2022-05-20 18:00:00',
+      title: 'ikinci deneme',
+      allDay: false,
+      cssClass: '',
+      color: '#00ff26',
+      resizable : {
+        beforeStart : true,
+        afterEnd : true
+      },
+      actions : {
+        editable : true,
+        deletable : true,
+      },
+      draggable: true,
       meta: {
         price : '15TL',
         customer : 'Arif Özçelik',
         worker : 'Onur Akalın'
       }
     }]
+
+    let calendar = [{
+id: 1,
+	hourDuration : '15',
+	hourSegmentHeight : '30',
+	precision: 'minutes',
+	locale : 'tr',
+	monthViewColumnHeader : 'EEEE',
+	monthViewDayNumber : 'd' ,
+	monthViewTitle : 'LLLL y' ,
+	weekViewColumnHeader : 'EEEE' ,
+	weekViewColumnSubHeader : 'MMM d' ,
+	weekViewHour: 'HH:mm' ,
+	dayViewHour: 'HH:mm',
+	dayViewTitle : 'EEEE, MMMM d, y',
+	excludeDays : '[0,7]' ,
+	weekendDays : '[0,7]' ,
+    }]
+
 
     let font = [
       {
@@ -31726,7 +31770,7 @@ export class MockupDataService implements InMemoryDbService {
         ]
       }
     ]
-    return { login, register, authlayout, font, custom, event };
+    return { login, register, authlayout, font, custom, event, calendar };
   };
 
 }

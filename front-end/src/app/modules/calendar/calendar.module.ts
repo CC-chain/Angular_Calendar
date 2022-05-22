@@ -11,8 +11,13 @@ import { AppSharedModule } from '@app/shared/shared.module';
 import { CalendarHeaderComponent } from './component/calendar-header/calendar-header.component';
 import { CalendarEditComponent } from './component/calendar-edit/calendar-edit.component';
 import {NgxMatDatetimePickerModule} from '@angular-material-components/datetime-picker'
+import { ContextMenuModule } from '@perfectmemory/ngx-contextmenu';
+import localeFr from '@angular/common/locales/fr';
+import localTr from '@angular/common/locales/tr';
+import { registerLocaleData } from '@angular/common';
 
-
+registerLocaleData(localeFr);
+registerLocaleData(localTr);
 
 @NgModule({
   exports: [CalendarComponent],
@@ -23,6 +28,9 @@ import {NgxMatDatetimePickerModule} from '@angular-material-components/datetime-
     NgbModalModule,
     ReactiveFormsModule,
     NgxMatDatetimePickerModule,
+    ContextMenuModule.forRoot({
+      useBootstrap4 : true
+    }),
     FlatpickrModule.forRoot(),
     CalendarModule.forRoot({
       provide: DateAdapter,

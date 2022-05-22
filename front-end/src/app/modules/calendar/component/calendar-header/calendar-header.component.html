@@ -2,7 +2,8 @@
       <div class="col-md-4">
         <div class="btn-group">
           <div
-            class="btn btn-primary"
+            class="btn"
+            [ngClass]="isInclude(theme)"
             mwlCalendarPreviousView
             [view]="view"
             [(viewDate)]="viewDate"
@@ -19,7 +20,8 @@
             Today
           </div>
           <div
-            class="btn btn-primary"
+            class="btn "
+            [ngClass]="isInclude(theme)"
             mwlCalendarNextView
             [view]="view"
             [(viewDate)]="viewDate"
@@ -35,21 +37,24 @@
       <div class="col-md-4">
         <div class="btn-group">
           <div
-            class="btn btn-primary"
+            class="btn "
+            [ngClass]="isInclude(theme)"
             (click)="viewChange.emit(CalendarView.Month)"
             [class.active]="view === CalendarView.Month"
           >
             Month
           </div>
           <div
-            class="btn btn-primary"
+            class="btn "
+            [ngClass]="isInclude(theme)"
             (click)="viewChange.emit(CalendarView.Week)"
             [class.active]="view === CalendarView.Week"
           >
             Week
           </div>
           <div
-            class="btn btn-primary"
+            class="btn "
+            [ngClass]="isInclude(theme)"
             (click)="viewChange.emit(CalendarView.Day)"
             [class.active]="view === CalendarView.Day"
           >

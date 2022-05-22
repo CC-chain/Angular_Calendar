@@ -14,9 +14,21 @@ export class CalendarHeaderComponent {
 
   @Input() locale: string = 'en';
 
+  @Input() theme!: string;
+
   @Output() viewChange = new EventEmitter<CalendarView>();
 
   @Output() viewDateChange = new EventEmitter<Date>();
 
   CalendarView = CalendarView;
+
+  isInclude(theme : string){
+    if(theme.includes("light")){
+      return 'btn-light'
+    }
+    else if (theme.includes("dark")){
+      return 'btn-dark'
+    }
+    return "btn-primary"
+  }
 }

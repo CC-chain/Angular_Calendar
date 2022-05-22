@@ -28,6 +28,7 @@ export class CustomComponent implements OnInit {
     scriptTag.type = "text/javascript";
     scriptTag.async = true;
     scriptTag.text = script;
+    console.log(script)
     this._renderer2.appendChild(this._document.body, scriptTag);
     //this._renderer2.removeChild(this._document.body,scriptTag);
     return scriptTag;

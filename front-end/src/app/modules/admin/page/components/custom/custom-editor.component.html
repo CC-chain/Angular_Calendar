@@ -13,7 +13,7 @@
       </c-col>
       <c-col>
         <h2>JavaScript</h2>
-        <textarea rows="20" cols="50">
+        <textarea rows="20" cols="50" [value]="customElement.script" (change)="onChange($event,'script')">
           {{customElement.script}}
         </textarea>
       </c-col>

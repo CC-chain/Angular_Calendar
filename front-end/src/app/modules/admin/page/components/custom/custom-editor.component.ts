@@ -21,7 +21,11 @@ export class CustomEditorComponent implements OnInit {
   private customElementSubject: Subject<any> = new Subject<any>();
   constructor() {
      this.customElementSubject.subscribe((value: CustomCs) => {
-      this.customElement = value;
+      this.customElement = value
+      //To trigger content sections
+      this.customElement.content += " ";
+      this.customElement.content = value.content;
+
     })
    }
    faRemove = faRemove;
@@ -31,8 +35,9 @@ export class CustomEditorComponent implements OnInit {
        let newCustomCs = this.customElement;
        if(specific === "html")
        newCustomCs.content = val.target!.value;
-       if(specific === "js")
+       if(specific === "script")
        newCustomCs.script = val.target!.value;
+       console.log(newCustomCs)
        this.customElementSubject.next(newCustomCs)
      }
    }

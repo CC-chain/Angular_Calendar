@@ -1,8 +1,7 @@
 import { Injectable, TemplateRef } from '@angular/core';
 import { DataCsService } from '@app/data/service/data-cs.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CalendarEvent, CalendarEventAction, CalendarView } from 'angular-calendar';
-import { endOfDay, endOfMonth, endOfWeek, startOfDay, startOfMonth, startOfWeek } from 'date-fns';
+import { CalendarEvent, CalendarEventAction, CalendarEventTimesChangedEvent, CalendarView } from 'angular-calendar';
 import { map, Observable } from 'rxjs';
 
 
@@ -26,7 +25,10 @@ const colors: any = {
 })
 export class AsyncEventsService {
 
-  modalContent! : TemplateRef<any>;
+  modalEdit! : TemplateRef<any>;
+  modalRemove!: TemplateRef<any>;
+  modalAdd! : TemplateRef<any>;
+
   modalData! : {
     action : string,
     event: CalendarEvent,
@@ -35,26 +37,40 @@ export class AsyncEventsService {
 
   constructor(private dataService : DataCsService, private modal : NgbModal) { }
 
-  handleEvent(action: string, event : CalendarEvent){
-    console.log(action,event,this.modal,this.modalContent)
+  handleEvent(action: string, event : any){
+    if(action == "Edit"){
+      console.log(event)
     this.modalData = {action, event  };
-    this.modal.open(this.modalContent, { size:'xl' });
+    this.modal.open(this.modalEdit, { size:'xl' });
+    }
+    if(action == "Delete"){
+    this.modalData = {action, event  };
+    this.modal.open(this.modalRemove, { size:'sm' });
+    }
+     if(action == "Add"){
+    let newEvent: CalendarEvent = {
+      start : new Date(event),
+      end : new Date(event),
+      title : '',
+      draggable: false,
+      resizable : {
+        afterEnd : false,
+        beforeStart : false
+      },
+      color : {
+        primary : '#ad2121',
+        secondary : '#ad2121'
+      },
+      id: 0,
+    }
+    event = newEvent
+    this.modalData = {action, event };
+    this.modal.open(this.modalAdd, { size:'xl' });
+    }
   }
 
-  fetchEvents(view: CalendarView): Observable<CalendarEvent[]> {
+  fetchEvents(): Observable<CalendarEvent[]> {
     let events : Observable<CalendarEvent[]>
-
-    const getStart: any = {
-      month: startOfMonth,
-      week: startOfWeek,
-      day: startOfDay,
-    }[view];
-
-    const getEnd: any = {
-      month: endOfMonth,
-      week: endOfWeek,
-      day: endOfDay,
-    }[view];
 
     events = this.dataService.getCalendar('event/').pipe(
       map(events => {
@@ -73,12 +89,21 @@ export class AsyncEventsService {
         })
       })
     )
-    console.log(events)
+    console.log('123',events)
     return events;
+  }
+
+  addEvent(event : CalendarEvent, dbUrl: string = 'event/'){
+    this.dataService.createCalendar(event,dbUrl);
   }
 
   editEvents(event : CalendarEvent, dbUrl: string = 'event/'){
     this.dataService.editCalendar(event,dbUrl);
+  }
+
+  deleteEvents(event : CalendarEvent, dbUrl: string = 'event/'){
+    this.dataService.deleteCalendar(Number(event.id), 'event/');
+    console.log(this.dataService.getCalendar('event/'))
   }
 
   private getActions(actions : any): CalendarEventAction[]{
@@ -103,5 +128,12 @@ export class AsyncEventsService {
     }
     console.log(calendarActions)
     return calendarActions;
+  }
+
+  eventTimesChanged({event,newStart,newEnd} : CalendarEventTimesChangedEvent): void {
+    event.start = newStart;
+    event.end = newEnd
+    console.log(event)
+    this.dataService.editCalendar(event,'event/');
   }
 }

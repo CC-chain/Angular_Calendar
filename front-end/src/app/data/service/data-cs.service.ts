@@ -69,6 +69,7 @@ export class DataCsService {
   }
 
   getCalendar(dbUrl: string): Observable<CalendarEvent[]> {
+    console.log('geldi',dbUrl)
     return this.http.get<CalendarEvent[]>(this.dataCsUrl + dbUrl).pipe(
       retry(2),
       catchError((error: HttpErrorResponse) => {
@@ -88,12 +89,19 @@ export class DataCsService {
   }
 
   editCalendar(dataCs: CalendarEvent, dbUrl: string): Observable<any> {
-    console.log('geld', dataCs)
+    console.log('edit', dataCs)
     return this.http.put(this.dataCsUrl + dbUrl + dataCs.id, dataCs);
   }
 
   deleteCalendar(id: number, dbUrl: string): Observable<any> {
-    return this.http.delete(this.dataCsUrl + dbUrl + id);
+    console.log('geld',this.dataCsUrl+dbUrl+id)
+    return this.http.delete(this.dataCsUrl + dbUrl + id).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.log(error)
+        return throwError(()  => error)
+      },
+      )
+    );
   }
 
 
