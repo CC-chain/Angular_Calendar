@@ -9,7 +9,8 @@ export class GetColorPipe implements PipeTransform {
   transform(value: any ): string {
     let styleColor: string = '#0000';
     Object.keys(value).forEach(key => {
-      if(/([\w]+)[Cc]olor$/.test(key)){
+      if(/([\w]+|)[Cc]olor$/.test(key)){
+        console.log(key)
         styleColor = value[key].toString();
       }
     })

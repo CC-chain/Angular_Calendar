@@ -14,7 +14,7 @@ export class RegisterComponent implements OnInit {
   constructor(private dataCsService : DataCsService) { }
 
   ngOnInit(): void {
-    this.styles = this.dataCsService.getStyles('register/')
+    this.styles = this.dataCsService.getStyles('Component/Register')
   }
 
 }

@@ -1,111 +1,138 @@
 <c-nav variant="pills">
   <c-nav-item *ngFor="let comp of comps">
-    <a [active]="comp.id == 1" [cTabContent]="tabContentColors" [routerLink] [tabPaneIdx]="comp.id -1"
-     cNavLink (click)="loadForm(comp.component)" >
-       {{comp.name}}
-     </a>
+    <a [active]="comp.id == 1" [cTabContent]="tabContentColors" [routerLink]
+      [tabPaneIdx]="comp.id -1"
+      cNavLink (click)="loadForm(comp.component)">
+      {{comp.name}}
+    </a>
   </c-nav-item>
 </c-nav>
 <c-tab-content #tabContentColors="cTabContent">
-  <ng-template ngFor let-comp [ngForOf]="comps">
   <c-tab-pane classes="p-1">
     <c-card class="mb-3">
       <c-card-header>
         <c-nav variant="tabs">
-           <c-nav-item *ngFor="let compChild of comp.child">
-            <a [cTabContent]="tabContentChildColors"  [routerLink]
-           [tabPaneIdx]="compChild.id - 1" cNavLink
-           (click)="getStyles(compChild?.url || comp?.url || 'empty' )" >
-         {{compChild.name}}
-         </a>
-         </c-nav-item>
+          <c-nav-item *ngFor="let compChild of comps[0].child">
+            <a [cTabContent]="tabContentChildColors" [routerLink]
+              [tabPaneIdx]="compChild.id - 1" cNavLink
+              (click)="getStyles(compChild?.url || comps[0]?.url || 'empty' )">
+              {{compChild.name}}
+            </a>
+          </c-nav-item>
         </c-nav>
       </c-card-header>
       <c-card-body>
         <c-tab-content #tabContentChildColors="cTabContent">
-          <ng-template ngFor let-compChild [ngForOf]="comp.child">
-          <c-tab-pane classes="p-3">
-            <c-row>
-              <ng-container *ngIf="!isValid(compChild.child) && ((isLoaded | async) != true)">
-                <ng-template ngFor let-styleEl [ngForOf]="styles | getSpecifics :
-                compChild?.style || 'backgroundColor' ">
-                  <c-col xl='2' md='4' sm='6' xs='12' class=''>
-                    <app-app-theme-color [colorPickr]="styleEl.backgroundColor"
-                      [$styleElement]="styleEl | modelToDto :
-                      compChild?.dto || ['name','backgroundColor']"
-                      (styleElementChange)="editStyles($event,compChild?.url || comp?.url || '')">
-                      <h3
-                        style="text-align:center;font-size:15px;font-weight:bold">{{
-                        styleEl.name }}</h3>
-                    </app-app-theme-color>
-                  </c-col>
-              </ng-template>
-              <div class="d-grid gap-2 mx-auto">
-              <button type="button" [cModalToggle]="fullScreen.id" cButton class="btn btn-outline-primary btn-block text-center"
-              (click)="loadForm(comp.component)" >Refresh {{comp.component}}</button>
-              </div>
-              </ng-container>
-              <ng-container *ngIf="isValid(compChild.child)">
-                <c-card class="mb-3">
-                  <c-card-header>
-                    <c-nav variant="tabs">
-                       <c-nav-item *ngFor="let compChild2 of compChild.child">
-                        <a [cTabContent]="tabContentChildColors2" [routerLink]
-                       [tabPaneIdx]="compChild2.id - 1" cNavLink
-                       (click)="getStyles( compChild?.url || 'empty' )">
-                     {{compChild2.name}}
-                     </a>
-                      </c-nav-item>
-                    </c-nav>
-                  </c-card-header>
-                  <c-card-body>
-                    <c-tab-content #tabContentChildColors2="cTabContent">
-                    <ng-template ngFor let-compChild2 [ngForOf]="compChild.child">
-                      <c-tab-pane classes="p-3">
-                        <c-row>
-                          <ng-container *ngIf="((isLoaded | async) != true)">
-                          <ng-template ngFor let-styleEl [ngForOf]="styles | getSpecifics :
-                          compChild2?.style || 'backgroundColor' ">
-                            <c-col xl='2' md='4' sm='6' xs='12' class=''>
-                              <app-app-theme-color [colorPickr]="styleEl | getColor"
-                                [$styleElement]="styleEl | modelToDto :
-                                compChild2?.dto || ['name','backgroundColor']"
-                                (styleElementChange)="editStyles($event,compChild?.url || '')">
-                                <h3
-                                  style="text-align:center;font-size:15px;font-weight:bold">{{
-                                  styleEl.name }}</h3>
-                              </app-app-theme-color>
-                            </c-col>
+          <ng-template ngFor let-compChild [ngForOf]="comps[0].child">
+            <c-tab-pane classes="p-3">
+              <c-row>
+                <ng-container *ngIf="!isValid(compChild.child) && ((isLoaded |
+                  async) != true)">
+                  <ng-template ngFor let-styleEl [ngForOf]="styles |
+                    getSpecifics :
+                    compChild?.style || 'backgroundColor'">
+                    <c-col xl='2' md='4' sm='6' xs='12' class=''>
+                      <app-app-theme-color
+                        [colorPickr]="styleEl.backgroundColor"
+                        [$styleElement]="styleEl | modelToDto :
+                        compChild?.dto || ['name','backgroundColor']"
+                        (styleElementChange)="editStyles($event,compChild?.url
+                        || comps[0]?.url || '')">
+                        <h3
+                          style="text-align:center;font-size:15px;font-weight:bold">{{
+                          styleEl.name }}</h3>
+                      </app-app-theme-color>
+                    </c-col>
+                  </ng-template>
+                  <div class="d-grid gap-2 mx-auto">
+                    <button type="button" [cModalToggle]="fullScreen.id" cButton
+                      class="btn btn-outline-primary btn-block text-center"
+                      (click)="loadForm(comps[0].component)">Refresh
+                      {{comps[0].component}}</button>
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="isValid(compChild.child)">
+                  <c-card class="mb-3">
+                    <c-card-header>
+                      <c-nav variant="tabs">
+                        <c-nav-item *ngFor="let compChild2 of compChild.child">
+                          <a [cTabContent]="tabContentChildColors2" [routerLink]
+                            [tabPaneIdx]="compChild2.id - 1" cNavLink
+                            (click)="getStyles( compChild?.url || 'empty' )">
+                            {{compChild2.name}}
+                          </a>
+                        </c-nav-item>
+                      </c-nav>
+                    </c-card-header>
+                    <c-card-body>
+                      <c-tab-content #tabContentChildColors2="cTabContent">
+                        <ng-template ngFor let-compChild2
+                          [ngForOf]="compChild.child">
+                          <c-tab-pane classes="p-3">
+                            <c-row>
+                              <ng-container *ngIf="((isLoaded | async) !=
+                                true)">
+                                <ng-template ngFor let-styleEl [ngForOf]="styles
+                                  | getSpecifics :
+                                  compChild2?.style || 'backgroundColor'">
+                                  <c-col xl='2' md='4' sm='6' xs='12' class=''>
+                                    <app-app-theme-color [colorPickr]="styleEl | modelToDto :
+                                    compChild2?.dto ||
+                                    ['name','backgroundColor'] | getColor"
+                                      [$styleElement]="styleEl | modelToDto :
+                                      compChild2?.dto ||
+                                      ['name','backgroundColor']"
+                                      (styleElementChange)="editStyles($event,compChild?.url
+                                      || '')">
+                                      <h3
+                                        style="text-align:center;font-size:15px;font-weight:bold">{{
+                                        styleEl.name }}</h3>
+                                    </app-app-theme-color>
+                                  </c-col>
+                                </ng-template>
+                              </ng-container>
+                            </c-row>
+                          </c-tab-pane>
                         </ng-template>
-                          </ng-container>
-                        </c-row>
-                      </c-tab-pane>
-                    </ng-template>
-                    </c-tab-content>
-                  </c-card-body>
-                </c-card>
-                <div class="d-grid gap-2 mx-auto">
-              <button type="button" [cModalToggle]="fullScreen.id" cButton  class="btn btn-outline-primary btn-block text-center"
-              (click)="loadForm(compChild.component)">Refresh {{compChild.component}}</button>
-                </div>
-              </ng-container>
-            </c-row>
-          </c-tab-pane>
+                      </c-tab-content>
+                    </c-card-body>
+                  </c-card>
+                  <div class="d-grid gap-2 mx-auto">
+                    <button type="button" [cModalToggle]="fullScreen.id" cButton
+                      class="btn btn-outline-primary btn-block text-center"
+                      (click)="loadForm(compChild.component)">Refresh
+                      {{compChild.component}}</button>
+                  </div>
+                </ng-container>
+              </c-row>
+            </c-tab-pane>
           </ng-template>
 
         </c-tab-content>
 
       </c-card-body>
     </c-card>
-        <ng-container *ngIf="isLoaded | async">
-          <div class="overlay"></div>
-          <mat-progress-spinner [mode]="'indeterminate'"></mat-progress-spinner>
-        </ng-container>
+    <ng-container *ngIf="isLoaded | async">
+      <div class="overlay"></div>
+      <mat-progress-spinner [mode]="'indeterminate'"></mat-progress-spinner>
+    </ng-container>
   </c-tab-pane>
-</ng-template>
-  <c-modal #fullScreen id="fullscreen" [fullscreen]="true">
-    <button style="z-index: 999" [cModalToggle]="fullScreen.id" cButtonClose class="btn btn-outline-primary">Close</button>
-    <ng-template #layoutComponent let-modal="s"></ng-template>
-  </c-modal>
-</c-tab-content>
-
+  <c-tab-pane>
+    <c-card classes="mb-3">
+      <c-card-header>
+        <h2>Select a theme for Calendar</h2>
+      </c-card-header>
+      <c-card-body>
+        <c-row>
+          <c-col>
+              </c-col>
+            </c-row>
+          </c-card-body>
+        </c-card>
+      </c-tab-pane>
+      <c-modal #fullScreen id="fullscreen" [fullscreen]="true">
+        <button style="z-index: 999" [cModalToggle]="fullScreen.id" cButtonClose
+          class="btn btn-outline-primary">Close</button>
+        <ng-template #layoutComponent let-modal="s"></ng-template>
+      </c-modal>
+    </c-tab-content>

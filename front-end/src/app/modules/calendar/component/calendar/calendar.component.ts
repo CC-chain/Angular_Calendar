@@ -61,7 +61,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   @ViewChild('modalRemove', { static: false }) modalRemove!: TemplateRef<any>;
   @ViewChild('modalAdd', { static: false }) modalAdd!: TemplateRef<any>;
 
-  locale = 'en-US';
+  locale = 'tr';
 
   view: CalendarView = CalendarView.Month;
 
@@ -93,7 +93,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
 
   activeDayIsOpen: boolean = true;
 
-  public theme = 'light-theme';
+  public theme = 'dark-theme';
 
   constructor(public dataService: AsyncEventsService) {
   }

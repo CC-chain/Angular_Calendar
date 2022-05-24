@@ -21,7 +21,7 @@ export class AuthLayoutComponent implements OnInit {
   }
 
   private getStyles() {
-    this.dataCsService.getStyles('authlayout/').subscribe(styles => {
+    this.dataCsService.getStyles('Component/AuthLayout').subscribe(styles => {
       this.styles = styles
     });
   }

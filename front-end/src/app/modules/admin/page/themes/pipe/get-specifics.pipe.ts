@@ -11,11 +11,12 @@ export class GetSpecificsPipe implements PipeTransform {
     args.forEach(argStr => {
       value.forEach(obj => {
         if(obj.hasOwnProperty(argStr)){
+
           arr.push(obj);
         }
       } )
     })
-    console.log(arr)
+    console.log(arr, args)
     return arr;
   }
 

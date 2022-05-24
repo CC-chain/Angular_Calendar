@@ -13,6 +13,7 @@ export class ModelToDtoPipe implements PipeTransform {
       let variableValue : string = value[arg]
       newObj[arg] = variableValue
     })
+    console.log(newObj)
     return newObj
   }
 

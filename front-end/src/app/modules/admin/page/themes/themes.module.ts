@@ -17,6 +17,7 @@ import {  ModelToDtoPipe } from './pipe/model-to-dto.pipe';
 import { DynamicImportService } from '@app/shared/service/dynamic_import/dynamic-import.service';
 import { FontPickerConfigInterface, FontPickerModule, FONT_PICKER_CONFIG } from '@lib/font-picker/src/public-api';
 import { FontPickerComponent } from './typography/font-picker.component';
+import { GetFontPipe } from './pipe/get-font.pipe';
 
 const DEFAULT_FONT_PICKER_CONFIG: FontPickerConfigInterface = {
   apiKey : 'AIzaSyCNwa0xQsLZuC3fzA7rE2ykvJBVm1YFqPI'
@@ -30,6 +31,7 @@ const DEFAULT_FONT_PICKER_CONFIG: FontPickerConfigInterface = {
     GetSpecificsPipe,
     ModelToDtoPipe,
     FontPickerComponent,
+    GetFontPipe,
   ],
   imports: [
     NgbModule,

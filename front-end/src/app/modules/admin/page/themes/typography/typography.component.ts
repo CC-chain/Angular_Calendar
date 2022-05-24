@@ -53,18 +53,19 @@ export class TypographyComponent implements OnInit {
   }
 
   public editStyles(styleObj : any , dbUrl : string) {
-    console.log('edit', styleObj ,dbUrl)
-    let curStyle : any = this.styles.find(stylesObj => stylesObj.name === styleObj.name);
-    if(typeof curStyle !== "undefined" ){
-    Object.keys(curStyle).map(key  => {
-      if(styleObj.hasOwnProperty(key)){
-        curStyle[key] = styleObj[key];
+    console.log('edit', styleObj, dbUrl)
+    this.styles.map((stylesObj : any) => {
+
+      if (stylesObj.name === styleObj.name) {
+        Object.keys(stylesObj).map((key) => {
+          if (styleObj.hasOwnProperty(key)) {
+            stylesObj[key as keyof DataCs] = styleObj[key];
+          }
+        })
       }
-    })
-    this.dataCsService.editStyles(curStyle , dbUrl).subscribe(res => console.log("başarılı: ",res));
-    }else{
-      console.log("hata");
-    }
+    });
+
+  this.dataCsService.editStyles(this.styles,dbUrl).subscribe(data => console.log(data))
   }
 
   public getStyles(dbUrl : string) {

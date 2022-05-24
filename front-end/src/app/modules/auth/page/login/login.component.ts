@@ -69,34 +69,9 @@ export class LoginComponent implements OnInit, OnDestroy {
     });
   }
 
-  getCustoms() {
-    new Promise<void>((resolve, reject) => {
-      this.dataCsService.getCustoms('custom/').subscribe({
-        next: (res: any) => {
-          let sources : CustomCs[] = [];
-          res.map((res : any) => {
-            if(res.targetComponent === "LoginComponent")
-            sources.push (new CustomCs(res.id,res.name,res.layout,res.content,res.script,res.targetComponent,res.dependentComponents));
-          })
-          console.log(sources);
-          this.customs = sources;
-          resolve();
-        },
-        error: (err: any) => {
-          reject(err);
-        },
-        complete: () => {
-          console.log("complete");
-        }
-      },
 
-      )
-    });
-
-  }
 
   ngOnInit() {
-    this.styles = this.dataCsService.getStyles('login/');
-    this.getCustoms();
+   this.styles= this.dataCsService.getStyles('Component/Login')
   }
 }

@@ -35,6 +35,8 @@
                     <ng-container *ngIf="isLoaded">
                       <c-col xl='2' md='4' sm='6' xs='12' class=''>
                         <app-font-picker
+                        [font]="styleEl | modelToDto :
+                          compChild?.dto || ['name','backgroundColor'] | getFont"
                           [$styleElement]="styleEl | modelToDto :
                           compChild?.dto || ['name','backgroundColor']"
                           (styleElementChange)="editStyles($event,compChild?.url

@@ -2,16 +2,31 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CustomCs, DataCs } from '@data/schema/data';
 import { CalendarEvent } from 'angular-calendar';
-import { catchError, Observable, retry, throwError } from 'rxjs';
+import { catchError, map, Observable, retry, throwError } from 'rxjs';
+
+interface IDataCs {
+  data : any ,
+    message: string ,
+    success : boolean
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class DataCsService {
-  private dataCsUrl = 'http://localhost:4200/api/';
+  private dataCsUrl = 'http://localhost:5000/api/';
   constructor(private http: HttpClient) { }
 
   getStyles(dbUrl: string): Observable<DataCs[]> {
+    dbUrl =  dbUrl.replace(/\//g,"/Get")
     return this.http.get<DataCs[]>(this.dataCsUrl + dbUrl).pipe(
+      map((data : any ) => {
+        let curData : IDataCs  = <IDataCs> data;
+        if(!curData.success){
+        return throwError(() => curData.message);
+        }
+        return curData.data
+      }),
       retry(2),
       catchError((error: HttpErrorResponse) => {
         console.error(error);
@@ -20,19 +35,14 @@ export class DataCsService {
     );
   }
 
-  createStyles(dataCs: DataCs, dbUrl: string): Observable<DataCs> {
-    dataCs.id = null;
-    return this.http.post<DataCs>(this.dataCsUrl + dbUrl, dataCs).pipe(
-      catchError((error: HttpErrorResponse) => {
-        console.error(error);
-        return throwError(() => error);
-      })
-    );
+  createStyles(dataCs: DataCs[], dbUrl: string): Observable<any> {
+    return this.http.put(this.dataCsUrl + dbUrl, dataCs);
   }
 
-  editStyles(dataCs: DataCs, dbUrl: string): Observable<any> {
-    console.log('geld', dataCs)
-    return this.http.put(this.dataCsUrl + dbUrl + dataCs.id, dataCs);
+  editStyles(dataCs: DataCs[], dbUrl: string): Observable<any> {
+    dbUrl =  dbUrl.replace(/\//g,"/Set")
+    console.log(this.dataCsUrl + dbUrl, JSON.stringify(dataCs))
+    return this.http.put(this.dataCsUrl + dbUrl, dataCs)
   }
 
   deleteStyles(id: number, dbUrl: string): Observable<any> {

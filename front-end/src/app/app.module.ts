@@ -43,8 +43,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 
 import { IconModule, IconSetService } from '@coreui/icons-angular';
 import { ContextMenuModule } from 'ngx-contextmenu';
-import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
-import { MockupDataService } from '@data/service/mockup-data.service';
 import { HttpClientModule } from '@angular/common/http';
 
 const APP_CONTAINERS = [
@@ -70,7 +68,6 @@ const APP_CONTAINERS = [
     CoreModule,
     AppSharedModule,
     ContextMenuModule.forRoot(),
-    HttpClientInMemoryWebApiModule.forRoot(MockupDataService),
     HttpClientModule,
     ReactiveFormsModule,
     AvatarModule,

@@ -3,7 +3,7 @@ export const adminColorComponents = [
     id : 1,
     name : 'Authorization',
     component: 'AuthLayoutComponent',
-    url : 'authlayout/',
+    url : 'Component/AuthLayout',
     child : [
       {
         id : 1,
@@ -15,7 +15,7 @@ export const adminColorComponents = [
         id : 2 ,
         name : 'Login',
         component : 'LoginComponent',
-        url : 'login/',
+        url : 'Component/Login',
         child : [
           {
             id : 1,
@@ -40,7 +40,7 @@ export const adminColorComponents = [
        {
         id : 3,
         name : 'Register',
-        url : 'register/',
+        url : 'Component/Register',
         component : 'RegisterComponent',
         child : [
           {
@@ -79,20 +79,20 @@ export const adminColorComponents = [
     id : 1,
     name : 'Authorization',
     component: 'AuthLayoutComponent',
-    url : 'authlayout/',
+    url : 'Component/AuthLayout',
     child : [
       {
         id : 1 ,
         name : 'Login',
         component : 'LoginComponent',
-        url : 'login/',
+        url : 'Component/Login',
         style : 'font',
         dto : ["name", "font"]
       },
        {
         id : 2,
         name : 'Register',
-        url : 'register/',
+        url : 'Component/Register',
         component : 'RegisterComponent',
             style : 'font',
             dto : ["name","font"]

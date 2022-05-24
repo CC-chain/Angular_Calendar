@@ -14,6 +14,8 @@ export class ColorsComponent implements OnInit {
   @ViewChild("layoutComponent", { read: ViewContainerRef })
   layoutComponent!: ViewContainerRef;
   styles!: DataCs[];
+  themes!: string[];
+
   isLoaded = this.loader.loading$;
   comps = adminColorComponents
   constructor(private injector: Injector, private dataCsService: DataCsService, private modalService: NgbModal,
@@ -23,22 +25,27 @@ export class ColorsComponent implements OnInit {
 
   ngOnInit() {
     this.loader.show();
-    setTimeout(() => this.loader.hide(),1500);
+    setTimeout(() => this.loader.hide(), 1500);
   }
 
   public editStyles(styleObj: any, dbUrl: string) {
     console.log('edit', styleObj, dbUrl)
-    let curStyle: any = this.styles.find(stylesObj => stylesObj.name === styleObj.name);
-    if (typeof curStyle !== "undefined") {
-      Object.keys(curStyle).map(key => {
-        if (styleObj.hasOwnProperty(key)) {
-          curStyle[key] = styleObj[key];
-        }
-      })
-      this.dataCsService.editStyles(curStyle, dbUrl).subscribe(res => console.log("başarılı: ", res));
-    } else {
-      console.log("hata");
-    }
+    this.styles.map((stylesObj : any) => {
+
+      if (stylesObj.name === styleObj.name) {
+        Object.keys(stylesObj).map((key) => {
+          if (styleObj.hasOwnProperty(key)) {
+            stylesObj[key as keyof DataCs] = styleObj[key];
+          }
+        })
+      }
+    });
+
+  this.dataCsService.editStyles(this.styles,dbUrl).subscribe(data => console.log(data))
+  }
+
+  public getCalendar() {
+
   }
 
   public getStyles(dbUrl: string) {
@@ -58,7 +65,7 @@ export class ColorsComponent implements OnInit {
     }, 1000)
   }
 
-  ngAfterViewInit(){
+  ngAfterViewInit() {
     this.ngOnInit();
   }
 
@@ -74,5 +81,7 @@ export class ColorsComponent implements OnInit {
     return typeof obj !== 'undefined'
   }
 
+  changeThemes(event: any) {
 
+  }
 }
