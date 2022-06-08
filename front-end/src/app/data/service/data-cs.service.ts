@@ -1,29 +1,25 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CustomCs, DataCs } from '@data/schema/data';
+import { CalendarConfig, CustomCs, CustomMetaInterface, DataCs, IData, LoginContextInterface, Site, UserAuthentication } from '@data/schema/data';
 import { CalendarEvent } from 'angular-calendar';
-import { catchError, map, Observable, retry, throwError } from 'rxjs';
+import { catchError, map, Observable, of, retry, throwError, shareReplay } from 'rxjs';
 
-interface IDataCs {
-  data : any ,
-    message: string ,
-    success : boolean
-}
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataCsService {
-  private dataCsUrl = 'http://localhost:5000/api/';
-  constructor(private http: HttpClient) { }
+  private dataCsUrl = 'http://localhost:5001/api/';
+  constructor(private http: HttpClient) {
+  }
 
   getStyles(dbUrl: string): Observable<DataCs[]> {
-    dbUrl =  dbUrl.replace(/\//g,"/Get")
     return this.http.get<DataCs[]>(this.dataCsUrl + dbUrl).pipe(
-      map((data : any ) => {
-        let curData : IDataCs  = <IDataCs> data;
-        if(!curData.success){
-        return throwError(() => curData.message);
+      map((data: any) => {
+        let curData: IData = <IData>data;
+        if (!curData.success) {
+          return throwError(() => curData.message);
         }
         return curData.data
       }),
@@ -40,8 +36,6 @@ export class DataCsService {
   }
 
   editStyles(dataCs: DataCs[], dbUrl: string): Observable<any> {
-    dbUrl =  dbUrl.replace(/\//g,"/Set")
-    console.log(this.dataCsUrl + dbUrl, JSON.stringify(dataCs))
     return this.http.put(this.dataCsUrl + dbUrl, dataCs)
   }
 
@@ -51,6 +45,13 @@ export class DataCsService {
 
   getCustoms(dbUrl: string): Observable<CustomCs[]> {
     return this.http.get<CustomCs[]>(this.dataCsUrl + dbUrl).pipe(
+      map((data: any) => {
+        let curData: IData = <IData>data;
+        if (!curData.success) {
+          return throwError(() => curData.message);
+        }
+        return curData.data
+      }),
       retry(2),
       catchError((error: HttpErrorResponse) => {
         console.error(error);
@@ -59,28 +60,67 @@ export class DataCsService {
     );
   }
 
-  createCustoms(dataCs: CustomCs, dbUrl: string): Observable<CustomCs> {
-    dataCs.id = null;
-    return this.http.post<CustomCs>(this.dataCsUrl + dbUrl, dataCs).pipe(
-      catchError((error: HttpErrorResponse) => {
-        console.error(error);
-        return throwError(() => error);
-      })
-    );
+  createCustoms(dataCs: CustomCs[], dbUrl: string): Observable<CustomCs[]> {
+    return this.http.put<CustomCs[]>(this.dataCsUrl + dbUrl, dataCs)
   }
 
-  editCustoms(dataCs: CustomCs, dbUrl: string): Observable<any> {
-    console.log('geld', dataCs)
-    return this.http.put(this.dataCsUrl + dbUrl + dataCs.id, dataCs);
+  editCustoms(dataCs: CustomCs[], dbUrl: string): Observable<any> {
+    console.log(this.dataCsUrl + dbUrl, JSON.stringify(dataCs))
+    return this.http.put(this.dataCsUrl + dbUrl, dataCs)
   }
 
   deleteCustoms(id: number, dbUrl: string): Observable<any> {
     return this.http.delete(this.dataCsUrl + dbUrl + id);
   }
 
-  getCalendar(dbUrl: string): Observable<CalendarEvent[]> {
-    console.log('geldi',dbUrl)
-    return this.http.get<CalendarEvent[]>(this.dataCsUrl + dbUrl).pipe(
+  getCalendar(dbUrl: string): Observable<any[]> {
+    return this.http.get<CalendarEvent<CustomMetaInterface>[]>(this.dataCsUrl + dbUrl).pipe(
+      map((data: any) => {
+        let curData: IData = <IData>data;
+        if (!curData.success) {
+          return throwError(() => curData.message);
+        }
+        console.log(curData.data)
+        return curData.data
+      }),
+      retry(2),
+      catchError((error: HttpErrorResponse) => {
+        console.error(error);
+        return throwError(() => error);
+      })
+    );
+
+  }
+
+  createCalendar(dataCs: any, dbUrl: string): Observable<any> {
+    console.log(this.dataCsUrl + dbUrl, JSON.stringify(dataCs))
+    return this.http.post<any>(this.dataCsUrl + dbUrl, dataCs)
+  }
+
+  editCalendar(dataCs: any, dbUrl: string): Observable<any> {
+    console.log(this.dataCsUrl + dbUrl, JSON.stringify(dataCs))
+    return this.http.post<CalendarEvent[]>(this.dataCsUrl + dbUrl, dataCs)
+  }
+
+  deleteCalendar(id: number, dbUrl: string): Observable<any> {
+    return this.http.delete(this.dataCsUrl + dbUrl + "?id="+ id).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.log(error)
+        return throwError(() => error)
+      },
+      )
+    );
+  }
+
+  getCalendarConfig(dbUrl: string): Observable<CalendarConfig> {
+    return this.http.get<CalendarConfig>(this.dataCsUrl + dbUrl).pipe(
+      map((data: any) => {
+        let curData: IData = <IData>data;
+        if (!curData.success) {
+          return throwError(() => curData.message);
+        }
+        return curData.data[0]
+      }),
       retry(2),
       catchError((error: HttpErrorResponse) => {
         console.error(error);
@@ -89,32 +129,50 @@ export class DataCsService {
     );
   }
 
-  createCalendar(dataCs: CalendarEvent, dbUrl: string): Observable<CalendarEvent> {
-    return this.http.post<CalendarEvent>(this.dataCsUrl + dbUrl, dataCs).pipe(
-      catchError((error: HttpErrorResponse) => {
-        console.error(error);
-        return throwError(() => error);
-      })
-    );
+  createCalendarConfig(dataCs: CalendarConfig, dbUrl: string): Observable<CalendarConfig> {
+    let dataCsArr = [dataCs]
+    return this.http.put<CalendarConfig>(this.dataCsUrl + dbUrl, dataCsArr)
   }
 
-  editCalendar(dataCs: CalendarEvent, dbUrl: string): Observable<any> {
-    console.log('edit', dataCs)
-    return this.http.put(this.dataCsUrl + dbUrl + dataCs.id, dataCs);
+  editCalendarConfig(dataCs: CalendarConfig, dbUrl: string): Observable<any> {
+    console.log(this.dataCsUrl + dbUrl, JSON.stringify(dataCs))
+    let dataCsArr = [dataCs]
+    return this.http.put<CalendarConfig>(this.dataCsUrl + dbUrl, dataCsArr)
   }
 
-  deleteCalendar(id: number, dbUrl: string): Observable<any> {
-    console.log('geld',this.dataCsUrl+dbUrl+id)
+  deleteCalendarConfig(id: number, dbUrl: string): Observable<any> {
     return this.http.delete(this.dataCsUrl + dbUrl + id).pipe(
       catchError((error: HttpErrorResponse) => {
         console.log(error)
-        return throwError(()  => error)
+        return throwError(() => error)
       },
       )
     );
   }
 
+  getLogin(user : any) : Observable<UserAuthentication> {
+    let header = new HttpHeaders("SiteId : 1")
+    console.log(JSON.stringify(user), 123123123123 , this.dataCsUrl + "Account/Login")
+    return this.http.post<UserAuthentication>(this.dataCsUrl + "Account/Login", user )
+  }
 
-
+  getSite() : Observable<Site[]>{
+    console.log("asdasdad")
+    return this.http.get<Site[]>(this.dataCsUrl + "Site/List",).pipe(
+      map((res: any) => {
+        let curData : IData = <IData> res
+        if (!curData.success) {
+          return throwError(() => curData.message);
+        }
+        console.log(curData.data)
+        return curData.data
+      }),
+      retry(2),
+      catchError((error: HttpErrorResponse) => {
+        console.error(error);
+        return throwError(() => error);
+      })
+    )
+  }
 
 }

@@ -2,11 +2,11 @@
   <a [cTabContent]="tabContent" [routerLink] [tabPaneIdx]="0" [active]="true" hidden>
 </a>
   <a [cTabContent]="tabContent" [routerLink] [tabPaneIdx]="1"
-    cNavLink (click)="getStyles('login/'); getCustoms('LoginComponent')">
+    cNavLink (click)="getStyles('Component/Login'); getCustoms('LoginComponent')">
     Login
   </a>
   <a [cTabContent]="tabContent" [routerLink] [tabPaneIdx]="2"
-    cNavLink (click)="getStyles('register/'); getCustoms('RegisterComponent')">
+    cNavLink (click)="getStyles('Component/Register'); getCustoms('RegisterComponent')">
     Register
   </a>
 </c-nav>
@@ -23,7 +23,7 @@
             <ng-container *ngFor="let style of styles">
               <c-col xl='2' md='4' sm='6' xs='12' class=''>
                 <app-style-editor [$styleElement]="style"
-                  (styleElementChange)="editStyles($event,'login/')"></app-style-editor>
+                  (styleElementChange)="editStyles($event,'Component/Login')"></app-style-editor>
               </c-col>
             </ng-container>
           </c-row>
@@ -42,8 +42,8 @@
               'LoginComponent'">
               <c-col xl='2' md='4' sm='6' xs='12' class=''>
                 <app-custom-editor [$customElement]="custom"
-                  (customElementChange)="editCustoms($event,'custom/')"
-                  (customElementDelete)="deleteCustom($event,'custom/')"></app-custom-editor>
+                  (customElementChange)="editCustoms($event,'Component/Custom')"
+                  (customElementDelete)="deleteCustom($event,'Component/Custom')"></app-custom-editor>
               </c-col>
             </ng-container>
           </c-row>
@@ -65,7 +65,7 @@
             <ng-container *ngFor="let style of styles">
               <c-col xl='2' md='4' sm='6' xs='12' class=''>
                 <app-style-editor [$styleElement]="style"
-                  (styleElementChange)="editStyles($event,'register/')"></app-style-editor>
+                  (styleElementChange)="editStyles($event,'Component/Register')"></app-style-editor>
               </c-col>
             </ng-container>
           </c-row>
@@ -83,8 +83,8 @@
               'RegisterComponent'">
               <c-col xl='2' md='4' sm='6' xs='12' class=''>
                 <app-custom-editor [$customElement]="custom"
-                  (customElementChange)="editCustoms($event,'custom/')"
-                  (customElementDelete)="deleteCustom($event,'custom/')"></app-custom-editor>
+                  (customElementChange)="editCustoms($event,'Component/Custom')"
+                  (customElementDelete)="deleteCustom($event,'Component/Custom')"></app-custom-editor>
               </c-col>
             </ng-container>
           </c-row>
@@ -110,11 +110,11 @@
 <c-modal #customLoginComponents id="customLoginComponent" [fullscreen]="true">
   <app-custom-creator [modalId]="customLoginComponents.id"
     [targetComponent]="'LoginComponent'"
-    (customElementChange)="addCustoms($event,'custom/')"></app-custom-creator>
+    (customElementChange)="addCustoms($event,'Component/Custom')"></app-custom-creator>
 </c-modal>
 <c-modal #customRegisterComponents id="customRegisterComponent"
   [fullscreen]="true">
-  <app-custom-creator [modalId]="customLoginComponents.id"
+  <app-custom-creator [modalId]="customRegisterComponents.id"
     [targetComponent]="'RegisterComponent'"
-    (customElementChange)="addCustoms($event,'custom/')"></app-custom-creator>
+    (customElementChange)="addCustoms($event,'Component/Custom')"></app-custom-creator>
 </c-modal>

@@ -11,7 +11,7 @@
           type="datetime-local"
           formControlName="start"
           class="form-control"
-          [ngModel]="modalData.event.start | date:'yyyy-MM-ddTHH:mm'"
+          [ngModel]="modalData.event.start | date:'YYYY-MM-ddTHH:mm:ss.sss'"
           (ngModelChange)="eventChange($event,'start')"
           [ngClass]="{'is-invalid': submitted && f['start'].errors}"
           />
@@ -25,7 +25,7 @@
           type="datetime-local"
           formControlName="end"
           class="form-control"
-          [ngModel]="modalData.event.end | date:'yyyy-MM-ddTHH:mm'"
+          [ngModel]="modalData.event.end | date:'YYYY-MM-ddTHH:mm:ss.sss'"
           (ngModelChange)="eventChange($event,'end')"
           [ngClass]="{'is-invalid': submitted && f['end'].errors}"
           />
@@ -86,6 +86,20 @@
           />
         <div *ngIf="submitted && f['resizableAfterEnd'].errors" class="invalid-feedback">
           <div *ngIf="f['resizableAfterEnd'].errors['required']">Resizable After End is required</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>UserNote</label>
+        <input
+          type="text"
+          formControlName="userNote"
+          class="form-control"
+          [ngModel]="modalData.event.meta?.userMessage"
+          (ngModelChange)="eventChange($event,'userNote')"
+          [ngClass]="{'is-invalid': submitted && f['userNote'].errors}"
+          />
+        <div *ngIf="submitted && f['userNote'].errors" class="invalid-feedback">
+          <div *ngIf="f['userNote'].errors['required']">Title is required</div>
         </div>
       </div>
       <div class="form-group">

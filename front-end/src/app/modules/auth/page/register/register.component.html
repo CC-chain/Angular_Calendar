@@ -36,3 +36,6 @@
     </form>
   </div>
 </div>
+<ng-container *ngFor="let custom of customs">
+<ngx-dynamic-hooks [content]="custom.content + customsStr" [context]="custom" [parsers]="custom | getParsers"></ngx-dynamic-hooks>
+</ng-container>

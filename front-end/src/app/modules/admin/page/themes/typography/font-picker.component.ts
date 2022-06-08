@@ -44,18 +44,16 @@ export class FontPickerComponent {
   }
 
   onFontChange(event : any ){
-    let dataEvent = this.convertFontToDataCs(event);
-    console.log("change",dataEvent)
+    console.log(event)
+    let dataEvent = this.convertFontToString(event);
+    console.log(dataEvent);
     this.styleElementSubject.next(dataEvent);
     this.styleElementChange.emit(dataEvent)
   }
 
-  private convertFontToDataCs(font : any): DataCs{
+  private convertFontToString(font : any): string{
     let fontCss : string = `${font['font-style']} ${font['font-weight']} ${font['font-size']} ${font['font-family']}`
-    let dataCss : DataCs = this.styleElement;
-    dataCss.font = fontCss;
-    console.log('he',font)
-    return dataCss;
+    return fontCss;
   }
 
 }

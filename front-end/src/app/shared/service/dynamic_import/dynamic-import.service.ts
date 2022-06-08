@@ -22,6 +22,7 @@ export class DynamicImportService {
         return;
       }
     }
+    console.log("geldi",layout, component)
 
     switch(layout){
       case 'LoginComponent':
@@ -38,6 +39,24 @@ export class DynamicImportService {
         setTimeout(() => this.currContentSubject.next(refAuthLayout.instance.contentComponent),1000);
         refAuthLayout.changeDetectorRef.detectChanges();
         break;
+
+      case 'CalendarLayoutComponent':
+        const { CalendarLayoutComponent } = await import("@layout/calendar-layout/calendar-layout.component");
+        component.clear();
+        const refCalendarLayout = component.createComponent(CalendarLayoutComponent);
+        setTimeout(() => this.currContentSubject.next(refCalendarLayout.instance.calendarComponent),1000);
+        refCalendarLayout.changeDetectorRef.detectChanges();
+        break;
+
+      case 'CalendarComponent':
+        const { CalendarComponent } = await import('@modules/calendar/component/calendar/calendar.component')
+        component.clear();
+        const refCalendar = component.createComponent(CalendarComponent);
+        console.log(refCalendar)
+        refCalendar.instance._disable=true;
+        refCalendar.changeDetectorRef.detectChanges();
+        break;
+
       case 'RegisterComponent':
         const { RegisterComponent } = await import("@modules/auth/page/register/register.component")
         component.clear();

@@ -14,10 +14,18 @@ import {NgxMatDatetimePickerModule} from '@angular-material-components/datetime-
 import { ContextMenuModule } from '@perfectmemory/ngx-contextmenu';
 import localeFr from '@angular/common/locales/fr';
 import localTr from '@angular/common/locales/tr';
+import localRu from '@angular/common/locales/ru';
+import localDe from '@angular/common/locales/de';
+import localUk from '@angular/common/locales/uk';
 import { registerLocaleData } from '@angular/common';
+import { GetFontPipe } from '../admin/page/themes/pipe/get-font.pipe';
 
 registerLocaleData(localeFr);
 registerLocaleData(localTr);
+registerLocaleData(localRu);
+registerLocaleData(localRu);
+registerLocaleData(localDe);
+registerLocaleData(localUk);
 
 @NgModule({
   exports: [CalendarComponent],

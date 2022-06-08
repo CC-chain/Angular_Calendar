@@ -1,0 +1,224 @@
+<c-nav variant="pills">
+  <a [cTabContent]="tabContent" [routerLink] [tabPaneIdx]="0" cNavLink
+    (click)="getCalendarConfiguration()">
+    Configurations
+  </a>
+  <a [cTabContent]="tabContent" [routerLink] [tabPaneIdx]="1" cNavLink>
+    Events
+  </a>
+</c-nav>
+<c-tab-content #tabContent="cTabContent">
+  <c-tab-pane>
+    <c-container *ngIf="(data | async)">
+      <c-card>
+        <c-card-header>
+          <h2 style="font-weight: 400; padding-top:10px" cCardTitle>Edit Configurations</h2>
+        </c-card-header>
+        <c-card-body>
+          <form cForm class="row g-3 my-2" (submit)="onSubmit()">
+            <c-col [md]="3">
+              <div [cFormFloating]="true" class="mb-3">
+                <input cFormControl #inputHourDuration type="number" min="5"
+                  name="hourDuration" [(ngModel)]="config.hourDuration"
+                  max="60" />
+                <label cLabel for="inputHourDuration">Hour Duration </label>
+              </div>
+            </c-col>
+            <c-col [md]="3">
+              <div [cFormFloating]="true" class="mb-3">
+                <input cFormControl #inputHourSegmentHeight type="number"
+                  name="hourSegment" [(ngModel)]="config.hourSegmentHeight" />
+                <label cLabel for="inputHourHourSegmentHeight">Hour Segment
+                  Height</label>
+              </div>
+            </c-col>
+            <c-col [md]="3">
+              <div [cFormFloating]="true" class="mb-3">
+                <select cSelect #selectPrecision name="precision"
+                  [(ngModel)]="config.precision">
+                  <option>Select a precision</option>
+                  <option [ngValue]="'minutes'">Minutes</option>
+                  <option [ngValue]="'days'">Days</option>
+                </select>
+                <label cLabel for="selectPrecision">Precision</label>
+              </div>
+            </c-col>
+            <c-col [md]="3">
+              <div [cFormFloating]="true" class="mb-3">
+                <select cSelect #selectLocale name="locale"
+                  [(ngModel)]="config.locale">
+                  <option>Select a locale</option>
+                  <option value="tr">Turkish</option>
+                  <option value="en-US">English - USA</option>
+                  <option value="uk">English - UK</option>
+                  <option value="fr">French</option>
+                  <option value="de">German</option>
+                  <option value="ru">Russian</option>
+                </select>
+                <label cLabel for="selectPrecision">Locale</label>
+              </div>
+            </c-col>
+            <c-col [md]="3">
+              <label style="font-weight: 500;" cLabel>Exclude Days</label>
+              <c-col>
+                <c-form-check inline class="mx-2">
+                  <input cFormCheckInput #checkMondayExclude type="checkbox"
+                    name="MondayExclude" [(ngModel)]="excludeDaysArr[1]">
+                  <label cFormCheckLabel for="checkMondayExclude">Monday</label>
+                </c-form-check>
+                <c-form-check inline class="mx-2">
+                  <input cFormCheckInput #checkTuesdayExclude type="checkbox"
+                    name="TuesdayExclude" [(ngModel)]="excludeDaysArr[2]">
+                  <label cFormCheckLabel for="checkTuesdayExclude">Tuesday</label>
+                </c-form-check>
+                <c-form-check inline class="mx-2">
+                  <input cFormCheckInput #checkWednesDayExclude
+                    type="checkbox" name="WednesdayExclude"
+                    [(ngModel)]="excludeDaysArr[3]">
+                  <label cFormCheckLabel for="checkWednesDayExclude">WednesDay</label>
+                </c-form-check>
+                <c-form-check inline class="mx-2">
+                  <input cFormCheckInput #checkThursdayExclude
+                    type="checkbox" name="ThursdayExclude"
+                    [(ngModel)]="excludeDaysArr[4]">
+                  <label cFormCheckLabel for="checkThursdayExclude">Thursday</label>
+                </c-form-check>
+                <c-form-check inline class="mx-2">
+                  <input cFormCheckInput #checkFridayExclude type="checkbox" name="FridayExclude" [(ngModel)]="excludeDaysArr[5]">
+                  <label cFormCheckLabel for="checkFridayExclude">Friday</label>
+                </c-form-check>
+                <c-form-check inline class="mx-2">
+                  <input cFormCheckInput #checkSaturdayExclude
+                    type="checkbox" name="SaturdayExclude" [(ngModel)]="excludeDaysArr[6]">
+                  <label cFormCheckLabel for="checkSaturdayExclude">Saturday</label>
+                </c-form-check>
+                <c-form-check inline class="mx-2">
+                  <input cFormCheckInput #checkSundayExclude type="checkbox" name="SundayExclude" [(ngModel)]="excludeDaysArr[0]">
+                  <label cFormCheckLabel for="checkSundayExclude">Sunday</label>
+                </c-form-check>
+              </c-col>
+            </c-col>
+            <c-col [md]="3">
+              <label style="font-weight: 500;" cLabel>Holidays</label>
+              <c-col>
+                <c-form-check inline class="mx-2">
+                  <input cFormCheckInput #checkMondayHolidays type="checkbox" name="MondayHoliday" [(ngModel)]="holidaysArr[1]">
+                  <label cFormCheckLabel for="checkMondayHolidays">Monday</label>
+                </c-form-check>
+                <c-form-check inline class="mx-2">
+                  <input cFormCheckInput #checkTuesdayHolidays
+                    type="checkbox"name="TuesdayHoliday" [(ngModel)]="holidaysArr[2]">
+                  <label cFormCheckLabel for="checkTuesdayHolidays" >Tuesday</label>
+                </c-form-check>
+                <c-form-check inline class="mx-2">
+                  <input cFormCheckInput #checkWednesDayHolidays
+                    type="checkbox"name="WednesdayHoliday" [(ngModel)]="holidaysArr[3]">
+                  <label cFormCheckLabel for="checkWednesDayHolidays" >WednesDay</label>
+                </c-form-check>
+                <c-form-check inline class="mx-2">
+                  <input cFormCheckInput #checkThursdayHolidays
+                    type="checkbox"name="ThursdayModel" [(ngModel)]="holidaysArr[4]">
+                  <label cFormCheckLabel for="checkThursdayHolidays" >Thursday</label>
+                </c-form-check>
+                <c-form-check inline class="mx-2">
+                  <input cFormCheckInput #checkFridayHolidays type="checkbox" name="FridayHoliday" [(ngModel)]="holidaysArr[5]">
+                  <label cFormCheckLabel for="checkFridayHolidays">Friday</label>
+                </c-form-check>
+                <c-form-check inline class="mx-2">
+                  <input cFormCheckInput #checkSaturdayHolidays
+                    type="checkbox" name="SaturdayHoliday" [(ngModel)]="holidaysArr[6]">
+                  <label cFormCheckLabel for="checkSaturdayHolidays">Saturday</label>
+                </c-form-check>
+                <c-form-check inline class="mx-2">
+                  <input cFormCheckInput #checkSundayHolidays type="checkbox" name="SundayHoliday" [(ngModel)]="holidaysArr[0]">
+                  <label cFormCheckLabel for="checkSundayHolidays">Sunday</label>
+                </c-form-check>
+              </c-col>
+            </c-col>
+            <c-col [md]="3">
+              <div [cFormFloating]="true" class="mb-3">
+                <c-col>
+                  <label cLabel style="font-weight : 500">Start Hour</label>
+                </c-col>
+                <c-col>
+                  <c-input-group class="mb-3">
+                    <input aria-label="Start Hour" cFormControl
+                      placeholder="Start
+                      Hour" name="startHour" [(ngModel)]="config.dayStartHour" type="number" min="1" max="24">
+                    <span cInputGroupText>:</span>
+                    <input aria-label="Start Minute" cFormControl
+                      placeholder="Start Minute" name="startMinute" [(ngModel)]="config.dayStartMinute" type="number" min="0" max="59">
+                  </c-input-group>
+                </c-col>
+              </div>
+            </c-col>
+            <c-col [md]="3">
+              <div [cFormFloating]="true" class="mb-3">
+                <c-col>
+                  <label cLabel style="font-weight : 500">End Hour</label>
+                </c-col>
+                <c-col>
+                  <c-input-group class="mb-3">
+                    <input aria-label="End Hour" cFormControl placeholder="End
+                      Hour" type="number" name="endHour" [(ngModel)]="config.dayEndHour" min="1" max="24">
+                    <span cInputGroupText>:</span>
+                    <input aria-label="End Minute" cFormControl placeholder="End
+                      Minute" type="number" name="endMinute" [(ngModel)]="config.dayEndMinute" min="0" max="59">
+                  </c-input-group>
+                </c-col>
+              </div>
+            </c-col>
+            <button type="submit" class="btn btn-outline-primary"
+              style="width:100%">Submit</button>
+          </form>
+        </c-card-body>
+      </c-card>
+    </c-container>
+    <ng-container *ngIf="isLoaded | async">
+      <div class="overlay"></div>
+      <mat-progress-spinner [mode]="'indeterminate'"></mat-progress-spinner>
+    </ng-container>
+  </c-tab-pane>
+  <c-tab-pane>
+    <c-card>
+      <c-card-header>
+        <h2 style="font-weight: 400;" cCardTitle>Edit Configurations</h2>
+      </c-card-header>
+      <c-card-body>
+        <form cForm class="row g-3 my-2">
+          <div class="mx-auto" style="width: 95%">
+            <app-calendar-events-edit [editOrAdd]="false"></app-calendar-events-edit>
+            <table cTable color="" [striped]="true" hover class="my-3">
+              <thead>
+                <tr cTableColor="primary">
+                  <th scope="col" class="text-center">#</th>
+                  <th scope="col" class="text-center">Name</th>
+                  <th scope="col"class="text-center">Price</th>
+                  <th scope="col" class="text-center">Options</th>
+                  <th scope="col" class="text-center">Edit</th>
+                  <th scope="col" class="text-center">Delete</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="font-size: 15px;">
+                  <th scope="row" class="text-center">1</th>
+                  <td class="text-center">Sakal Tıraş</td>
+                  <td class="text-center">13 TL</td>
+                  <td class="text-center"><i class="bi bi-gear-fill"
+                      type="button" style="color:grey"></i></td>
+                  <td class="text-center"><app-calendar-events-edit [data]="{id:
+                      '1',name: 'Hello', price : '13Tl'}" [editOrAdd]="true"></app-calendar-events-edit></td>
+                  <td class="text-center"><app-calendar-events-remove
+                      [data]="{id: '1',name: 'Hello', price : '13Tl'}"></app-calendar-events-remove></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </form>
+      </c-card-body>
+    </c-card>
+  </c-tab-pane>
+</c-tab-content>
+<c-modal #newCalendarEvent id="newCalendarEvent" [fullscreen]="true">
+
+</c-modal>

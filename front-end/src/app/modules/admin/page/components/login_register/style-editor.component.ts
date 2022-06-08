@@ -38,17 +38,17 @@ export class StyleEditorComponent implements OnInit {
   private file!: File;
 
    modalData : ModalData = {
-  marginTop :['unspecified', 'px'],
-  marginRight :['unspecified', 'px'],
-  marginBottom :['unspecified', 'px'],
-  marginLeft :['unspecified', 'px'],
-  paddingTop :['unspecified', 'px'],
-  paddingRight :['unspecified', 'px'],
-  paddingBottom :['unspecified', 'px'],
-  paddingLeft :['unspecified', 'px'],
-  width :['unspecified', 'px'],
-  height :['unspecified', 'px'],
-  backgroundImage:['unspecified', 'px'],
+  marginTop :['0', 'px'],
+  marginRight :['0', 'px'],
+  marginBottom :['0', 'px'],
+  marginLeft :['0', 'px'],
+  paddingTop :['0', 'px'],
+  paddingRight :['0', 'px'],
+  paddingBottom :['0', 'px'],
+  paddingLeft :['0', 'px'],
+  width :['0', 'px'],
+  height :['0', 'px'],
+  backgroundImage:['0', 'px'],
 }
 
 
@@ -63,36 +63,43 @@ export class StyleEditorComponent implements OnInit {
   transformData(styleElement : DataCs){
     if(styleElement){
 
-      if(styleElement.width.length > 0)
-      this.modalData.width = styleElement.width.match(/[\d\.]+|\D+/gi) ;
-      if(styleElement.height.length > 0)
-      this.modalData.height = styleElement.width.match(/[\d\.]+|\D+/gi);;
+      if(styleElement.width.length > 0){
+      let newWidth = styleElement.width.match(/[\d\.]+|\D+/gi)
+      this.modalData.width = newWidth && newWidth.length == 2 ? newWidth : this.modalData.width;
+      }
+      if(styleElement.height.length > 0){
+      let newHeight = styleElement.height.match(/[\d\.]+|\D+/gi)
+      this.modalData.height = newHeight && newHeight.length == 2 ? newHeight : this.modalData.height;
+      }
       if(styleElement.backgroundImage.length > 0)
       this.modalData.backgroundImage = styleElement.backgroundImage;
 
       styleElement.margin.split(" ").map((text,i) => {
         if(text.trim().length > 0){
-          if(i == 0)
-          this.modalData.marginTop = text.match(/[\d\.]+|\D+/gi);
+          let newText = text.match(/[\d\.]+|\D+/gi);
+          if(i == 0){
+          this.modalData.marginTop = newText && newText.length == 2 ? newText : this.modalData.marginTop;
+          }
           else if(i == 1)
-          this.modalData.marginRight = text.match(/[\d\.]+|\D+/gi);
+          this.modalData.marginRight = newText && newText.length == 2 ? newText : this.modalData.marginRight;
           else if(i == 2)
-          this.modalData.marginBottom =text.match(/[\d\.]+|\D+/gi);
+          this.modalData.marginBottom = newText && newText.length == 2 ? newText : this.modalData.marginBottom;
           else if(i == 3)
-          this.modalData.marginLeft = text.match(/[\d\.]+|\D+/gi);
+          this.modalData.marginLeft = newText && newText.length == 2 ? newText : this.modalData.marginLeft;
         }
       })
        styleElement.padding.split(" ").map((text,i) => {
          i = i + 4;
         if(text.trim().length > 0){
+          let newText = text.match(/[\d\.]+|\D+/gi);
           if(i == 4)
-          this.modalData.paddingTop = text.match(/[\d\.]+|\D+/gi);
+          this.modalData.paddingTop= newText && newText.length == 2 ? newText : this.modalData.paddingTop;
           else if(i == 5)
-          this.modalData.paddingRight = text.match(/[\d\.]+|\D+/gi);
+          this.modalData.paddingRight = newText && newText.length == 2 ? newText : this.modalData.paddingRight;
           else if(i == 6)
-          this.modalData.paddingBottom = text.match(/[\d\.]+|\D+/gi);
+          this.modalData.paddingBottom = newText && newText.length == 2 ? newText : this.modalData.paddingBottom;
           else if(i == 7)
-          this.modalData.paddingLeft = text.match(/[\d\.]+|\D+/gi);
+          this.modalData.paddingLeft = newText && newText.length == 2 ? newText : this.modalData.paddingLeft;
         }
       }
       )
@@ -114,7 +121,8 @@ export class StyleEditorComponent implements OnInit {
 
     for(let prop of modalDataProps){
       console.log(counter, prop)
-      if(prop[0] !== "unspecified"){
+      if(prop[0] !== "unspecified" || prop.length >= 2){
+        console.log('girdi')
         if(counter <= 3){
           newMargin += prop[0]+prop[1]+" "
         }else if(counter <= 7){
@@ -129,13 +137,17 @@ export class StyleEditorComponent implements OnInit {
       }
       counter++;
     }
-    newStyle.padding = newPadding;
-    newStyle.margin = newMargin;
-    if(this.modalData.height && this.modalData.width){
+    newStyle.padding = newPadding != "0px 0px 0px 0px " ? newPadding : "";
+    newStyle.margin = newMargin != "0px 0px 0px 0px " ? newMargin : "";
+    if(!!this.modalData.height && !!this.modalData.width){
+    newStyle.height = "";
+    newStyle.width = "";
+
+    if(this.modalData.height[0] != "0")
     newStyle.height = this.modalData.height[0] + this.modalData.height[1];
+    if(this.modalData.width[0] != "0")
     newStyle.width = this.modalData.width[0] + this.modalData.width[1];
     }
-    console.log('bak',newStyle, newMargin)
     this.styleElementChange.emit(newStyle);
   }
   ngOnInit(): void {

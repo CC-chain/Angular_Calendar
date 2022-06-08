@@ -101,7 +101,19 @@ export const adminColorComponents = [
   },
   {
     id : 2 ,
-    name : 'Calendar'
+    name : 'Calendar',
+    component: 'CalendarLayoutComponent',
+    url: 'Component/CalendarConfiguration',
+    child : [
+      {
+        id: 1 ,
+        name: 'Calendar',
+        component : 'CalendarComponent',
+        url : '',
+        style : 'font',
+        dto : [],
+      }
+    ]
   },
   {
     id : 3,
@@ -113,3 +125,16 @@ export const adminColorComponents = [
   }
   ]
    export const presetFonts = ['Arial', 'Times', 'Courier', 'Lato', 'Open Sans', 'Roboto Slab'];
+
+   export const themes = [
+     {
+       name: 'dark-theme',
+       primary : '#1f262d',
+       secondary : '#394046'
+     },
+     {
+       name: 'light-theme',
+       primary : '#ffffff',
+       secondary : '#eceaea'
+     }
+   ]

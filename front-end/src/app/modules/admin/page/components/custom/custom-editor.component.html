@@ -4,28 +4,37 @@
     <h2 cModalTitle style="font-weight: bolder;"><button type="button" class="btn btn-outline-danger" (click)="deleteCustom()"><fa-icon [icon]="faRemove"></fa-icon></button>  {{customElement.name}} </h2>
     <button [cModalToggle]="fullScreen.id" class="btn btn-outline-secondary" cButtonClose>Exit</button>
   </c-modal-header>
-  <c-modal-body>
-    <c-row>
+  <c-modal-body style="background-color: white">
+    <c-row class="mb-3">
       <c-col>
         <h2>HTML</h2>
-        <textarea rows="20" cols="50" [value]="customElement.content" (change)="onChange($event,'html')">
+        <textarea rows="20" cols="30" [value]="customElement.content" (change)="onChange($event,'html')">
+          {{customElement.content}}
         </textarea>
       </c-col>
       <c-col>
         <h2>JavaScript</h2>
-        <textarea rows="20" cols="50" [value]="customElement.script" (change)="onChange($event,'script')">
+        <textarea rows="20" cols="30" [value]="customElement.script" (change)="onChange($event,'script')">
           {{customElement.script}}
         </textarea>
       </c-col>
       <c-col>
+        <h2>Style</h2>
+        <textarea rows="20" cols="30" [value]="customElement.style" (change)="onChange($event,'style')">
+          {{customElement.style}}
+        </textarea>
+      </c-col>
+    </c-row>
+    <c-row class="mb-3">
+       <c-col>
         <h2>Preview</h2>
-        <div style="overflow:scroll; height:420px; max-width: 420;">
-<ngx-dynamic-hooks [content]="customElement.content" [context]="customElement" [parsers]="customElement | getParsers"></ngx-dynamic-hooks>
+        <div style="overflow:scroll; height:420px; border:1px solid black ">
+<ngx-dynamic-hooks [content]="customElement.content + customs" [context]="customElement" [parsers]="customElement | getParsers"></ngx-dynamic-hooks>
         </div>
       </c-col>
     </c-row>
-    <c-row>
-      <div class="text-center mb-4">
+    <c-row class="mb-3">
+      <div class="text-center">
     <button type="button" class="btn btn-outline-primary btn-lg btn-block" style="width:100%" (click)="onUpdate()">Update</button>
     </div>
     </c-row>

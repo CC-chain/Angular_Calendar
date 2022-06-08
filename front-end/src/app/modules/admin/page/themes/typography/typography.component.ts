@@ -1,6 +1,6 @@
 import { Component, Injector, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { adminTypographyComponents } from '@app/data/schema/admin';
-import { DataCs } from '@app/data/schema/data';
+import { CalendarConfig, DataCs } from '@app/data/schema/data';
 import { DataCsService } from '@app/data/service/data-cs.service';
 import { DynamicImportService } from '@app/shared/service/dynamic_import/dynamic-import.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -18,7 +18,7 @@ export class TypographyComponent implements OnInit {
   styles!: DataCs[];
   isLoaded = this.loader.loading$;
   comps = adminTypographyComponents
-
+  config!: CalendarConfig;
 
   private _presetFonts =  presetFonts
 
@@ -50,10 +50,12 @@ export class TypographyComponent implements OnInit {
   ngOnInit() {
     this.loader.show();
     setTimeout(() => this.loader.hide(),1500);
+    this.getCalendarConfig("Component/CalendarConfiguration")
   }
 
-  public editStyles(styleObj : any , dbUrl : string) {
+  public editStyles(font : string ,styleObj : any , dbUrl : string) {
     console.log('edit', styleObj, dbUrl)
+    styleObj.font = font;
     this.styles.map((stylesObj : any) => {
 
       if (stylesObj.name === styleObj.name) {
@@ -64,6 +66,7 @@ export class TypographyComponent implements OnInit {
         })
       }
     });
+    console.log(this.styles)
 
   this.dataCsService.editStyles(this.styles,dbUrl).subscribe(data => console.log(data))
   }
@@ -85,6 +88,27 @@ export class TypographyComponent implements OnInit {
       }, 1000)
   }
 
+    getCalendarConfig(dbUrl: string){
+    this.loader.show();
+    const $config = this.dataCsService.getCalendarConfig(dbUrl)
+    $config.subscribe(
+      data => {
+        this.config = data
+      })
+       var interval = setInterval(() => {
+      if (this.config) {
+        this.loader.hide();
+        clearInterval(interval);
+      } else {
+        console.log("gelmedi")
+      }
+    }, 1000)
+  }
+
+  editCalendarConfig(event: any, dbUrl: string){
+    this.config.font = event
+    this.dataCsService.editCalendarConfig(this.config,dbUrl).subscribe(log => console.log(log))
+  }
 
   async loadForm(layout : string = "") {
     console.log(layout)

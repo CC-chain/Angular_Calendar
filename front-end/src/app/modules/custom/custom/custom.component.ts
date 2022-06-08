@@ -1,40 +1,89 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, Inject, Input, OnInit, Renderer2 } from '@angular/core';
+import { Component, Inject, Input, OnInit, Renderer2, ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'app-custom',
   templateUrl: './custom.component.html',
-  styleUrls: ['./custom.component.scss']
+  styleUrls: ['./custom.component.scss'],
 })
-export class CustomComponent implements OnInit {
+export class CustomComponent {
 
   @Input() get script() {
     return this._script
   }
+
   set script(value) {
     this._script = value;
     console.log(value);
-    this.curScript = this.loadscript(value)
+    this.loadscript(value)
   }
 
+  @Input() get style() {
+    return this._style;
+  }
+  set style(value) {
+    this._style = value;
+    console.log(value)
+    this.loadstyle(value)
+
+  }
+  @Input() get contextID(){
+    return this._contextID;
+  }
+
+  set contextID(value) {
+    this._contextID = value;
+    console.log(this.contextID);
+    if(this._style)
+    this.loadstyle(this._style)
+    if(this._script)
+    this.loadscript(this._script)
+  }
+
+  private _contextID!: string;
+  private _style: string = "";
   private _script: string = "";
-  private curScript : any ;
 
   constructor(private _renderer2: Renderer2,
     @Inject(DOCUMENT) private _document: Document) { }
 
-  loadscript(script : string) {
+  loadscript(script: string) {
+    if(this._contextID){
+    const el = this._document.getElementById('script-'+ this._contextID)
+    if(el != null && typeof el != undefined){
+      el.innerHTML = "";
+      let text = this._renderer2.createText(script)
+      this._renderer2.appendChild(el,text);
+    }else {
     let scriptTag = this._renderer2.createElement('script');
+    this._renderer2.setProperty(scriptTag, "id", 'script-'+ this._contextID);
     scriptTag.type = "text/javascript";
     scriptTag.async = true;
     scriptTag.text = script;
     console.log(script)
     this._renderer2.appendChild(this._document.body, scriptTag);
-    //this._renderer2.removeChild(this._document.body,scriptTag);
-    return scriptTag;
+    }
+  }
   }
 
-  ngOnInit(): void {
+  loadstyle(style: string) {
+    if(this._contextID){
+    const el = this._document.getElementById("style-"+ this._contextID);
+    if (el != null && typeof el != undefined)  {
+      el.innerHTML = "";
+      let text = this._renderer2.createText(style)
+      this._renderer2.appendChild(el,text);
+    }
+    else {
+      let styleTag = this._renderer2.createElement('style');
+      let text = this._renderer2.createText(style);
+      this._renderer2.setProperty(styleTag, "id", 'style-'+this._contextID);
+      this._renderer2.appendChild(styleTag, text);
+      styleTag.async = true;
+      this._renderer2.appendChild(this._document.head, styleTag);
+    }
   }
+  }
+
 
 }

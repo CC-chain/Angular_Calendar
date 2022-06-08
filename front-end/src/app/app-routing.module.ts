@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from './core/guard/auth.guard';
 import { NoAuthGuard } from './core/guard/no-auth.guard';
 import { DefaultAdminLayoutComponent } from './layout/admin-layout';
 import { AuthLayoutComponent } from './layout/auth-layout/auth-layout.component';
@@ -13,7 +14,7 @@ const routes: Routes = [{
 {
   path: 'home',
   component: CalendarLayoutComponent,
-  canActivate: [NoAuthGuard],
+  canActivate: [AuthGuard],
   loadChildren: () =>
       import('@modules/calendar/calendar.module').then(m => m.CalendarLayoutModule)
 },{
@@ -22,6 +23,7 @@ const routes: Routes = [{
   import('@modules/auth/auth.module').then(m => m.AuthModule)
 },{
   path: 'admin',
+  canActivate: [AuthGuard],
   loadChildren: () =>
   import('@modules/admin/admin.module').then(m => m.AdminModule)
 },

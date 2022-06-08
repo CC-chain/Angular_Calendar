@@ -1,14 +1,12 @@
 import { Injectable } from '@angular/core';
-import { of, Observable, throwError } from 'rxjs';
-
+import { of, Observable, throwError, map } from 'rxjs';
+import * as moment from "moment";
 import { User } from '@data/schema/user';
+import { IData, LoginContextInterface, UserAuthentication } from '@app/data/schema/data';
+import { DataCsService } from '@app/data/service/data-cs.service';
+import { tap } from 'rxjs';
 
-interface LoginContextInterface {
-  username: string;
-  mail: string;
-  password: string;
-  token: string;
-}
+
 
 const defaultUser = {
   username: 'Arif',
@@ -20,21 +18,50 @@ const defaultUser = {
   providedIn: 'root'
 })
 export class AuthService {
-  token!: string;
 
-  login(loginContext: LoginContextInterface): Observable<User> {
-    const isDefaultUser =
-      loginContext.username === defaultUser.username &&
-      loginContext.password === defaultUser.password;
+  private user!: UserAuthentication;
+  constructor(private dataCsService : DataCsService){}
 
-    if (isDefaultUser) {
-      return of(defaultUser);
-    }
-
-    return throwError('Invalid username or password');
+  login(loginContext: LoginContextInterface){
+   return  this.dataCsService.getLogin(loginContext).pipe(
+    map((data: any) => {
+     let curData: IData = <IData>data;
+     console.log(curData)
+     if (!curData.success) {
+       return false;
+     }
+    this.setSession(curData.data)
+     return true
+   }),
+   )
   }
 
-  logout(): Observable<boolean> {
-    return of(false);
+
+  private setSession(authResult: UserAuthentication) {
+    localStorage.setItem("id_token", authResult.token);
+    localStorage.setItem("expires_at", authResult.expiration);
+    localStorage.setItem("id_user", authResult.userId)
+    console.log(localStorage)
+  }
+
+  public isLoggedIn() {
+    return new Date() < new Date(this.getExpiration()!);
+  }
+
+  public isSiteActive(){
+    return localStorage.getItem("id_site") != null  ? true : false
+  }
+  isLoggedOut() {
+    return !this.isLoggedIn();
+  }
+
+  getExpiration() {
+    const expiration = localStorage.getItem("expires_at");
+    return expiration;
+  }
+
+  logout() {
+    localStorage.removeItem("id_token");
+    localStorage.removeItem("expires_at");
   }
 }

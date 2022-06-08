@@ -1,7 +1,7 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, OnInit } from '@angular/core';
-import { themes } from '@app/core/constants/themes';
+import { Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { ThemeService } from '@app/core/service/theme.service';
+import { Font } from '@lib/font-picker/src/public-api';
 import { map } from 'rxjs';
 
 @Component({
@@ -10,40 +10,11 @@ import { map } from 'rxjs';
   styleUrls: ['./calendar-layout.component.scss']
 })
 export class CalendarLayoutComponent implements OnInit {
-currentTheme!: string;
-
-  currentActiveTheme$ = this.themeService.getDarkTheme().pipe(
-    map((isDarkTheme: boolean) => {
-      const [lightTheme, darkTheme] = themes;
-
-      this.currentTheme = isDarkTheme ? lightTheme.name : darkTheme.name;
-
-      if (this.overlayContainer) {
-        const overlayContainerClasses = this.overlayContainer.getContainerElement()
-          .classList;
-        const themeClassesToRemove = Array.from(
-          overlayContainerClasses
-        ).filter((item: string) => item.includes('-theme'));
-        if (themeClassesToRemove.length) {
-          overlayContainerClasses.remove(...themeClassesToRemove);
-        }
-        overlayContainerClasses.add(this.currentTheme);
-      }
-
-      return this.currentTheme;
-    })
-  );
-
-  private overlayContainer!: OverlayContainer;
-
-  constructor(private themeService: ThemeService) {}
+  @ViewChild("calendarComponent", { read: ViewContainerRef })
+  public calendarComponent!: ViewContainerRef;
 
   ngOnInit(): void {
-    if (this.overlayContainer) {
-      this.overlayContainer
-        .getContainerElement()
-        .classList.add(this.currentTheme);
-    }
+
   }
 
 }

@@ -17,6 +17,7 @@ import { AdminRoutingModule } from './admin-routing.module';
   providers: [
   ],
   declarations: [
+
   ]
 })
 export class AdminModule { }

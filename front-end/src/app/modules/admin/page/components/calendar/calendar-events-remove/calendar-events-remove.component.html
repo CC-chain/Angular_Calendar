@@ -1,0 +1,14 @@
+<i class="bi bi-trash-fill" [cModalToggle]="fullScreenDelete.id"
+  style="color:red" type="button"></i>
+
+<c-modal #fullScreenDelete [id]="'delete' + data.name + data.id">
+  <c-modal-header>
+    <h2 cModalTitle style="font-weight: bolder;">Are your sure ?</h2>
+    <button [cModalToggle]="fullScreenDelete.id" class="btn
+      btn-outline-secondary">Exit</button>
+  </c-modal-header>
+  <c-modal-footer>
+    <button type="button" class="btn btn-danger">Remove</button>
+    <button type="button" [cModalToggle]="fullScreenDelete.id" class="btn btn-secondary" data-dismiss="modal">Close</button>
+  </c-modal-footer>
+</c-modal>

@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { CustomMetaInterface } from '@app/data/schema/data';
 import { faSleigh } from '@fortawesome/free-solid-svg-icons';
 import { getRandomId } from '@syncfusion/ej2/base';
 import { CalendarEvent } from 'angular-calendar';
@@ -12,8 +13,8 @@ import { Subject, timestamp } from 'rxjs';
 })
 export class CalendarEditComponent implements OnInit {
 
-  @Input() modalData!:  {action : string , event : CalendarEvent};
-  @Output() onChangeEvent = new EventEmitter<CalendarEvent>();
+  @Input() modalData!:  {action : string , event : CalendarEvent<CustomMetaInterface>};
+  @Output() onChangeEvent = new EventEmitter<CalendarEvent<CustomMetaInterface>>();
   refresh = new Subject<void>();
 
   form: FormGroup = new FormGroup({
@@ -23,6 +24,7 @@ export class CalendarEditComponent implements OnInit {
     resizableBeforeStart : new FormControl(''),
     resizableAfterEnd: new FormControl(''),
     colors: new FormControl(''),
+    userNote : new FormControl('')
   });
   submitted = false;
 
@@ -34,6 +36,7 @@ export class CalendarEditComponent implements OnInit {
    onSubmit(): void {
     this.submitted = true;
     if (this.form.invalid) {
+      console.log(this.form)
       return;
     }
     console.log(this.modalData.event)
@@ -50,7 +53,8 @@ export class CalendarEditComponent implements OnInit {
         title: ['',Validators.required],
         resizableBeforeStart: ['',Validators.required],
         resizableAfterEnd: ['',Validators.required],
-        colors: ['',Validators.required]
+        colors: ['',Validators.required],
+        userNote : ['', Validators.required],
       }
     )
   }
@@ -68,12 +72,14 @@ export class CalendarEditComponent implements OnInit {
         this.modalData.event.resizable!.beforeStart = event
         break;
       case 'start':
-        this.modalData.event.start = new Date(event);
+        this.modalData.event.start = event ;
         break
       case 'end':
-        this.modalData.event.end = new Date(event);
+        this.modalData.event.end = event;
+        break;
+      case 'userNote':
+        this.modalData.event.meta!.userMessage = event
         break;
     }
-    console.log(this.modalData.event)
   }
 }

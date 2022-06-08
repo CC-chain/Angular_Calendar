@@ -1,9 +1,9 @@
 import { Compiler, Component, ComponentFactoryResolver, ComponentRef, createNgModuleRef, Injector, OnInit, TemplateRef, Type, ViewChild, ViewContainerRef } from '@angular/core';
-import { DataCs } from '@app/data/schema/data';
+import { CalendarConfig, DataCs } from '@app/data/schema/data';
 import { DataCsService } from '@app/data/service/data-cs.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DynamicImportService } from '@shared/service/dynamic_import/dynamic-import.service'
-import { adminColorComponents } from '@data/schema/admin'
+import { adminColorComponents, themes } from '@data/schema/admin'
 import { LoadingService } from '@shared/service/loading/loading.service'
 @Component({
   selector: 'app-colors',
@@ -14,7 +14,8 @@ export class ColorsComponent implements OnInit {
   @ViewChild("layoutComponent", { read: ViewContainerRef })
   layoutComponent!: ViewContainerRef;
   styles!: DataCs[];
-  themes!: string[];
+  config!: CalendarConfig;
+  themes = themes;
 
   isLoaded = this.loader.loading$;
   comps = adminColorComponents
@@ -24,8 +25,7 @@ export class ColorsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loader.show();
-    setTimeout(() => this.loader.hide(), 1500);
+    this.getCalendarConfig('Component/CalendarConfiguration')
   }
 
   public editStyles(styleObj: any, dbUrl: string) {
@@ -44,12 +44,7 @@ export class ColorsComponent implements OnInit {
   this.dataCsService.editStyles(this.styles,dbUrl).subscribe(data => console.log(data))
   }
 
-  public getCalendar() {
-
-  }
-
   public getStyles(dbUrl: string) {
-    let flag: boolean = false;
     this.loader.show();
     const $style = this.dataCsService.getStyles(dbUrl)
     $style.subscribe(styles => {
@@ -65,6 +60,31 @@ export class ColorsComponent implements OnInit {
     }, 1000)
   }
 
+
+  getCalendarConfig(dbUrl: string){
+    this.loader.show();
+    const $config = this.dataCsService.getCalendarConfig(dbUrl)
+    $config.subscribe(
+      data => {
+        this.config = data
+      })
+       var interval = setInterval(() => {
+      if (this.config) {
+        this.loader.hide();
+        clearInterval(interval);
+      } else {
+        console.log("gelmedi")
+      }
+    }, 1000)
+  }
+
+  setCalendarConfig(event: any, dbUrl: string){
+    let curTheme = this.themes.find(theme => theme.name === event.target.value)
+    if(curTheme){
+    this.config.theme = curTheme
+    this.dataCsService.editCalendarConfig(this.config,dbUrl).subscribe(log => console.log(log))
+    }
+  }
   ngAfterViewInit() {
     this.ngOnInit();
   }
@@ -83,5 +103,9 @@ export class ColorsComponent implements OnInit {
 
   changeThemes(event: any) {
 
+  }
+
+  getIndexOfThemes(){
+    return this.themes.indexOf(this.config.theme)
   }
 }

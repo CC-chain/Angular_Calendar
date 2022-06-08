@@ -3,25 +3,35 @@
 
     <button [cModalToggle]="modalId" class="btn btn-light" cButtonClose>Exit</button>
 </c-modal-header>
-<c-modal-body>
-  <c-row>
+<c-modal-body style="background-color: white">
+  <c-row class="mb-3">
     <c-col>
       <h2>HTML</h2>
-      <textarea rows="20" cols="50" [(ngModel)]="htmlEl">
+      <textarea rows="20" cols="30" [(ngModel)]="htmlEl">
+      </textarea>
+    </c-col>
+   <c-col>
+      <h2>JavaScript</h2>
+      <textarea rows="20" cols="30" [(ngModel)]="scriptEl">
       </textarea>
     </c-col>
     <c-col>
-      <h2>JavaScript</h2>
-      <textarea rows="20" cols="50" [(ngModel)]="scriptEl">
+      <h2>Style</h2>
+      <textarea rows="20" cols="30" [(ngModel)]="styleEl">
       </textarea>
     </c-col>
+  </c-row>
+  <c-row class="mb-3">
     <c-col>
       <h2>Preview</h2>
-      <div style="overflow:scroll; max-height:420px; max-width:420">
-<ngx-dynamic-hooks [content]="htmlEl" [context]="scriptEl" [parsers]="customHook"></ngx-dynamic-hooks>
+      <div style="overflow:scroll; height:420px; width:420; border:1px solid ">
+<ngx-dynamic-hooks [content]="htmlEl + customs" [context]="getCustomInfos()" [parsers]="customHook"></ngx-dynamic-hooks>
       </div>
     </c-col>
-  </c-row><div class="text-center mb-4">
+  </c-row>
+  <c-row class="mb-3">
+  <div class="text-center mb-4">
   <button type="button" class="btn btn-outline-primary btn-lg btn-block" style="width:100%" (click)="onUpdate()">Update</button>
   </div>
+  </c-row>
 </c-modal-body>

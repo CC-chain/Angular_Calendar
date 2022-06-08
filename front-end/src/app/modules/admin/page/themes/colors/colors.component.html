@@ -76,9 +76,10 @@
                                   | getSpecifics :
                                   compChild2?.style || 'backgroundColor'">
                                   <c-col xl='2' md='4' sm='6' xs='12' class=''>
-                                    <app-app-theme-color [colorPickr]="styleEl | modelToDto :
-                                    compChild2?.dto ||
-                                    ['name','backgroundColor'] | getColor"
+                                    <app-app-theme-color [colorPickr]="styleEl |
+                                      modelToDto :
+                                      compChild2?.dto ||
+                                      ['name','backgroundColor'] | getColor"
                                       [$styleElement]="styleEl | modelToDto :
                                       compChild2?.dto ||
                                       ['name','backgroundColor']"
@@ -124,15 +125,40 @@
       </c-card-header>
       <c-card-body>
         <c-row>
+          <c-col [md]="3" class="my-auto">
+            <select
+              (change)="setCalendarConfig($event,'Component/CalendarConfiguration')"
+              class="form-select mb-3" [selectedIndex]="getIndexOfThemes()">
+              <option *ngFor="let theme of themes">{{theme.name}}</option>
+            </select>
+          </c-col>
+          <c-col class="text-center">
+            <h1 style="font-weight: bold;">Primary Color</h1>
+            <div [ngStyle]="{'background-color': config.theme.primary}"
+              class="mx-auto" style='border: 3px solid black; height:150px ;
+              width: 150px;'></div>
+            <div class="text-center">
+              <h3 style="font-weight:bold">{{config.theme.primary}}</h3>
+            </div>
+          </c-col>
           <c-col>
-              </c-col>
-            </c-row>
-          </c-card-body>
-        </c-card>
-      </c-tab-pane>
-      <c-modal #fullScreen id="fullscreen" [fullscreen]="true">
-        <button style="z-index: 999" [cModalToggle]="fullScreen.id" cButtonClose
-          class="btn btn-outline-primary">Close</button>
-        <ng-template #layoutComponent let-modal="s"></ng-template>
-      </c-modal>
-    </c-tab-content>
+            <div class="text-center">
+              <h1 style="font-weight: bold;">Secondary Color</h1>
+            </div>
+            <div [ngStyle]="{'background-color': config.theme.secondary}"
+              class="mx-auto" style='border: 3px solid black; height:150px ;
+              width: 150px'></div>
+            <div class="text-center">
+              <h3 style="font-weight:bold">{{config.theme.secondary}}</h3>
+            </div>
+          </c-col>
+        </c-row>
+      </c-card-body>
+    </c-card>
+  </c-tab-pane>
+  <c-modal #fullScreen id="fullscreen" [fullscreen]="true">
+    <button style="z-index: 999" [cModalToggle]="fullScreen.id" cButtonClose
+      class="btn btn-outline-primary">Close</button>
+    <ng-template #layoutComponent let-modal="s"></ng-template>
+  </c-modal>
+</c-tab-content>

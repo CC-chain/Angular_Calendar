@@ -16,14 +16,18 @@ export class CustomCreatorComponent implements OnInit {
   @Output() customElementChange = new EventEmitter();
   htmlEl: string = "";
   scriptEl: string = "";
+  styleEl : string = "";
+  idEl : string = "";
   nameEl: string = "";
   customHook: SelectorHookParserConfig[] = [
     {
       component: CustomComponent
     }
   ]
-
-  constructor() { }
+   customs = `\n <app-custom [script]="context.script" [style]="context.style" [contextID]="context.id"> </app-custom> `
+  constructor() {
+    this.idEl = Math.floor(Math.random() * 10000).toString();
+   }
 
   onUpdate() {
 
@@ -32,10 +36,11 @@ export class CustomCreatorComponent implements OnInit {
       this.scriptEl.length > 0 &&
       this.nameEl.length > 0) {
       newCustomCs = {
-        id: 999,
+        id: null,
         content: this.htmlEl,
         targetComponent: this.targetComponent,
         script: this.scriptEl,
+        style : this.styleEl,
         dependentComponents: 'CustomComponent',
         layout: 'AuthLayoutComponent',
         name: this.nameEl,
@@ -49,6 +54,7 @@ export class CustomCreatorComponent implements OnInit {
   clearInputs(){
     this.htmlEl="";
     this.scriptEl="";
+    this.styleEl="";
     this.nameEl="";
   }
 
@@ -56,4 +62,7 @@ export class CustomCreatorComponent implements OnInit {
 
   }
 
+  getCustomInfos(){
+    return {script : this.scriptEl , style : this.styleEl , id : this.idEl }
+  }
 }

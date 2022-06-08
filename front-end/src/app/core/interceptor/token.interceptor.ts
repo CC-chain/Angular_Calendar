@@ -12,7 +12,24 @@ export class TokenInterceptor implements HttpInterceptor {
 
   constructor() {}
 
-  intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    const idToken = localStorage.getItem("id_token");
+    const siteId = localStorage.getItem("id_site");
+    if(idToken && siteId){
+      const cloned = request.clone({
+        headers: request.headers.set("Authorization",
+        "Bearer " + idToken)
+        .set("SiteId", siteId )
+      });
+      return next.handle(cloned);
+    }
+    else if(siteId) {
+      const cloned = request.clone({
+        headers: request.headers
+        .set("SiteId", siteId )
+      });
+      return next.handle(cloned);
+    }
     return next.handle(request);
   }
 }

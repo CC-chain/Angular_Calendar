@@ -25,11 +25,12 @@ export class CustomEditorComponent implements OnInit {
       //To trigger content sections
       this.customElement.content += " ";
       this.customElement.content = value.content;
+      console.log(this.customElement.id)
 
     })
    }
    faRemove = faRemove;
-
+   customs = `\n  <app-custom [script]="context.script" [style]="context.style" [contextID]="context.id"> </app-custom> `
    onChange(val : any, specific : string){
      if(val){
        let newCustomCs = this.customElement;
@@ -37,7 +38,9 @@ export class CustomEditorComponent implements OnInit {
        newCustomCs.content = val.target!.value;
        if(specific === "script")
        newCustomCs.script = val.target!.value;
-       console.log(newCustomCs)
+       if(specific === "style")
+       newCustomCs.style = val.target!.value;
+
        this.customElementSubject.next(newCustomCs)
      }
    }

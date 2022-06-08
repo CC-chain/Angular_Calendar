@@ -35,15 +35,19 @@ import {
   UtilitiesModule,
 } from '@coreui/angular';
 import { PerfectScrollbarConfigInterface, PerfectScrollbarModule, PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
-
+import { FontPickerConfigInterface, FontPickerModule, FONT_PICKER_CONFIG } from '@lib/font-picker/src/public-api';
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
 };
-
-
 import { IconModule, IconSetService } from '@coreui/icons-angular';
 import { ContextMenuModule } from 'ngx-contextmenu';
 import { HttpClientModule } from '@angular/common/http';
+import { CalendarLayoutModule } from './modules/calendar/calendar.module';
+import { DynamicImportService } from './shared/service/dynamic_import/dynamic-import.service';
+
+const DEFAULT_FONT_PICKER_CONFIG: FontPickerConfigInterface = {
+  apiKey : 'AIzaSyCNwa0xQsLZuC3fzA7rE2ykvJBVm1YFqPI'
+}
 
 const APP_CONTAINERS = [
   DefaultFooterComponent,
@@ -89,7 +93,9 @@ const APP_CONTAINERS = [
     TabsModule,
     UtilitiesModule,
     IconModule,
+    FontPickerModule,
     PerfectScrollbarModule,
+    CalendarLayoutModule,
   ],
   providers: [
     {
@@ -98,6 +104,11 @@ const APP_CONTAINERS = [
     },
     IconSetService,
     Title,
+    DynamicImportService,
+    {
+      provide : FONT_PICKER_CONFIG,
+      useValue : DEFAULT_FONT_PICKER_CONFIG
+    }
   ],
   bootstrap: [AppComponent]
 })

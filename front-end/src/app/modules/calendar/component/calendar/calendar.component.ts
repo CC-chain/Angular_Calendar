@@ -6,6 +6,8 @@ import {
   OnInit,
   AfterViewInit,
   ViewEncapsulation,
+  Input,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import {
@@ -19,7 +21,10 @@ import {
 import { AsyncEventsService } from '@modules/calendar/services/async-events.service';
 import { WeekViewHour, WeekViewHourColumn, WeekViewHourSegment } from 'calendar-utils';
 import { addMinutes, isSameDay } from 'date-fns';
-import {CustomDateFormatter} from '@modules/calendar/provider/custom-date-formatter.provider'
+import { CustomDateFormatter } from '@modules/calendar/provider/custom-date-formatter.provider'
+import { CalendarConfig, CustomMetaInterface, DataCs } from '@app/data/schema/data';
+import { formatDate } from '@angular/common';
+import { Font, FontPickerService } from '@lib/font-picker/src/public-api';
 
 @Component({
   selector: 'mwl-demo-component',
@@ -60,6 +65,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   @ViewChild('modalEdit', { static: false }) modalEdit!: TemplateRef<any>;
   @ViewChild('modalRemove', { static: false }) modalRemove!: TemplateRef<any>;
   @ViewChild('modalAdd', { static: false }) modalAdd!: TemplateRef<any>;
+  @Input() _disable!: boolean;
 
   locale = 'tr';
 
@@ -93,19 +99,36 @@ export class CalendarComponent implements OnInit, AfterViewInit {
 
   activeDayIsOpen: boolean = true;
 
-  public theme = 'dark-theme';
+  calendarConfig$!: Observable<CalendarConfig>;
 
-  constructor(public dataService: AsyncEventsService) {
+  config!: CalendarConfig;
+
+
+  constructor(public dataService: AsyncEventsService, public fontPickerService: FontPickerService) {
   }
 
   ngOnInit() {
+    this.fetchCalendarConfig()
     this.fetchEvents();
   }
 
   fetchEvents() {
     this.events$ = this.dataService.fetchEvents();
     this.events$.subscribe((events) => {
-      this.events = events;
+      if (events)
+        this.events = events;
+      else {
+        this.events = [];
+      }
+      console.log(this.events)
+    })
+  }
+
+  fetchCalendarConfig() {
+    this.calendarConfig$ = this.dataService.fetchCalendarConfig();
+    this.calendarConfig$.subscribe(event => {
+      this.config = event
+      console.log(event)
     })
   }
 
@@ -118,15 +141,20 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   }
 
   eventTimesChanged(eventTimesChangedEvent: CalendarEventTimesChangedEvent) {
-    let changedEvent: any = {
+    let changedEvent: { event: CalendarEvent<CustomMetaInterface>, newStart: string, newEnd: string } = {
       event: eventTimesChangedEvent.event,
-      newStart: eventTimesChangedEvent.newStart,
-      newEnd: eventTimesChangedEvent.newEnd,
+      newStart: formatDate(eventTimesChangedEvent.newStart, 'YYYY-MM-ddTHH:mm:ss.sss', "en-us") + "Z",
+      newEnd: formatDate(eventTimesChangedEvent.newEnd!, 'YYYY-MM-ddTHH:mm:ss.sss', "en-us") + "Z",
     }
     delete eventTimesChangedEvent.event.cssClass;
     if (this.validateEventTimesChanged(eventTimesChangedEvent, false)) {
-      console.log('hello')
-      this.dataService.eventTimesChanged(changedEvent);
+      this.events.map(event => {
+        if (event.id == eventTimesChangedEvent.event.id) {
+          changedEvent.event.start = eventTimesChangedEvent.newStart;
+          changedEvent.event.end = eventTimesChangedEvent.newEnd;
+        }
+      })
+      this.dataService.editEvents(changedEvent.event, changedEvent.newStart, changedEvent.newEnd)
       this.refresh.next();
     }
     else {
@@ -134,20 +162,29 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     }
   }
 
-  addEvent(event : CalendarEvent){
-    console.log(event)
+
+
+
+  addEvent(event: CalendarEvent<CustomMetaInterface>) {
     this.dataService.addEvent(event)
+    this.ngOnInit();
     this.refresh.next();
   }
 
-  editEvents(event: CalendarEvent) {
-    this.dataService.editEvents(event)
-    this.refresh.next();
+  editEvents(newEvent: CalendarEvent<CustomMetaInterface>) {
+    this.dataService.editEvents(newEvent)
+    this.ngOnInit();
+    this.refresh.next()
   }
 
-  deleteEvent(event: CalendarEvent) {
-    this.dataService.deleteEvents(event);
-    this.refresh.next();
+  deleteEvent(delEvent: CalendarEvent<CustomMetaInterface>) {
+    let eventId = this.events.find(event => event.id === delEvent.id)!.id;
+    if (eventId)
+      this.dataService.deleteEvents(Number(eventId));
+
+    this.ngOnInit();
+    this.refresh.next()
+
   }
 
   editEventContext(event: any) {
@@ -158,9 +195,9 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     this.dataService.handleEvent('Delete', event.item)
   }
 
-  addEventContext(event : any) {
+  addEventContext(event: any) {
     console.log(event)
-    this.dataService.handleEvent('Add', event.item)
+    this.dataService.handleEvent('Add', new Date(event.item))
   }
   setView(view: CalendarView) {
     this.view = view;
@@ -275,4 +312,69 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     }
     return true;
   };
+
+  transformFont(value: any):Font{
+    let font!: Font
+    console.log(value, font)
+    if ((typeof value === 'function') || (typeof value === 'object')) {
+      Object.keys(value).forEach(key => {
+        if (/^[Ff]ont$/.test(key)) {
+          let curValue = value[key as keyof DataCs].toString().split(" ");
+          if (curValue.length == 5) {
+
+            if (curValue[2].length < 3) {
+              for (let i = curValue[2].length; i <= 3; i++) { curValue[2] += " " }
+            }
+            font = new Font({
+              style: curValue[2] + " " + curValue[0] + " " + curValue[1],
+              size: curValue[3],
+              family: curValue[4],
+              styles: [''],
+              files: undefined
+            }
+            )
+          } else if (curValue.length == 4) {
+            if (curValue[1].length < 3) {
+              for (let i = curValue[1].length; i <= 3; i++) { curValue[2] += " " }
+            }
+            font = new Font({
+              style: curValue[2] + " " + curValue[0] + " " + curValue[1],
+              size: curValue[3],
+              family: curValue[4],
+              styles: [''],
+              files: undefined
+            })
+          }
+        }
+      })
+    } else if (typeof value === 'string') {
+      let curValue = value.split(" ");
+      if (curValue.length == 5) {
+
+        if (curValue[2].length < 3) {
+          for (let i = curValue[2].length; i <= 3; i++) { curValue[2] += " " }
+        }
+        font = new Font({
+          style: curValue[2] + " " + curValue[0] + " " + curValue[1],
+          size: curValue[3],
+          family: curValue[4],
+          styles: [''],
+          files: undefined
+        }
+        )
+      } else if (curValue.length == 4) {
+        if (curValue[1].length < 3) {
+          for (let i = curValue[1].length; i <= 3; i++) { curValue[2] += " " }
+        }
+        font = new Font({
+          style: curValue[2] + " " + curValue[0] + " " + curValue[1],
+          size: curValue[3],
+          family: curValue[4],
+          styles: [''],
+          files: undefined
+        })
+      }
+    }
+    return font;
+  }
 }

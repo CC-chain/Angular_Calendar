@@ -6,7 +6,7 @@ import { BehaviorSubject, Observable, of, Subject, Subscription } from 'rxjs';
 
 import { AuthService } from '@core/service/auth.service';
 import { DataCsService } from '@app/data/service/data-cs.service';
-import { CustomCs, DataCs } from '@app/data/schema/data';
+import { CustomCs, DataCs, Site } from '@app/data/schema/data';
 import { DOCUMENT } from '@angular/common';
 import { DynamicImportService } from '@app/shared/service/dynamic_import/dynamic-import.service';
 
@@ -15,16 +15,16 @@ import { DynamicImportService } from '@app/shared/service/dynamic_import/dynamic
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
-export class LoginComponent implements OnInit, OnDestroy {
+export class LoginComponent implements OnInit {
   @Input() _disable!: boolean;
   styles!: Observable<DataCs[]>;
-  customs : CustomCs[] = [];
+  sites!: Observable<Site[]>
+  siteId!: any;
+  customs: CustomCs[] = [];
   error!: string;
   isLoading!: boolean;
   loginForm!: FormGroup;
-
-  private sub = new Subscription();
-
+   customsStr = `\n  <app-custom [script]="context.script" [style]="context.style" [contextID]="context.id"> </app-custom> `
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
@@ -42,36 +42,65 @@ export class LoginComponent implements OnInit, OnDestroy {
     return this.loginForm.controls;
   }
 
+
+
   login() {
     this.isLoading = true;
 
     const credentials = this.loginForm.value;
 
-    this.sub = this.authService
-      .login(credentials)
-      .pipe(
-        delay(1500),
-        tap(() => this.router.navigate(['/home/calendar'])),
-        finalize(() => (this.isLoading = false)),
-        catchError(error => of((this.error = error)))
-      )
-      .subscribe();
+    this.authService.login(credentials).subscribe(res => {
+      if (res == true) {
+        if (this.authService.isLoggedIn()) {
+          this.isLoading = false;
+          this.router.navigate(['/home/calendar']);
+        }
+      } else {
+        window.location.reload()
+      }
+    })
+
+
   }
 
-  ngOnDestroy(): void {
-    this.sub.unsubscribe();
+  private loaded = false;
+  onChange(event: any) {
+    if (event && event != this.siteId) {
+      localStorage.setItem("id_site", event.toString());
+      this.styles = this.dataCsService.getStyles('Component/Login')
+      this.styles.subscribe(data => console.log(data))
+      this.dataCsService.getCustoms('Component/Custom').subscribe(data => this.customs = data);
+      window.location.reload();
+    }
   }
 
   private buildForm(): void {
     this.loginForm = this.formBuilder.group({
-      username: ['', Validators.required],
-      password: ['', Validators.required]
+      email: ['', Validators.required],
+      password: ['', Validators.required],
+      siteId: ['', Validators.required]
     });
   }
 
+  isValid(data : any) {
+    console.log(data)
+  }
 
+  getSelected(siteId : any){
+    if(siteId && localStorage.getItem("id_site")){
+
+    console.log(siteId.toString() === localStorage.getItem("id_site"))
+     return  siteId.toString() === localStorage.getItem("id_site");
+    }
+    return false
+  }
 
   ngOnInit() {
-   this.styles= this.dataCsService.getStyles('Component/Login')
+    if(localStorage.getItem("id_site")){
+      this.siteId = localStorage.getItem("id_site");
+    }
+    this.styles = this.dataCsService.getStyles('Component/Login')
+    this.sites = this.dataCsService.getSite()
+    this.dataCsService.getCustoms('Component/Custom').subscribe(data => this.customs = data);
   }
 }

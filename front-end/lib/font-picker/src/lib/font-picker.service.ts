@@ -10,6 +10,7 @@ import { FONT_PICKER_CONFIG  } from './font-picker.interfaces';
 
 import { FontInterface, GoogleFontsInterface,
   FontPickerConfigInterface  } from './font-picker.interfaces';
+
 import { DataCsService } from '@app/data/service/data-cs.service';
 
 @Injectable()
@@ -29,6 +30,7 @@ export class FontPickerService {
    * Loads the given font from Google Web Fonts.
    */
   public loadFont(font: FontInterface): void {
+    console.log("req")
     try {
       WebFont.load({
         google: {
@@ -55,8 +57,9 @@ export class FontPickerService {
       if (sort) {
         requestUrl = requestUrl.concat('&sort=' + sort);
       }
+        return <Observable<GoogleFontsInterface>> this.http.get(requestUrl).pipe(
+      );
 
-      return <Observable<any>> this.csService.getStyles('font/')
     }
   }
 

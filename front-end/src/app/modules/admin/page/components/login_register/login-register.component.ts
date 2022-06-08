@@ -34,34 +34,22 @@ export class LoginRegisterComponent implements OnInit {
       setTimeout(() => this.dynamicImport.loadComponent(layout), 250);
   }
 
-  public editCustoms(customObj: any, dbUrl: string) {
-    console.log('edit', customObj, dbUrl)
-    let curCustom: any = this.customs.find(customsObj => customsObj.name === customObj.name);
-    if (typeof curCustom !== "undefined") {
-      Object.keys(curCustom).map(key => {
-        if (customObj.hasOwnProperty(key)) {
-          curCustom[key] = customObj[key];
-        }
-      })
-      this.dataCsService.editCustoms(curCustom, dbUrl).subscribe(res => console.log("başarılı: ", res));
-    } else {
-      console.log("hata");
-    }
-  }
+
 
   public editStyles(styleObj: any, dbUrl: string) {
     console.log('edit', styleObj, dbUrl)
-    let curStyle: any = this.styles.find(stylesObj => stylesObj.name === styleObj.name);
-    if (typeof curStyle !== "undefined") {
-      Object.keys(curStyle).map(key => {
-        if (styleObj.hasOwnProperty(key)) {
-          curStyle[key] = styleObj[key];
-        }
-      })
-      this.dataCsService.editStyles(curStyle, dbUrl).subscribe(res => console.log("başarılı: ", res));
-    } else {
-      console.log("hata");
-    }
+    this.styles.map((stylesObj : any) => {
+
+      if (stylesObj.name === styleObj.name) {
+        Object.keys(stylesObj).map((key) => {
+          if (styleObj.hasOwnProperty(key)) {
+            stylesObj[key as keyof DataCs] = styleObj[key];
+          }
+        })
+      }
+    });
+
+  this.dataCsService.editStyles(this.styles,dbUrl).subscribe(data => console.log(data))
   }
 
   public getStyles(dbUrl: string) {
@@ -86,7 +74,7 @@ export class LoginRegisterComponent implements OnInit {
     if (!this.customs) {
       console.log('girdi Customs')
       this.loaded.show();
-      this.dataCsService.getCustoms(dbUrl ? dbUrl : 'custom/').subscribe((value) => {
+      this.dataCsService.getCustoms(dbUrl ? dbUrl : 'Component/Custom').subscribe((value) => {
         this.customs = value;
         this.isAllLoaded(true, 'customs');
       });
@@ -95,26 +83,32 @@ export class LoginRegisterComponent implements OnInit {
     }
   }
 
-  addCustoms(customObj: CustomCs, dbUrl: string) {
-    if (customObj) {
-      this.dataCsService.createCustoms(customObj, dbUrl).subscribe(res => console.log("başarılı: ", res));
-    }
+    public editCustoms(customObj: any, dbUrl: string) {
+    console.log('edit', customObj, dbUrl)
+    this.customs.map((customsObj : any) => {
 
-    this.dataCsService.getCustoms(dbUrl ? dbUrl : 'custom/').subscribe((value) => {
-      this.customs = value;
+      if (customsObj.name === customObj.name) {
+        Object.keys(customsObj).map((key) => {
+          if (customObj.hasOwnProperty(key)) {
+            customsObj[key as keyof CustomCs] = customObj[key];
+          }
+        })
+      }
     });
 
+  this.dataCsService.editCustoms(this.customs,dbUrl).subscribe(data => console.log(data))
   }
 
-  deleteCustom(customObj: CustomCs, dbUrl: string) {
-    console.log(customObj)
-    if (customObj && customObj.id) {
-      console.log(customObj)
-      this.dataCsService.deleteCustoms(customObj.id, dbUrl).subscribe(res => console.log('başarılı'))
-    }
-    this.dataCsService.getCustoms(dbUrl ? dbUrl : 'custom/').subscribe((value) => {
-      this.customs = value;
-    });
+  addCustoms(customObj: any, dbUrl: string) {
+  this.customs = [...this.customs,customObj]
+  console.log(this.customs)
+  this.dataCsService.editCustoms(this.customs,dbUrl).subscribe(data => console.log(data))
+  }
+
+  deleteCustom(customObj: any, dbUrl: string) {
+  this.customs = this.customs.filter((item) => item.name !== customObj.name )
+  console.log(this.customs)
+  this.dataCsService.editCustoms(this.customs,dbUrl).subscribe(data => console.log(data))
   }
 
   flags = {
