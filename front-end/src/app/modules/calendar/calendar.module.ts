@@ -18,7 +18,10 @@ import localRu from '@angular/common/locales/ru';
 import localDe from '@angular/common/locales/de';
 import localUk from '@angular/common/locales/uk';
 import { registerLocaleData } from '@angular/common';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { GetFontPipe } from '../admin/page/themes/pipe/get-font.pipe';
+import {HttpClient, HttpClientModule} from '@angular/common/http';
 
 registerLocaleData(localeFr);
 registerLocaleData(localTr);
@@ -26,6 +29,12 @@ registerLocaleData(localRu);
 registerLocaleData(localRu);
 registerLocaleData(localDe);
 registerLocaleData(localUk);
+
+export function createTranslateLoader(http: HttpClient) {
+  return new TranslateHttpLoader(http, "assets/i18n/", '.json');
+}
+
+
 
 @NgModule({
   exports: [CalendarComponent],
@@ -35,6 +44,7 @@ registerLocaleData(localUk);
     FormsModule,
     NgbModalModule,
     ReactiveFormsModule,
+    HttpClientModule,
     NgxMatDatetimePickerModule,
     ContextMenuModule.forRoot({
       useBootstrap4 : true
@@ -45,7 +55,15 @@ registerLocaleData(localUk);
       useFactory: adapterFactory,
     }),
     CalendarRoutingModule,
-    AppSharedModule
+    AppSharedModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: (createTranslateLoader),
+        deps: [HttpClient],
+      },
+      defaultLanguage: 'en-US',
+    }),
   ]
 })
 export class CalendarLayoutModule { }

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, createNgModuleRef, ElementRef, Injector, Input, OnInit, SimpleChanges, ViewChild, ViewContainerRef } from '@angular/core';
 import { DataCs } from '@data/schema/data';
 import { DataCsService } from '@data/service/data-cs.service';
-import { isObservable } from 'rxjs';
+import { isObservable, Observable } from 'rxjs';
 
 
 @Component({
@@ -13,7 +13,7 @@ import { isObservable } from 'rxjs';
 export class AuthLayoutComponent implements OnInit {
   @ViewChild("contentComponent", { read: ViewContainerRef })
   public contentComponent!: ViewContainerRef;
-  styles!: DataCs[];
+  styles!: Observable<DataCs[]>;
   constructor(private injector: Injector, private dataCsService : DataCsService) {
   }
 
@@ -22,20 +22,17 @@ export class AuthLayoutComponent implements OnInit {
   }
 
   private getStyles() {
-    this.dataCsService.getStyles('Component/AuthLayout').subscribe(styles => {
-      if(styles)
-      this.styles = styles
+    this.styles =  this.dataCsService.getStyles('Component/AuthLayout')
+    this.styles.subscribe(styles => {
+     console.log(styles)
   });
 }
 
-  getStyleWithName(name : string){
-    if(this.styles && !isObservable(this.styles)){
-    let styleObj = this.styles.filter(style => style.name == name)[0];
-    if(styleObj)
-    return styleObj
-    }
-    return {}
-  }
+getFirst(dataCs : any){
+  if(!!dataCs)
+  return dataCs[0];
+  else return;
+}
 
 
 

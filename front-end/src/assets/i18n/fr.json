@@ -1,0 +1,16 @@
+{
+  "today": "aujourd'hui",
+  "month": "Mois",
+  "week": "La Semaine",
+  "day": "Journée",
+  "editEvent": "Modifier l'événement",
+  "deleteEvent": "Supprimer l'événement",
+  "addEvent": "Ajouter un événement",
+  "removing": "Suppression",
+  "areYouSure": "Êtes-vous sûr ?",
+  "startTime": "Heure de début",
+  "endTime": "Heure de fin",
+  "userNote": "Note d'utilisateur",
+  "dateError": "La date de début doit être inférieure à la date de fin !",
+  "formError": "est obligatoire !!"
+}

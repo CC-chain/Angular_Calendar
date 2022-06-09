@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { CustomMetaInterface } from '@app/data/schema/data';
 import { faSleigh } from '@fortawesome/free-solid-svg-icons';
+import { TranslateService } from '@ngx-translate/core';
 import { getRandomId } from '@syncfusion/ej2/base';
 import { CalendarEvent } from 'angular-calendar';
 import { Subject, timestamp } from 'rxjs';
@@ -13,66 +14,71 @@ import { Subject, timestamp } from 'rxjs';
 })
 export class CalendarEditComponent implements OnInit {
 
-  @Input() modalData!:  {action : string , event : CalendarEvent<CustomMetaInterface>};
+  @Input() modalData!: { action: string, event: CalendarEvent<CustomMetaInterface> };
+  @Input() siteService!: any;
+  @Input() get locale(){
+    return this._locale;
+  }
+  set locale(val){
+    this._locale = val;
+    this.translateService.use(val);
+  }
+
   @Output() onChangeEvent = new EventEmitter<CalendarEvent<CustomMetaInterface>>();
   refresh = new Subject<void>();
-
+  private  _locale!: string;
   form: FormGroup = new FormGroup({
     start: new FormControl(),
     end: new FormControl(''),
-    title: new FormControl(''),
-    resizableBeforeStart : new FormControl(''),
-    resizableAfterEnd: new FormControl(''),
-    colors: new FormControl(''),
-    userNote : new FormControl('')
+    userNote: new FormControl('')
   });
   submitted = false;
 
 
-  get f(): {[key:string] : AbstractControl}{
+  get f(): { [key: string]: AbstractControl } {
     return this.form.controls;
   }
 
-   onSubmit(): void {
+  onSubmit(): void {
     this.submitted = true;
     if (this.form.invalid) {
       console.log(this.form)
       return;
     }
-    console.log(this.modalData.event)
     this.onChangeEvent.emit(this.modalData.event)
   }
 
-  constructor(private formBuilder : FormBuilder) { }
+  constructor(private formBuilder: FormBuilder , private translateService : TranslateService) { }
 
   ngOnInit(): void {
     this.form = this.formBuilder.group(
       {
-        start: [,Validators.required],
-        end: ['',Validators.required],
-        title: ['',Validators.required],
-        resizableBeforeStart: ['',Validators.required],
-        resizableAfterEnd: ['',Validators.required],
-        colors: ['',Validators.required],
-        userNote : ['', Validators.required],
-      }
+        start: [, Validators.required],
+        end: ['', Validators.required],
+        userNote: ['', Validators.required],
+      }, {validators : this.dateLessThan('start','end')}
     )
   }
 
-  eventChange(event: any , prop : string){
-    switch(prop){
-      case 'color':
-        this.modalData.event.color!.primary = event;
-        this.modalData.event.color!.secondary = event
-        break;
-      case 'afterEnd':
-        this.modalData.event.resizable!.afterEnd = event;
-        break;
-      case 'beforeStart':
-        this.modalData.event.resizable!.beforeStart = event
-        break;
+  dateLessThan(from: string, to: string) {
+    return (group: FormGroup): { [key: string]: any } => {
+      let f = new Date(group.controls[from].value);
+      let t = new Date(group.controls[to].value);
+
+      if (f > t) {
+      console.log(f,t)
+        return {
+          dates: "Date start should be less than Date end"
+        };
+      }
+      return {};
+    }
+  }
+
+  eventChange(event: any, prop: string) {
+    switch (prop) {
       case 'start':
-        this.modalData.event.start = event ;
+        this.modalData.event.start = event;
         break
       case 'end':
         this.modalData.event.end = event;

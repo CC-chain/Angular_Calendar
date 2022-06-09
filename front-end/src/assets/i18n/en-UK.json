@@ -1,0 +1,16 @@
+{
+  "today": "Today",
+  "month": "Month",
+  "week": "Week",
+  "day": "Day",
+  "editEvent": "Edit Event",
+  "deleteEvent": "Delete Event",
+  "addEvent": "Add Event",
+  "removing": "Removing",
+  "areYouSure": "Are you sure ?",
+  "startTime": "Start Time",
+  "endTime": "End Time",
+  "userNote": "User Note",
+  "dateError": "Date start should be less than Date end !!",
+  "formError": "is required !!"
+}

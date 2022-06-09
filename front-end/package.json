@@ -34,6 +34,8 @@
     "@fortawesome/free-brands-svg-icons": "^6.1.1",
     "@fortawesome/free-solid-svg-icons": "^6.1.1",
     "@ng-bootstrap/ng-bootstrap": "^12.1.0",
+    "@ngx-translate/core": "^14.0.0",
+    "@ngx-translate/http-loader": "^7.0.0",
     "@perfectmemory/ngx-contextmenu": "^7.0.1",
     "@popperjs/core": "^2.10.2",
     "@syncfusion/ej2": "^20.1.56",

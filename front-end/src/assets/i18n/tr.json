@@ -1,0 +1,16 @@
+{
+  "today": "Bugün",
+  "month": "Ay",
+  "week": "Hafta",
+  "day": "Gün",
+  "editEvent": "Etkinliği Düzenle",
+  "deleteEvent": "Etkinliği Sil",
+  "addEvent": "Etkinlik Ekle",
+  "removing": "Kaldırılıyor",
+  "areYouSure": "Emin misiniz?",
+  "startTime": "Başlangıç Zamanı",
+  "endTime": "Bitiş Zamanı",
+  "userNote": "Kullanıcı Notu",
+  "dateError": "Tarih başlangıcı, Tarih bitişinden küçük olmalıdır !!",
+  "formError": "gerekli !!"
+}

@@ -51,10 +51,9 @@ export class CustomComponent {
     if(this._contextID){
     const el = this._document.getElementById('script-'+ this._contextID)
     if(el != null && typeof el != undefined){
-      el.innerHTML = "";
-      let text = this._renderer2.createText(script)
-      this._renderer2.appendChild(el,text);
-    }else {
+      this._renderer2.removeChild(this._document.body,el)
+    }
+
     let scriptTag = this._renderer2.createElement('script');
     this._renderer2.setProperty(scriptTag, "id", 'script-'+ this._contextID);
     scriptTag.type = "text/javascript";
@@ -62,7 +61,7 @@ export class CustomComponent {
     scriptTag.text = script;
     console.log(script)
     this._renderer2.appendChild(this._document.body, scriptTag);
-    }
+
   }
   }
 
@@ -70,11 +69,8 @@ export class CustomComponent {
     if(this._contextID){
     const el = this._document.getElementById("style-"+ this._contextID);
     if (el != null && typeof el != undefined)  {
-      el.innerHTML = "";
-      let text = this._renderer2.createText(style)
-      this._renderer2.appendChild(el,text);
+      this._renderer2.removeChild(this._document.head,el)
     }
-    else {
       let styleTag = this._renderer2.createElement('style');
       let text = this._renderer2.createText(style);
       this._renderer2.setProperty(styleTag, "id", 'style-'+this._contextID);
@@ -82,7 +78,6 @@ export class CustomComponent {
       styleTag.async = true;
       this._renderer2.appendChild(this._document.head, styleTag);
     }
-  }
   }
 
 

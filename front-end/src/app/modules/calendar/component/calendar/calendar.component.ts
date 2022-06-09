@@ -23,8 +23,10 @@ import { WeekViewHour, WeekViewHourColumn, WeekViewHourSegment } from 'calendar-
 import { addMinutes, isSameDay } from 'date-fns';
 import { CustomDateFormatter } from '@modules/calendar/provider/custom-date-formatter.provider'
 import { CalendarConfig, CustomMetaInterface, DataCs } from '@app/data/schema/data';
-import { formatDate } from '@angular/common';
+import { formatDate} from '@angular/common';
 import { Font, FontPickerService } from '@lib/font-picker/src/public-api';
+import { TranslateService } from '@ngx-translate/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'mwl-demo-component',
@@ -104,7 +106,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   config!: CalendarConfig;
 
 
-  constructor(public dataService: AsyncEventsService, public fontPickerService: FontPickerService) {
+  constructor(public dataService: AsyncEventsService, public fontPickerService: FontPickerService,
+     public translateService : TranslateService , private modal: NgbModal) {
   }
 
   ngOnInit() {
@@ -169,6 +172,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     this.dataService.addEvent(event)
     this.ngOnInit();
     this.refresh.next();
+    this.modal.dismissAll();
   }
 
   editEvents(newEvent: CalendarEvent<CustomMetaInterface>) {
@@ -184,7 +188,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
 
     this.ngOnInit();
     this.refresh.next()
-
+    this.modal.dismissAll();
   }
 
   editEventContext(event: any) {
@@ -195,9 +199,11 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     this.dataService.handleEvent('Delete', event.item)
   }
 
-  addEventContext(event: any) {
+  addEventContext(event: any , duration : any) {
     console.log(event)
-    this.dataService.handleEvent('Add', new Date(event.item))
+    let newStartTime = new Date(event.item);
+    let newEndTime = new Date(newStartTime.getTime() + duration * 60000)
+    this.dataService.handleEvent('Add', {newStartTime,newEndTime})
   }
   setView(view: CalendarView) {
     this.view = view;
@@ -377,4 +383,28 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     }
     return font;
   }
+
+  getDays(days : WeekDay[], locale : string): WeekDay[]{
+    let tempDays = days;
+    console.log(days)
+    if(locale.substring(0,2) != "en"){
+      console.log(locale)
+      let temp = tempDays[0];
+      tempDays[0] = tempDays[tempDays.length-1];
+      tempDays[tempDays.length - 1] = temp;
+    }
+    console.log(tempDays)
+    return tempDays;
+  }
+}
+
+
+interface WeekDay {
+    date: Date;
+    day: number;
+    isPast: boolean;
+    isToday: boolean;
+    isFuture: boolean;
+    isWeekend: boolean;
+    cssClass?: string;
 }

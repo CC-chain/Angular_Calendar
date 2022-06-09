@@ -1,0 +1,17 @@
+{
+  "today" : "Heute",
+  "month" : "Monat",
+  "week" : "Woche",
+  "day" : "Tag",
+  "editEvent" : "Ereignis bearbeiten",
+  "deleteEvent" : "Veranstaltung löschen",
+  "addEvent" : "Ereignis hinzufügen",
+  "removing" : "entfernen",
+  "areYouSure" : "Bist du dir sicher?",
+  "startTime" : "Startzeit",
+  "endTime" : "Endzeit",
+  "userNote" : "Benutzeranmerkung",
+  "dateError" : "Startdatum sollte kleiner sein als Enddatum !!",
+  "formError" : "ist nötig !!"
+}
+

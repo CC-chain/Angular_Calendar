@@ -1,12 +1,12 @@
  <div class="modal-header">
-  <h5 class="modal-title">Edit Event</h5>
+  <h5 class="modal-title">{{modalData.action == "Add" ? ("addEvent" | translate) : ("editEvent" | translate)}}</h5>
   <ng-content></ng-content>
 </div>
 <div class="modal-body">
   <div class="register-form">
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <div class="form-group">
-        <label>Start Time</label>
+        <label>{{"startTime" | translate}}</label>
         <input
           type="datetime-local"
           formControlName="start"
@@ -16,11 +16,11 @@
           [ngClass]="{'is-invalid': submitted && f['start'].errors}"
           />
         <div *ngIf="submitted && f['start'].errors" class="invalid-feedback">
-          <div *ngIf="f['start'].errors['required']">Start Time is required</div>
+          <div *ngIf="f['start'].errors['required']">{{"startTime" | translate}} {{"formError" | translate}}</div>
         </div>
       </div>
       <div class="form-group">
-        <label>End Time</label>
+        <label>{{"endTime" | translate}}</label>
         <input
           type="datetime-local"
           formControlName="end"
@@ -30,66 +30,12 @@
           [ngClass]="{'is-invalid': submitted && f['end'].errors}"
           />
         <div *ngIf="submitted && f['end'].errors" class="invalid-feedback">
-          <div *ngIf="f['end'].errors['required']">End Time is required</div>
+          <div *ngIf="f['end'].errors['required']">{{"endTime" | translate}} {{"formError" | translate}}</div>
         </div>
       </div>
+       <label *ngIf="form.errors" style="color:red">{{ "dateError" | translate}}</label>
       <div class="form-group">
-        <label>Title</label>
-        <input
-          type="text"
-          formControlName="title"
-          class="form-control"
-          [(ngModel)]="modalData.event.title"
-          [ngClass]="{'is-invalid': submitted && f['title'].errors}"
-          />
-        <div *ngIf="submitted && f['title'].errors" class="invalid-feedback">
-          <div *ngIf="f['title'].errors['required']">Title is required</div>
-        </div>
-      </div>
-      <div class="form-group">
-        <label>Color</label>
-        <input
-          type="color"
-          formControlName="colors"
-          class="form-control-color"
-          [ngModel]="modalData.event.color?.primary"
-          (ngModelChange)="eventChange($event,'color')"
-          [ngClass]="{'is-invalid': submitted && f['colors'].errors}"
-          />
-        <div *ngIf="submitted && f['colors'].errors" class="invalid-feedback">
-          <div *ngIf="f['colors'].errors['required']">Color is required</div>
-        </div>
-      </div>
-      <div class="form-group">
-        <label>Resizable Before Start</label>
-        <input
-          type="checkbox"
-          formControlName="resizableBeforeStart"
-          class="form-check"
-          [ngModel]="modalData.event.resizable?.beforeStart"
-          (ngModelChange)="eventChange($event,'beforeStart')"
-          [ngClass]="{'is-invalid': submitted && f['resizableBeforeStart'].errors}"
-          />
-        <div *ngIf="submitted && f['resizableBeforeStart'].errors" class="invalid-feedback">
-          <div *ngIf="f['resizableBeforeStart'].errors['required']">Resizable Before Start is required</div>
-        </div>
-      </div>
-      <div class="form-group">
-        <label>Resizable After Start</label>
-        <input
-          type="checkbox"
-          formControlName="resizableAfterEnd"
-          class="form-check"
-          [ngModel]="modalData.event.resizable?.afterEnd"
-          (ngModelChange)="eventChange($event,'afterEnd')"
-          [ngClass]="{'is-invalid': submitted && f['resizableAfterEnd'].errors}"
-          />
-        <div *ngIf="submitted && f['resizableAfterEnd'].errors" class="invalid-feedback">
-          <div *ngIf="f['resizableAfterEnd'].errors['required']">Resizable After End is required</div>
-        </div>
-      </div>
-      <div class="form-group">
-        <label>UserNote</label>
+        <label>{{"userNote" | translate}}</label>
         <input
           type="text"
           formControlName="userNote"
@@ -99,7 +45,7 @@
           [ngClass]="{'is-invalid': submitted && f['userNote'].errors}"
           />
         <div *ngIf="submitted && f['userNote'].errors" class="invalid-feedback">
-          <div *ngIf="f['userNote'].errors['required']">Title is required</div>
+          <div *ngIf="f['userNote'].errors['required']">{{"userNote" | translate}} {{"formError" | translate}}</div>
         </div>
       </div>
       <div class="form-group">

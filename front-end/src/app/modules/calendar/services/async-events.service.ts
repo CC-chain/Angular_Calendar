@@ -50,8 +50,8 @@ export class AsyncEventsService {
     }
     if (action == "Add") {
       let newEvent: CalendarEvent<CustomMetaInterface> = {
-        start: new Date(event),
-        end: new Date(event),
+        start: event.newStartTime,
+        end: event.newEndTime,
         title: '',
         allDay: false,
         cssClass: '',

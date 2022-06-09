@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <div class="auth-container"
-    [ngStyle]="getStyleWithName('AuthLayoutContainerBg')">
+    [ngStyle]="getFirst((styles | async))">
     <div class="auth-box">
       <div class="container">
         <router-outlet></router-outlet>

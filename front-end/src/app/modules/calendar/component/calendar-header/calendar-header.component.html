@@ -17,7 +17,7 @@
             [(viewDate)]="viewDate"
             (viewDateChange)="viewDateChange.next(viewDate)"
           >
-            Bugün
+          {{ "today" | translate}}
           </div>
           <div
             class="btn "
@@ -42,7 +42,7 @@
             (click)="viewChange.emit(CalendarView.Month)"
             [class.active]="view === CalendarView.Month"
           >
-            Month
+          {{ "month" | translate}}
           </div>
           <div
             class="btn "
@@ -50,7 +50,7 @@
             (click)="viewChange.emit(CalendarView.Week)"
             [class.active]="view === CalendarView.Week"
           >
-            Week
+          {{ "week" | translate}}
           </div>
           <div
             class="btn "
@@ -58,7 +58,7 @@
             (click)="viewChange.emit(CalendarView.Day)"
             [class.active]="view === CalendarView.Day"
           >
-            Day
+          {{ "day" | translate}}
           </div>
         </div>
       </div>

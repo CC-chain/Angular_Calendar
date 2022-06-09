@@ -24,8 +24,12 @@ export class CustomEditorComponent implements OnInit {
       this.customElement = value
       //To trigger content sections
       this.customElement.content += " ";
+      //
+
+      this.customElement.script = value.script;
+      this.customElement.style = value.style;
       this.customElement.content = value.content;
-      console.log(this.customElement.id)
+      console.log(this.customElement)
 
     })
    }
