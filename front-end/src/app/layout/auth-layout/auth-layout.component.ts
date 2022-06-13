@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, createNgModuleRef, ElementRef, Injector, Input, OnInit, SimpleChanges, ViewChild, ViewContainerRef } from '@angular/core';
+import { default_authLayout } from '@app/data/schema/defaultData';
 import { DataCs } from '@data/schema/data';
 import { DataCsService } from '@data/service/data-cs.service';
-import { isObservable, Observable } from 'rxjs';
+import { isObservable, Observable, of } from 'rxjs';
 
 
 @Component({
@@ -13,7 +14,7 @@ import { isObservable, Observable } from 'rxjs';
 export class AuthLayoutComponent implements OnInit {
   @ViewChild("contentComponent", { read: ViewContainerRef })
   public contentComponent!: ViewContainerRef;
-  styles!: Observable<DataCs[]>;
+  styles: Observable<DataCs[]> = of(default_authLayout);
   constructor(private injector: Injector, private dataCsService : DataCsService) {
   }
 
@@ -29,9 +30,9 @@ export class AuthLayoutComponent implements OnInit {
 }
 
 getFirst(dataCs : any){
-  if(!!dataCs)
+  if(dataCs)
   return dataCs[0];
-  else return;
+  else return {};
 }
 
 

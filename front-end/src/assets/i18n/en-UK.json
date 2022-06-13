@@ -12,5 +12,9 @@
   "endTime": "End Time",
   "userNote": "User Note",
   "dateError": "Date start should be less than Date end !!",
-  "formError": "is required !!"
+  "formError": "is required !!",
+  "Service": "Service",
+  "Duration": "Duration",
+  "Price": "Price",
+  "Description": "Description"
 }

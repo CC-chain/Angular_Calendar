@@ -2,7 +2,9 @@
   <c-nav-item *ngFor="let comp of comps">
     <a [active]="comp.id == 1" [cTabContent]="tabContentColors" [routerLink]
       [tabPaneIdx]="comp.id -1"
-      cNavLink (click)="loadForm(comp.component)">
+      cNavLink (click)="loadForm(comp.component); comp.component ==
+      'CalendarLayoutComponent'
+      ? getStyles('Component/CalendarLayout') : getStyles(comp?.url || 'empty')">
       {{comp.name}}
     </a>
   </c-nav-item>
@@ -121,6 +123,29 @@
   <c-tab-pane>
     <c-card classes="mb-3">
       <c-card-header>
+        <h2>Background Color</h2>
+      </c-card-header>
+      <c-card-body>
+        <c-row>
+          <ng-template ngFor let-styleEl [ngForOf]="styles
+            | getSpecifics :
+            'backgroundColor'">
+            <c-col xl='2' md='4' sm='6' xs='12' class=''>
+            <app-app-theme-color
+              [colorPickr]="styleEl.backgroundColor"
+              [$styleElement]="styleEl | modelToDto :
+              ['name','backgroundColor']"
+              (styleElementChange)="editStyles($event,'Component/CalendarLayout')">
+              <h3
+                style="text-align:center;font-size:15px;font-weight:bold">Calendar Layout</h3>
+            </app-app-theme-color>
+            </c-col>
+          </ng-template>
+        </c-row>
+      </c-card-body>
+    </c-card>
+    <c-card classes="mb-3">
+      <c-card-header>
         <h2>Select a theme for Calendar</h2>
       </c-card-header>
       <c-card-body>
@@ -153,6 +178,13 @@
             </div>
           </c-col>
         </c-row>
+
+        <div class="d-grid gap-2 mx-auto">
+          <button type="button" [cModalToggle]="fullScreen.id" cButton
+            class="btn btn-outline-primary btn-block text-center"
+            (click)="loadForm('CalendarComponent')">Refresh
+            Calendar</button>
+        </div>
       </c-card-body>
     </c-card>
   </c-tab-pane>

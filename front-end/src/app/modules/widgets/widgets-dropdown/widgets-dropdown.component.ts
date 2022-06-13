@@ -4,11 +4,14 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  Input,
   OnInit,
   ViewChild
 } from '@angular/core';
 import { getStyle } from '@coreui/utils/src';
 import { ChartjsComponent } from '@coreui/angular-chartjs';
+import { DashboardInfos } from '@app/modules/admin/page/dashboard/component/dashboard.component';
+import { GetMonthly } from '@app/data/schema/data';
 
 @Component({
   selector: 'app-widgets-dropdown',
@@ -18,9 +21,11 @@ import { ChartjsComponent } from '@coreui/angular-chartjs';
 })
 export class WidgetsDropdownComponent implements OnInit, AfterContentInit {
 
+  @Input() infos!: DashboardInfos;
+
   constructor(
     private changeDetectorRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   data: any[] = [];
   options: any[] = [];
@@ -37,10 +42,6 @@ export class WidgetsDropdownComponent implements OnInit, AfterContentInit {
     'October',
     'November',
     'December',
-    'January',
-    'February',
-    'March',
-    'April'
   ];
   datasets = [
     [{
@@ -49,27 +50,20 @@ export class WidgetsDropdownComponent implements OnInit, AfterContentInit {
       borderColor: 'rgba(255,255,255,.55)',
       pointBackgroundColor: getStyle('--cui-primary'),
       pointHoverBorderColor: getStyle('--cui-primary'),
-      data: [65, 59, 84, 84, 51, 55, 40]
+      data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     }], [{
       label: 'My Second dataset',
       backgroundColor: 'transparent',
       borderColor: 'rgba(255,255,255,.55)',
       pointBackgroundColor: getStyle('--cui-info'),
       pointHoverBorderColor: getStyle('--cui-info'),
-      data: [1, 18, 9, 17, 34, 22, 11]
-    }], [{
-      label: 'My Third dataset',
-      backgroundColor: 'rgba(255,255,255,.2)',
-      borderColor: 'rgba(255,255,255,.55)',
-      pointBackgroundColor: getStyle('--cui-warning'),
-      pointHoverBorderColor: getStyle('--cui-warning'),
-      data: [78, 81, 80, 45, 34, 12, 40],
-      fill: true
-    }], [{
+      data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    }],
+    [{
       label: 'My Fourth dataset',
       backgroundColor: 'rgba(255,255,255,.2)',
       borderColor: 'rgba(255,255,255,.55)',
-      data: [78, 81, 80, 45, 34, 12, 40, 85, 65, 23, 12, 98, 34, 84, 67, 82],
+      data: [78, 81, 80, 45, 34, 12, 40, 85, 65, 23, 12, 98],
       barPercentage: 0.7
     }]
   ];
@@ -91,8 +85,8 @@ export class WidgetsDropdownComponent implements OnInit, AfterContentInit {
         }
       },
       y: {
-        min: 30,
-        max: 89,
+        min: -8,
+        max: 100,
         display: false,
         grid: {
           display: false
@@ -125,17 +119,61 @@ export class WidgetsDropdownComponent implements OnInit, AfterContentInit {
   }
 
   setData() {
-    for (let idx = 0; idx < 4; idx++) {
+    for (let idx = 0; idx < 3; idx++) {
       this.data[idx] = {
-        labels: idx < 3 ? this.labels.slice(0, 7) : this.labels,
+        labels: this.labels,
         datasets: this.datasets[idx]
       };
+      console.log(this.data)
+      if (idx == 0) {
+        if (this.infos.monthlyUserSummary && this.infos.monthlyUserSummary.length > 0) {
+          this.data[idx].datasets[0].data = this.fillMonths(this.infos.monthlyUserSummary);
+        }
+      }
+      if (idx == 1) {
+        if (this.infos.monthlyIncomeSummary && this.infos.monthlyIncomeSummary.length > 0) {
+          this.data[idx].datasets[0].data = this.fillMonths(this.infos.monthlyIncomeSummary);
+        }
+      }
+        if (idx == 2) {
+        if (this.infos.monthlyReservationSummary && this.infos.monthlyReservationSummary.length > 0) {
+          this.data[idx].datasets[0].data = this.fillMonths(this.infos.monthlyReservationSummary);
+        }
+      }
     }
     this.setOptions();
   }
 
+
+  fillMonths(data?: GetMonthly[]) {
+    let months = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    if (data)
+      data.forEach((data) => {
+        console.log(data.month, data.total)
+        months[data.month - 1] = data.total;
+      })
+    console.log(months)
+    return months;
+  }
+
+  getTotal(data : GetMonthly[]){
+    let total = 0;
+    data.forEach((data) => total += data.total);
+    return total
+  }
+
+  getPercentage(data : GetMonthly[]){
+    let result = "0";
+    if(data.length > 1){
+      let lastMonth = data[data.length - 1].total;
+      let beforeMonth = data[data.length - 2].total;
+      result = (((lastMonth-beforeMonth)/beforeMonth)*100).toFixed(2);
+    }
+    return result;
+  }
+
   setOptions() {
-    for (let idx = 0; idx < 4; idx++) {
+    for (let idx = 0; idx < 3; idx++) {
       const options = JSON.parse(JSON.stringify(this.optionsDefault));
       switch (idx) {
         case 0: {
@@ -143,20 +181,12 @@ export class WidgetsDropdownComponent implements OnInit, AfterContentInit {
           break;
         }
         case 1: {
-          options.scales.y.min = -9;
-          options.scales.y.max = 39;
+          options.scales.y.min = -8;
+          options.scales.y.max = 3000;
           this.options.push(options);
           break;
         }
         case 2: {
-          options.scales.x = { display: false };
-          options.scales.y = { display: false };
-          options.elements.line.borderWidth = 2;
-          options.elements.point.radius = 0;
-          this.options.push(options);
-          break;
-        }
-        case 3: {
           options.scales.x.grid = { display: false, drawTicks: false };
           options.scales.x.grid = { display: false, drawTicks: false, drawBorder: false };
           options.scales.y.min = undefined;
@@ -176,7 +206,7 @@ export class WidgetsDropdownComponent implements OnInit, AfterContentInit {
 })
 export class ChartSample implements AfterViewInit {
 
-  constructor() {}
+  constructor() { }
 
   @ViewChild('chart') chartComponent!: ChartjsComponent;
 

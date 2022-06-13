@@ -1,174 +1,244 @@
 
 
 <ng-container *ngIf="editOrAdd == true">
-<i class="bi bi-pencil-square" [cModalToggle]="fullScreen.id" type="button"
-  style="color:black"></i>
-<c-modal #fullScreen [id]="data.name + data.id">
-  <c-modal-header>
-    <h2 cModalTitle style="font-weight: bolder;">{{data.name}}</h2>
-    <button [cModalToggle]="fullScreen.id" class="btn btn-outline-secondary"
-      cButtonClose>Exit</button>
-  </c-modal-header>
-  <c-modal-body>
-    <div class="register-form">
-      <form>
-        <div class="form-group">
-          <div [cFormFloating]="true" class="mb-3">
-            <input cFormControl #inputEditName placeholder="Name"
-              type="text" [value]="data.name">
-            <label clabel for="inputEditName">Name</label>
-          </div>
-        </div>
-        <div class="form-group">
-          <c-input-group>
+  <i class="bi bi-pencil-square" [cModalToggle]="fullScreen.id" type="button"
+    style="color:black"></i>
+  <c-modal #fullScreen [id]="data.name + data.id">
+    <c-modal-header>
+      <h2 cModalTitle style="font-weight: bolder;">{{data.name}}</h2>
+      <button [cModalToggle]="fullScreen.id" class="btn btn-outline-secondary"
+        cButtonClose>Exit</button>
+    </c-modal-header>
+    <c-modal-body>
+      <div class="register-form">
+        <form cForm class="row g-3 my-2" [formGroup]="form"
+          (submit)="onSubmit()">
+          <div class="form-group">
             <div [cFormFloating]="true" class="mb-3">
-              <input cFormControl [value]="data.price" placeholder="price" id="inputEditPrice"
-                type="number">
-              <label clabel for="inputEditPrice">Price</label>
+              <input cFormControl #inputEditName placeholder="Name"
+                type="text" formControlName="name" [(ngModel)]="data.name"
+                [ngClass]="{'is-invalid': submitted && f['name'].errors}">
+              <label clabel for="inputEditName">Name</label>
             </div>
-            <div [cFormFloating]="true">
-              <select cSelect id="inputEditCurrency">
-                <option value="$">Dollar <span style="font-weight: bold;">$</span></option>
-                <option value="€">Euro <span style="font-weight: bold">€</span></option>
-                <option value="£">Sterlin <span style="font-weight: bold;">£</span></option>
-                <option value="¥">Yen <span stlye="font-weight: bold">¥</span></option>
-                <option value="₺">Turkish Lira <span stlye="font-weight: bold">₺</span></option>
-              </select>
-              <label cLabel for="inputEditCurrency">Currency</label>
+            <div *ngIf="submitted && f['name'].errors" class="invalid-feedback">
+              <div *ngIf="f['name'].errors['required']">Name is required!!</div>
             </div>
-          </c-input-group>
-        </div>
-        <div class="form-group">
-          <c-input-group class="mb-3">
-            <div cFormFloating>
-              <input cFormControl placeholder="hour" style="width:190px"
-                id="inputEditDurationHour" type="number" min="0" max="24">
-              <label cLabel for="inputEditDurationHour">Duration (Hour)</label>
-            </div>
-            <span cInputGroupText style="font-weight:bold">:</span>
-            <div cFormFloating>
-              <input cFormControl placeholder="minute" style="width:190px"
-                id="inputEditDurationMinute" type="number" min="0" max="24">
-              <label cLabel for="inputEditDurationMinute">Duration (Minute)</label>
-            </div>
-          </c-input-group>
-        </div>
-        <div class="form-group">
-          <c-form-check [switch]="collapse" style="width:35%">
-            <input cFormCheckInput type="checkbox" (click)="toggleCollapse()">
-            <label cFormCheckLabel class="">A break after work</label>
-          </c-form-check>
-          <c-input-group class="" cCollapse [visible]="collapse">
-            <div cFormFloating>
-              <input cFormControl placeholder="hour" style="width:190px"
-                id="inputEditBreakHour" type="number" min="0" max="24">
-              <label cLabel for="inputEditBreakHour">Duration (Hour)</label>
-            </div>
-            <span cInputGroupText style="font-weight:bold">:</span>
-            <div cFormFloating>
-              <input cFormControl placeholder="minute" style="width:190px"
-                id="inputEditBreakMinute" type="number" min="0" max="24">
-              <label cLabel for="inputEditBreakMinute">Duration (Minute)</label>
-            </div>
-          </c-input-group>
-        </div>
-        <br>
-        <div class="form-group">
-          <div cFormFloating>
-            <textarea cFormControl placeholder="Description"
-              id="inputEditDescription" [ngStyle]="{ 'height.px': 100 }"></textarea>
-            <label cLabel for="inputEditDescription">Description</label>
           </div>
-        </div>
-      </form>
-    </div>
-  </c-modal-body>
-</c-modal>
+          <div class="form-group">
+            <c-input-group>
+              <div [cFormFloating]="true" class="mb-3">
+                <input cFormControl formControlName="price"
+                  [(ngModel)]="data.price"
+                  placeholder="price" id="inputEditPrice"
+                  type="number">
+                <label clabel for="inputEditPrice">Price</label>
+              </div>
+              <div [cFormFloating]="true">
+                <select cSelect id="inputEditCurrency"
+                  formControlName="currency" [(ngModel)]="data.currency">
+                  <option [ngValue]="1">Dollar <span style="font-weight: bold;">$</span></option>
+                  <option [ngValue]="2">Euro <span style="font-weight: bold">€</span></option>
+                  <option [ngValue]="3">Sterlin <span style="font-weight:
+                      bold;">£</span></option>
+                  <option [ngValue]="4">Yen <span stlye="font-weight: bold">¥</span></option>
+                  <option [ngValue]="5">Turkish Lira <span stlye="font-weight:
+                      bold">₺</span></option>
+                </select>
+                <label cLabel for="inputEditCurrency">Currency</label>
+              </div>
+            </c-input-group>
+          </div>
+          <div class="form-group">
+            <div cFormFloating>
+              <input cFormControl formControlName="duration" placeholder="hour"
+                style="width:190px" [(ngModel)]="data.duration"
+                [step]="config.hourDuration"
+                id="inputEditDurationHour" type="number" min="0"
+                [ngClass]="{'is-invalid': submitted && f['duration'].errors}">
+              <label cLabel for="inputEditDurationHour">Duration (Minute)</label>
+            </div>
+            <div *ngIf="submitted && f['duration'].errors"
+              class="invalid-feedback">
+              <div *ngIf="f['duration'].errors['required']">Duration is
+                required!!</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <c-form-check [switch]="true" style="width:35%">
+              <input cFormCheckInput id="checkBreak"
+                formControlName="breakAfterWork"
+                [(ngModel)]="data.breakAfter" type="checkbox">
+              <label cFormCheckLabel for="checkBreak" class="">A break after
+                work</label>
+            </c-form-check>
+            <c-input-group class="" cCollapse [visible]="data.breakAfter">
+              <div cFormFloating>
+                <input cFormControl placeholder="hour"
+                  formControlName="breakDuration"
+                  style="width:190px"
+                  id="inputEditBreakHour" [(ngModel)]="data.breakAfterDuration"
+                  type="number" min="0" [step]="config.hourDuration"
+                  [ngClass]="{'is-invalid': submitted &&
+                  f['breakDuration'].errors}">
+                <label cLabel for="inputEditBreakHour">Duration (Minute)</label>
+              </div>
+            </c-input-group>
+            <div *ngIf="submitted && f['breakDuration'].errors"
+              class="invalid-feedback">
+              <div *ngIf="f['breakDuration'].errors['breakTrue']">Break after
+                duration is
+                required!!</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div [cFormFloating]="true" class="mb-3">
+              <input cFormControl
+                type="color" formControlName="color" [(ngModel)]="data.color"
+                [ngClass]="{'is-invalid': submitted && f['color'].errors}">
+              <label clabel for="inputEditName">Color</label>
+            </div>
+            <div *ngIf="submitted && f['color'].errors" class="invalid-feedback">
+              <div *ngIf="f['color'].errors['required']">Name is required!!</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div cFormFloating>
+              <textarea cFormControl placeholder="Description"
+                formControlName="description"
+                id="inputEditDescription" [(ngModel)]="data.description"
+                [ngStyle]="{ 'height.px': 100 }"
+                [ngClass]="{'is-invalid': submitted &&
+                f['description'].errors}"></textarea>
+              <label cLabel for="inputEditDescription">Description</label>
+            </div>
+            <div *ngIf="submitted && f['description'].errors"
+              class="invalid-feedback">
+              <div *ngIf="f['description'].errors['required']">Description is
+                required!!</div>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-outline-primary"
+            style="width:100%">Submit</button>
+        </form>
+
+      </div>
+    </c-modal-body>
+  </c-modal>
 </ng-container>
-
 <ng-container *ngIf="editOrAdd == false">
-<button class="btn btn-outline-dark" [cModalToggle]="fullScreenAdd.id"> <i class="bi bi-gear-fill"
-  style="color:grey"></i></button>
-
-  <c-modal #fullScreenAdd [id]="'edit'">
-  <c-modal-header>
-    <h2 cModalTitle style="font-weight: bolder;">Add New Reservation Service</h2>
-    <button [cModalToggle]="fullScreenAdd.id" class="btn btn-outline-secondary"
-      cButtonClose>Exit</button>
-  </c-modal-header>
-  <c-modal-body>
-    <div class="register-form">
-      <form>
-        <div class="form-group">
-          <div [cFormFloating]="true" class="mb-3">
-            <input cFormControl id="inputAddName" placeholder="Name"
-              type="text">
-            <label clabel for="inputAddName">Name</label>
-          </div>
-        </div>
-        <div class="form-group">
-          <c-input-group>
+  <div [cModalToggle]="fullScreen.id" type="button">
+    <span style="font-size :14px ; font-weight:bold" class="mx-2">Add</span>
+    <i class="bi bi-plus-square-fill"
+      style="color:black"></i>
+  </div>
+  <c-modal #fullScreen [id]="'add'">
+    <c-modal-header>
+      <h2 cModalTitle style="font-weight: bolder;">{{data.name}}</h2>
+      <button [cModalToggle]="fullScreen.id" class="btn btn-outline-secondary"
+        cButtonClose>Exit</button>
+    </c-modal-header>
+    <c-modal-body>
+      <div class="register-form">
+        <form cForm class="row g-3 my-2" [formGroup]="form"
+          (submit)="onSubmit()">
+          <div class="form-group">
             <div [cFormFloating]="true" class="mb-3">
-              <input cFormControl placeholder="price" id="inputAddPrice"
-                type="number">
-              <label clabel for="inputAddPrice">Price</label>
+              <input cFormControl #inputEditName placeholder="Name"
+                type="text" formControlName="name" [(ngModel)]="data.name"
+                [ngClass]="{'is-invalid': submitted && f['name'].errors}">
+              <label clabel for="inputEditName">Name</label>
             </div>
-            <div [cFormFloating]="true">
-              <select cSelect id="inputAddCurrency">
-                <option value="$">Dollar <span style="font-weight: bold;">$</span></option>
-                <option value="€">Euro <span style="font-weight: bold">€</span></option>
-                <option value="£">Sterlin <span style="font-weight: bold;">£</span></option>
-                <option value="¥">Yen <span stlye="font-weight: bold">¥</span></option>
-                <option value="₺">Turkish Lira <span stlye="font-weight: bold">₺</span></option>
-              </select>
-              <label cLabel for="inputAddCurrency">Currency</label>
+            <div *ngIf="submitted && f['name'].errors" class="invalid-feedback">
+              <div *ngIf="f['name'].errors['required']">Name is required!!</div>
             </div>
-          </c-input-group>
-        </div>
-        <div class="form-group">
-          <c-input-group class="mb-3">
-            <div cFormFloating>
-              <input cFormControl placeholder="hour" style="width:190px"
-                id="inputAddDurationHour" type="number" min="0" max="24">
-              <label cLabel for="inputAddDurationHour">Duration (Hour)</label>
-            </div>
-            <span cInputGroupText style="font-weight:bold">:</span>
-            <div cFormFloating>
-              <input cFormControl placeholder="minute" style="width:190px"
-                id="inputAddDurationMinute" type="number" min="0" max="24">
-              <label cLabel for="inputAddDurationMinute">Duration (Minute)</label>
-            </div>
-          </c-input-group>
-        </div>
-        <div class="form-group">
-          <c-form-check [switch]="collapse" style="width:35%">
-            <input cFormCheckInput type="checkbox" (click)="toggleCollapse()">
-            <label cFormCheckLabel class="">A break after work</label>
-          </c-form-check>
-          <c-input-group class="" cCollapse [visible]="collapse">
-            <div cFormFloating>
-              <input cFormControl placeholder="hour" style="width:190px"
-                id="inputAddBreakHour" type="number" min="0" max="24">
-              <label cLabel for="inputAddBreakHour">Duration (Hour)</label>
-            </div>
-            <span cInputGroupText style="font-weight:bold">:</span>
-            <div cFormFloating>
-              <input cFormControl placeholder="minute" style="width:190px"
-                id="inputAddBreakMinute" type="number" min="0" max="24">
-              <label cLabel for="inputAddBreakMinute">Duration (Minute)</label>
-            </div>
-          </c-input-group>
-        </div>
-        <br>
-        <div class="form-group">
-          <div cFormFloating>
-            <textarea cFormControl placeholder="Description"
-              id="inputAddDescription" [ngStyle]="{ 'height.px': 100 }"></textarea>
-            <label cLabel for="inputAddDescription">Description</label>
           </div>
-        </div>
-      </form>
-    </div>
-  </c-modal-body>
-</c-modal>
+          <div class="form-group">
+            <c-input-group>
+              <div [cFormFloating]="true" class="mb-3">
+                <input cFormControl formControlName="price"
+                  [(ngModel)]="data.price"
+                  placeholder="price" id="inputEditPrice"
+                  type="number">
+                <label clabel for="inputEditPrice">Price</label>
+              </div>
+              <div [cFormFloating]="true">
+                <select cSelect id="inputEditCurrency"
+                  formControlName="currency" [(ngModel)]="data.currency">
+                  <option [ngValue]="1">Dollar <span style="font-weight: bold;">$</span></option>
+                  <option [ngValue]="2">Euro <span style="font-weight: bold">€</span></option>
+                  <option [ngValue]="3">Sterlin <span style="font-weight:
+                      bold;">£</span></option>
+                  <option [ngValue]="4">Yen <span stlye="font-weight: bold">¥</span></option>
+                  <option [ngValue]="5">Turkish Lira <span stlye="font-weight:
+                      bold">₺</span></option>
+                </select>
+                <label cLabel for="inputEditCurrency">Currency</label>
+              </div>
+            </c-input-group>
+          </div>
+          <div class="form-group">
+            <div cFormFloating>
+              <input cFormControl formControlName="duration" placeholder="hour"
+                style="width:190px" [(ngModel)]="data.duration"
+                id="inputEditDurationHour" type="number" min="0"
+                [step]="config.hourDuration"
+                [ngClass]="{'is-invalid': submitted && f['duration'].errors}">
+              <label cLabel for="inputEditDurationHour">Duration (Minute)</label>
+            </div>
+            <div *ngIf="submitted && f['duration'].errors"
+              class="invalid-feedback">
+              <div *ngIf="f['duration'].errors['required']">Duration is
+                required!!</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <c-form-check [switch]="true" style="width:35%">
+              <input cFormCheckInput id="checkBreak"
+                formControlName="breakAfterWork"
+                [(ngModel)]="data.breakAfter" type="checkbox">
+              <label cFormCheckLabel for="checkBreak" class="">A break after
+                work</label>
+            </c-form-check>
+            <c-input-group class="" cCollapse [visible]="data.breakAfter">
+              <div cFormFloating>
+                <input cFormControl placeholder="hour"
+                  formControlName="breakDuration"
+                  style="width:190px"
+                  id="inputEditBreakHour" [(ngModel)]="data.breakAfterDuration"
+                  type="number" min="0" [step]="config.hourDuration"
+                  [ngClass]="{'is-invalid': submitted &&
+                  f['breakDuration'].errors}">
+                <label cLabel for="inputEditBreakHour">Duration (Minute)</label>
+              </div>
+            </c-input-group>
+            <div *ngIf="submitted && f['breakDuration'].errors"
+              class="invalid-feedback">
+              <div *ngIf="f['breakDuration'].errors['breakTrue']">Break after
+                duration is
+                required!!</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div cFormFloating>
+              <textarea cFormControl placeholder="Description"
+                formControlName="description"
+                id="inputEditDescription" [(ngModel)]="data.description"
+                [ngStyle]="{ 'height.px': 100 }"
+                [ngClass]="{'is-invalid': submitted &&
+                f['description'].errors}"></textarea>
+              <label cLabel for="inputEditDescription">Description</label>
+            </div>
+            <div *ngIf="submitted && f['description'].errors"
+              class="invalid-feedback">
+              <div *ngIf="f['description'].errors['required']">Description is
+                required!!</div>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-outline-primary"
+            style="width:100%">Submit</button>
+        </form>
+
+      </div>
+    </c-modal-body>
+  </c-modal>
 </ng-container>

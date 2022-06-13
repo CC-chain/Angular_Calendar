@@ -1,0 +1,31 @@
+<ng-container *ngIf="isLoaded | async">
+  <div class="overlay"></div>
+  <mat-progress-spinner [mode]="'indeterminate'"></mat-progress-spinner>
+</ng-container>
+<ng-container *ngIf="((isLoaded | async) != true)">
+  <c-card style="font-weight: bold;">
+    <c-card-body>
+      <div>
+        <h2 cCardTitle>Custom Components <button type="button"
+            [cModalToggle]="customLoginComponents.id" class="btn
+            btn-outline-primary btn-sm" style="margin-left:5px"><i class="bi
+              bi-plus-circle"></i></button></h2>
+      </div>
+      <c-row>
+        <ng-container *ngFor="let custom of customs | filterCustoms :
+          'WebPages'">
+          <c-col xl='2' md='4' sm='6' xs='12' class=''>
+            <app-custom-editor [$customElement]="custom"
+              (customElementChange)="editCustoms($event,'Component/WebPage')"
+              (customElementDelete)="deleteCustom($event,'Component/WebPage')"></app-custom-editor>
+          </c-col>
+        </ng-container>
+      </c-row>
+    </c-card-body>
+  </c-card>
+</ng-container>
+<c-modal #customLoginComponents id="customLoginComponent" [fullscreen]="true">
+  <app-custom-creator [modalId]="customLoginComponents.id" [layout]="'CalendarLayoutComponent'"
+    [targetComponent]="'WebPages'"
+    (customElementChange)="addCustoms($event,'Component/WebPage')"></app-custom-creator>
+</c-modal>

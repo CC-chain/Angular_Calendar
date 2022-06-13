@@ -3,7 +3,20 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { DashboardChartDataService } from '@modules/admin/service/dashboard-charts-data';
 import { IChartProps } from '@modules/admin/interface/IChartProps'
 import { IUser } from '@modules/admin/interface/IUser'
+import { CustomMetaInterface, Employee, GetMonthly, GetWeekSummary, SiteService, SiteServiceSummary, User } from '@app/data/schema/data';
+import { CalendarEvent } from 'angular-calendar';
+import { DataCsService } from '@app/data/service/data-cs.service';
+import { LoadingService } from '@app/shared/service/loading/loading.service';
 
+
+export interface DashboardInfos {
+  lastActiveUsers: User[] | undefined,
+  calculatedIncome: any,
+  weeklySummary: GetWeekSummary | undefined,
+  monthlyUserSummary: GetMonthly[] | undefined,
+  monthlyIncomeSummary: GetMonthly[] | undefined,
+  monthlyReservationSummary: GetMonthly[] | undefined,
+}
 
 @Component({
   templateUrl: './dashboard.component.html',
@@ -11,97 +24,46 @@ import { IUser } from '@modules/admin/interface/IUser'
 })
 export class DashboardComponent implements OnInit {
 
-  constructor(private chartsData: DashboardChartDataService) {
+  constructor(private chartsData: DashboardChartDataService, private dataService: DataCsService,
+    private loader: LoadingService) {
   }
-
-  public users: IUser[] = [
-    {
-      name: 'Yiorgos Avraamu',
-      state: 'New',
-      registered: 'Jan 1, 2021',
-      country: 'Us',
-      usage: 50,
-      period: 'Jun 11, 2021 - Jul 10, 2021',
-      payment: 'Mastercard',
-      activity: '10 sec ago',
-      avatar: './assets/img/avatars/1.jpg',
-      status: 'success',
-      color: 'success'
-    },
-    {
-      name: 'Avram Tarasios',
-      state: 'Recurring ',
-      registered: 'Jan 1, 2021',
-      country: 'Br',
-      usage: 10,
-      period: 'Jun 11, 2021 - Jul 10, 2021',
-      payment: 'Visa',
-      activity: '5 minutes ago',
-      avatar: './assets/img/avatars/2.jpg',
-      status: 'danger',
-      color: 'info'
-    },
-    {
-      name: 'Quintin Ed',
-      state: 'New',
-      registered: 'Jan 1, 2021',
-      country: 'In',
-      usage: 74,
-      period: 'Jun 11, 2021 - Jul 10, 2021',
-      payment: 'Stripe',
-      activity: '1 hour ago',
-      avatar: './assets/img/avatars/3.jpg',
-      status: 'warning',
-      color: 'warning'
-    },
-    {
-      name: 'Enéas Kwadwo',
-      state: 'Sleep',
-      registered: 'Jan 1, 2021',
-      country: 'Fr',
-      usage: 98,
-      period: 'Jun 11, 2021 - Jul 10, 2021',
-      payment: 'Paypal',
-      activity: 'Last month',
-      avatar: './assets/img/avatars/4.jpg',
-      status: 'secondary',
-      color: 'danger'
-    },
-    {
-      name: 'Agapetus Tadeáš',
-      state: 'New',
-      registered: 'Jan 1, 2021',
-      country: 'Es',
-      usage: 22,
-      period: 'Jun 11, 2021 - Jul 10, 2021',
-      payment: 'ApplePay',
-      activity: 'Last week',
-      avatar: './assets/img/avatars/5.jpg',
-      status: 'success',
-      color: 'primary'
-    },
-    {
-      name: 'Friderik Dávid',
-      state: 'New',
-      registered: 'Jan 1, 2021',
-      country: 'Pl',
-      usage: 43,
-      period: 'Jun 11, 2021 - Jul 10, 2021',
-      payment: 'Amex',
-      activity: 'Yesterday',
-      avatar: './assets/img/avatars/6.jpg',
-      status: 'info',
-      color: 'dark'
-    }
-  ];
+  isLoaded = this.loader.loading$;
+  public users!: User[];
+  public employees!: Employee[];
+  public reservations!: CalendarEvent<CustomMetaInterface>[];
+  public siteService!: SiteService[];
   public mainChart: IChartProps = {};
   public chart: Array<IChartProps> = [];
+  public dashboardInfos: DashboardInfos = {
+    calculatedIncome: 0,
+    monthlyIncomeSummary: undefined,
+    lastActiveUsers: undefined,
+    monthlyReservationSummary: undefined,
+    monthlyUserSummary: undefined,
+    weeklySummary: undefined
+  };
   public trafficRadioGroup = new FormGroup({
     trafficRadio: new FormControl('Month')
   });
 
   ngOnInit(): void {
+    this.loader.show();
+    this.getDashboard();
     this.initCharts();
+    this.getEmployee();
+    let wait = setInterval(() => {
+      if (
+        typeof this.dashboardInfos.lastActiveUsers != 'undefined' &&
+        typeof this.dashboardInfos.monthlyIncomeSummary != 'undefined' &&
+        typeof this.dashboardInfos.monthlyReservationSummary != 'undefined' &&
+        typeof this.dashboardInfos.monthlyUserSummary != 'undefined' &&
+        typeof this.dashboardInfos.weeklySummary != 'undefined'
+      ) {
+        this.loader.hide();
+        clearInterval(wait);
+      }
+
+    }, 200);
   }
 
   initCharts(): void {
@@ -114,5 +76,54 @@ export class DashboardComponent implements OnInit {
     this.chartsData.initMainChart(value);
     this.initCharts();
   }
+
+  addEmployee(event: any) {
+    this.dataService.addEmployee(event, "Employee/Insert").subscribe(data => console.log(data));
+    this.getEmployee();
+  }
+
+  getEmployee() {
+    this.dataService.getEmployee("Employee/List").subscribe(data => this.employees = data);
+  }
+
+  deleteEmployee(emp : any){
+    this.dataService.deleteEmployee(emp.id,"Employee/Delete").subscribe(data => console.log(data))
+    this.getEmployee();
+  }
+
+
+  getDashboard() {
+    this.dataService.getDashboard<GetWeekSummary>("Dashboard/GetWeeklySummary").subscribe(data =>
+      this.dashboardInfos.weeklySummary = data);
+    this.dataService.getDashboard<GetMonthly[]>("Dashboard/GetMonthlyUserSummary").subscribe(data =>
+      this.dashboardInfos.monthlyUserSummary = data);
+    this.dataService.getDashboard<GetMonthly[]>("Dashboard/GetMonthlyIncomeSummary").subscribe(data =>
+      this.dashboardInfos.monthlyIncomeSummary = data);
+    this.dataService.getDashboard<GetMonthly[]>("Dashboard/GetMonthlyReservationSummary").subscribe(data =>
+      this.dashboardInfos.monthlyReservationSummary = data);
+    this.dataService.getDashboard<User[]>("Dashboard/GetLastActiveUsers").subscribe(data =>
+      this.dashboardInfos.lastActiveUsers = data);
+
+  }
+
+  getTotal(data: GetMonthly[] | SiteServiceSummary[]) {
+    let total = 0;
+    data.forEach((data) => total += data.total);
+    return total
+  }
+
+  getPercentage(data: GetWeekSummary , day : number , isCompletedReservations : boolean) {
+   let daySummary = data.daySummary
+   let index =  daySummary.findIndex(data => {return data.day == day})
+   if(index != -1){
+     if(isCompletedReservations)
+     return ((daySummary[index].completedTotal)/(daySummary[index].completedTotal + daySummary[index].cancelledTotal))* 100
+     if(!isCompletedReservations)
+     return ((daySummary[index].cancelledTotal)/(daySummary[index].completedTotal + daySummary[index].cancelledTotal))* 100
+   }
+   return 0;
+  }
+
+
 
 }

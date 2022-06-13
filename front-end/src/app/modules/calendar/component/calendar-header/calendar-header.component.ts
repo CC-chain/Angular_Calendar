@@ -17,6 +17,8 @@ export class CalendarHeaderComponent {
     return this._locale
   }
 
+  @Input() weekStartsOn!: number;
+
   set locale(val){
     this._locale = val;
     this.translateService.use(val);

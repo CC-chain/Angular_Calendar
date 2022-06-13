@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators, AbstractControl, FormArray } from '@angular/forms';
 import { tap, delay, finalize, catchError, filter, timeout } from 'rxjs/operators';
 import { BehaviorSubject, Observable, of, Subject, Subscription } from 'rxjs';
+import {default_login} from '@data/schema/defaultData'
 
 import { AuthService } from '@core/service/auth.service';
 import { DataCsService } from '@app/data/service/data-cs.service';
@@ -17,10 +18,10 @@ import { DynamicImportService } from '@app/shared/service/dynamic_import/dynamic
 })
 export class LoginComponent implements OnInit {
   @Input() _disable!: boolean;
-  styles!: Observable<DataCs[]>;
+  styles: Observable<DataCs[]> = of(default_login);
   sites!: Observable<Site[]>
   siteId!: any;
-  customs: CustomCs[] = [];
+  customs!: Observable<CustomCs[]>
   error!: string;
   isLoading!: boolean;
   loginForm!: FormGroup;
@@ -69,7 +70,8 @@ export class LoginComponent implements OnInit {
       localStorage.setItem("id_site", event.toString());
       this.styles = this.dataCsService.getStyles('Component/Login')
       this.styles.subscribe(data => console.log(data))
-      this.dataCsService.getCustoms('Component/Custom').subscribe(data => this.customs = data);
+      this.customs = this.dataCsService.getCustoms('Component/Custom')
+      this.customs.subscribe(data => console.log(data));
       window.location.reload();
     }
   }
@@ -99,8 +101,9 @@ export class LoginComponent implements OnInit {
     if(localStorage.getItem("id_site")){
       this.siteId = localStorage.getItem("id_site");
     }
-    this.styles = this.dataCsService.getStyles('Component/Login')
-    this.sites = this.dataCsService.getSite()
-    this.dataCsService.getCustoms('Component/Custom').subscribe(data => this.customs = data);
+    this.styles = this.dataCsService.getStyles('Component/Login');
+    this.sites = this.dataCsService.getSite();
+    this.customs = this.dataCsService.getCustoms('Component/Custom');
+    console.log(this.styles)
   }
 }

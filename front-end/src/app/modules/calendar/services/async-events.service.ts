@@ -1,5 +1,6 @@
+import { formatDate } from '@angular/common';
 import { Injectable, TemplateRef } from '@angular/core';
-import { CalendarConfig, CustomMetaInterface } from '@app/data/schema/data';
+import { CalendarConfig, CustomMetaInterface, SiteOfTime } from '@app/data/schema/data';
 import { DataCsService } from '@app/data/service/data-cs.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CalendarEvent, CalendarEventAction, CalendarEventTimesChangedEvent, CalendarView } from 'angular-calendar';
@@ -68,7 +69,8 @@ export class AsyncEventsService {
         meta: {
           siteServiceId: Number(localStorage.getItem("id_site")),
           userId: Number(localStorage.getItem("id_user")),
-          userMessage: ''
+          userMessage: '',
+          isCancelled: false
         }
       }
       event = newEvent
@@ -163,8 +165,8 @@ export class AsyncEventsService {
 
   addEvent(event: CalendarEvent<CustomMetaInterface>, dbUrl: string = 'Reservation/Insert') {
     let modifiedEvent = {
-      start : event.start,
-      end : event.end,
+      start : formatDate(event.start, 'YYYY-MM-ddTHH:mm:ss.sss', "en-us") + "Z",
+      end : formatDate(event.end! , 'YYYY-MM-ddTHH:mm:ss.sss', "en-us") + "Z",
       cssClass : event.cssClass ? event.cssClass : '',
       color : event.color!.primary,
       resizable : event.resizable,
@@ -200,7 +202,7 @@ export class AsyncEventsService {
     this.dataService.editCalendar(modifiedEvent, dbUrl).subscribe(data => console.log(data));
   }
 
-  deleteEvents(eventId : number, dbUrl: string = 'Reservation/Delete') {
+  deleteEvents(eventId : number, dbUrl: string = 'Reservation/Cancel') {
     this.dataService.deleteCalendar(eventId, dbUrl).subscribe(data => console.log(data));
   }
 
@@ -242,5 +244,24 @@ export class AsyncEventsService {
       }
     } )
     return properAction;
+  }
+
+  addSiteOfTime(data : any){
+    this.dataService.addSiteOfTime(data,"SiteOffTime/Insert").subscribe(data => console.log(data));
+  }
+
+  fetchSiteOfTime() : Observable<SiteOfTime[]>{
+    return this.dataService.getSiteOfTime("SiteOffTime/List").pipe(
+      map((event : SiteOfTime[])  => {
+        event.forEach(data => {
+          data.date = new Date(data.date);
+          data.endDate = new Date(data.endDate)
+        })
+        return event;
+      }))
+  }
+
+  deleteSiteOfTime(data : any){
+    this.dataService.deleteSiteOfTime(data.id,"SiteOffTime/Delete").subscribe(data => console.log(data));
   }
 }

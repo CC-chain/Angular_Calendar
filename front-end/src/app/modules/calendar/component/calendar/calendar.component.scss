@@ -59,6 +59,10 @@
   .nav-tabs .nav-link:focus {
     border-color: $border-color;
   }
+
+  p{
+    color : $text-color
+  }
 }
 
 
@@ -120,5 +124,9 @@
   .nav-tabs .nav-link:hover,
   .nav-tabs .nav-link:focus {
     border-color: $border-color;
+  }
+
+  p{
+    color : $text-color
   }
 }

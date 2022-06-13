@@ -12,5 +12,9 @@
   "endTime": "Bitiş Zamanı",
   "userNote": "Kullanıcı Notu",
   "dateError": "Tarih başlangıcı, Tarih bitişinden küçük olmalıdır !!",
-  "formError": "gerekli !!"
+  "formError": "gerekli !!",
+  "Service": "Hizmet",
+  "Duration": "Süre",
+  "Price": "Fiyat",
+  "Description": "Tanım"
 }

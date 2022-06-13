@@ -1,18 +1,71 @@
 <c-nav variant="pills">
-  <a [cTabContent]="tabContent" [routerLink] [tabPaneIdx]="0" [active]="true" hidden>
-</a>
+  <a [cTabContent]="tabContent" [routerLink] [tabPaneIdx]="0"
+    cNavLink (click)="getStyles('Component/AuthLayout');
+    getCustoms('AuthLayout')">
+    Background
+  </a>
   <a [cTabContent]="tabContent" [routerLink] [tabPaneIdx]="1"
-    cNavLink (click)="getStyles('Component/Login'); getCustoms('LoginComponent')">
+    cNavLink (click)="getStyles('Component/Login');
+    getCustoms('LoginComponent')">
     Login
   </a>
   <a [cTabContent]="tabContent" [routerLink] [tabPaneIdx]="2"
-    cNavLink (click)="getStyles('Component/Register'); getCustoms('RegisterComponent')">
+    cNavLink (click)="getStyles('Component/Register');
+    getCustoms('RegisterComponent')">
     Register
   </a>
 </c-nav>
 <c-tab-content #tabContent="cTabContent">
   <c-tab-pane>
-
+    <ng-container *ngIf="((isLoaded | async) != true)">
+      <c-card style="font-weight: bold;">
+        <c-card-body>
+          <ng-container *ngIf="styles">
+          <h2 cCardTitle>Background</h2>
+          <c-row>
+            <label class="d-block">
+              <h3>Background Image</h3>
+              <input type="file" class="form-control"
+                (change)="onPhotoChange($event)" accept="image/*"
+                />
+              <button class="btn btn-outline-primary form-control"
+                (click)="imageUrl= undefined">Clean</button>
+              <div *ngIf="imageUrl" class="text-center" style="border:1px solid
+                black">
+                <img style="padding:15px;" [src]="imageUrl" class="img-fluid">
+                <button class="btn btn-outline-primary form-control" (click)="uploadPhoto(styles[0])">Upload Photo</button>
+              </div>
+            </label>
+          </c-row>
+          </ng-container>
+        </c-card-body>
+      </c-card>
+      <c-card style="font-weight: bold;">
+        <c-card-body>
+          <div>
+            <h2 cCardTitle>Custom Components <button type="button"
+                [cModalToggle]="customLayoutComponents.id" class="btn
+                btn-outline-primary btn-sm" style="margin-left:5px"><i class="bi
+                  bi-plus-circle"></i></button></h2>
+          </div>
+          <c-row>
+            <ng-container *ngFor="let custom of customs | filterCustoms :
+              'AuthLayoutComponent'">
+              <c-col xl='2' md='4' sm='6' xs='12' class=''>
+                <app-custom-editor [$customElement]="custom"
+                  (customElementChange)="editCustoms($event,'Component/Custom')"
+                  (customElementDelete)="deleteCustom($event,'Component/Custom')"></app-custom-editor>
+              </c-col>
+            </ng-container>
+          </c-row>
+        </c-card-body>
+      </c-card>
+      <div class="d-grid gap-2 mx-auto">
+        <button type="button" class="btn btn-outline-primary btn-block
+          text-center" [cModalToggle]="fullScreen.id" cButton
+          (click)="loadForm('AuthLayoutComponent')">Refresh Layout Page</button>
+      </div>
+    </ng-container>
   </c-tab-pane>
   <c-tab-pane classes="p-3">
     <ng-container *ngIf="((isLoaded | async) != true)">
@@ -75,9 +128,9 @@
       <c-card style="font-weight: bold;">
         <c-card-body>
           <h2 cCardTitle>Custom Components <button type="button"
-                [cModalToggle]="customRegisterComponents.id" class="btn
-                btn-outline-primary btn-sm" style="margin-left:5px"><i class="bi
-                  bi-plus-circle"></i></button></h2>
+              [cModalToggle]="customRegisterComponents.id" class="btn
+              btn-outline-primary btn-sm" style="margin-left:5px"><i class="bi
+                bi-plus-circle"></i></button></h2>
           <c-row>
             <ng-container *ngFor="let custom of customs | filterCustoms :
               'RegisterComponent'">
@@ -116,5 +169,11 @@
   [fullscreen]="true">
   <app-custom-creator [modalId]="customRegisterComponents.id"
     [targetComponent]="'RegisterComponent'"
+    (customElementChange)="addCustoms($event,'Component/Custom')"></app-custom-creator>
+</c-modal>
+<c-modal #customLayoutComponents id="customRegisterComponent"
+  [fullscreen]="true">
+  <app-custom-creator [modalId]="customRegisterComponents.id"
+    [targetComponent]="'AuthLayoutComponent'"
     (customElementChange)="addCustoms($event,'Component/Custom')"></app-custom-creator>
 </c-modal>

@@ -44,6 +44,7 @@ import { ContextMenuModule } from 'ngx-contextmenu';
 import { HttpClientModule } from '@angular/common/http';
 import { CalendarLayoutModule } from './modules/calendar/calendar.module';
 import { DynamicImportService } from './shared/service/dynamic_import/dynamic-import.service';
+import { NgxNavbarModule } from 'ngx-bootstrap-navbar';
 
 const DEFAULT_FONT_PICKER_CONFIG: FontPickerConfigInterface = {
   apiKey : 'AIzaSyCNwa0xQsLZuC3fzA7rE2ykvJBVm1YFqPI'
@@ -78,6 +79,7 @@ const APP_CONTAINERS = [
     BadgeModule,
     BreadcrumbModule,
     ButtonGroupModule,
+    NgxNavbarModule,
     ButtonModule,
     CardModule,
     DropdownModule,

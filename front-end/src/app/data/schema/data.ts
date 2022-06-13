@@ -1,8 +1,9 @@
+import { AnyObject } from "chart.js/types/basic";
 
 
 export class DataCs {
   constructor(
-    public id: number,
+    public id: string,
     public name: string,
     public backgroundColor: string,
     public color: string,
@@ -17,7 +18,7 @@ export class DataCs {
 
 export class CustomCs {
   constructor(
-    public id: number | null,
+    public id: string | null,
     public name: string,
     public layout: string,
     public content: string,
@@ -43,14 +44,6 @@ export class CalendarConfig {
     public hourSegmentHeight: number,
     public precision: string,
     public locale: string,
-    public monthViewColumnHeader: string,
-    public monthViewDayNumber: string,
-    public monthViewTitle: string,
-    public weekViewColumnHeader: string,
-    public weekViewColumnSubHeader: string,
-    public weekViewHour: string,
-    public dayViewHour: string,
-    public dayViewTitle: string,
     public excludeDays: number[],
     public weekendDays: number[],
     public theme: {
@@ -107,19 +100,20 @@ export interface CustomMetaInterface {
   userMessage: string,
   siteService?: SiteService,
   user?: User,
+  isCancelled: boolean,
 }
 
 export interface SiteService {
-  id: number,
+  id?: number,
   name: string,
-  breakAfter: true,
-  breakAfterDuration: number,
+  breakAfter: boolean,
+  breakAfterDuration?: number,
   color: string,
-  price: number,
-  currency: number,
+  price?: number,
+  currency?: number,
   description: string,
   duration: number,
-  images: Image[],
+  images?: Image[],
 }
 
 export interface User {
@@ -134,4 +128,64 @@ export interface Image {
   id: number,
   title: string,
   path: string,
+}
+
+export interface Employee {
+  id?: number,
+  firstName: string,
+  lastName: string,
+  phoneNumber: string,
+  password?: string,
+  code?: string,
+  email: string,
+  gender: number,
+  lastLoginDate?: Date,
+}
+
+export interface Role {
+  id?: number,
+  role: string,
+}
+
+export interface SiteServiceDay {
+  id?: number,
+  day: number,
+  isHoliday: boolean,
+  date: Date,
+  siteServiceId: number,
+}
+
+export interface SiteOfTime {
+  id?: number,
+  day: number,
+  isFullDay: boolean,
+  date: any,
+  endDate: any
+}
+
+export interface GetWeekSummary {
+  completedReservationTotal: number,
+  cancelledReservationTotal: number,
+  siteServiceTotal: number,
+  userTotal: number,
+  maleTotal: number,
+  femaleTotal: number,
+  daySummary: DaySummary[],
+  siteServiceSummary: SiteServiceSummary[]
+}
+
+export interface DaySummary {
+  day: number,
+  completedTotal: number,
+  cancelledTotal: number
+}
+
+export interface SiteServiceSummary {
+  siteServiceName: string,
+  total: number
+}
+
+export interface GetMonthly {
+  month: number,
+  total: number
 }

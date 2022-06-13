@@ -6,16 +6,10 @@
 >
   <c-sidebar-brand
     [brandFull]="{
-      src: 'assets/img/brand/coreui-pro-angular-white.svg',
-      width: 190,
+      src: 'http://localhost:5001/Images/' + siteId + '.jpg',
+      width: 80,
       height: 35,
-      alt: 'CoreUI Logo'
-    }"
-    [brandNarrow]="{
-      src: 'assets/img/brand/coreui-signet-white.svg',
-      width: 46,
-      height: 46,
-      alt: 'CoreUI Logo'
+      alt: siteId
     }"
     routerLink="./"
   >

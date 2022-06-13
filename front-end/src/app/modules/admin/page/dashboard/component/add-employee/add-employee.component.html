@@ -1,0 +1,96 @@
+ <div class="modal-header">
+  <h5 class="modal-title">Add Employee</h5>
+  <ng-content></ng-content>
+</div>
+<div class="modal-body">
+  <div class="register-form">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label>Name and Surname</label>
+        <div class="input-group">
+
+        <input
+          type="text"
+          formControlName="firstName"
+          class="form-control"
+          [ngModel]="modalData.firstName"
+          (ngModelChange)="eventChange($event,'firstName')"
+          [ngClass]="{'is-invalid': submitted && f['firstName'].errors}"
+          />
+          <div class="input-group-append">
+            <span style="font-weight:bold" class="input-group-text">and</span>
+          </div>
+         <input
+          type="text"
+          formControlName="lastName"
+          class="form-control"
+          [ngModel]="modalData.lastName"
+          (ngModelChange)="eventChange($event,'lastName')"
+          [ngClass]="{'is-invalid': submitted && f['lastName'].errors}"
+          />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input
+          type="text"
+          formControlName="email"
+          class="form-control"
+          [ngModel]="modalData.email"
+          (ngModelChange)="eventChange($event,'email')"
+          [ngClass]="{'is-invalid': submitted && f['email'].errors}"
+          />
+      </div>
+      <div class="form-group">
+        <label>Phone Number</label>
+        <div stlye="width : 100%">
+        <ngx-intl-tel-input
+        [cssClass]="'form-control'"
+        [preferredCountries]="preferredCountries"
+        [enableAutoCountrySelect]="true"
+        [enablePlaceholder]="true"
+        [searchCountryFlag]="true"
+        [searchCountryField]="[
+          SearchCountryField.Iso2,
+          SearchCountryField.Name
+        ]"
+        [selectFirstCountry]="false"
+        [selectedCountryISO]="CountryISO.Turkey"
+        [maxLength]="15"
+        [phoneValidation]="true"
+        [separateDialCode]="separateDialCode"
+        [numberFormat]="PhoneNumberFormat.National"
+        name="phoneNumber"
+        formControlName="phoneNumber"
+      >
+        </ngx-intl-tel-input>
+        </div>
+      </div>
+       <div class="form-group">
+        <label>Gender</label>
+        <label>
+          <input type="radio" [value]="1"  formControlName="gender">
+            <span>Male</span>
+        </label>
+        <label>
+          <input type="radio" [value]="2" formControlName="gender">
+            <span>Female</span>
+        </label>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+         <input
+          type="password"
+          formControlName="password"
+          class="form-control"
+          [ngModel]="modalData.password"
+          (ngModelChange)="eventChange($event,'password')"
+          [ngClass]="{'is-invalid': submitted && f['password'].errors}"
+          />
+      </div>
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary">Change it</button>
+      </div>
+    </form>
+  </div>
+</div>

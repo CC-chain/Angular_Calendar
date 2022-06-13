@@ -12,12 +12,20 @@ const routes: Routes = [{
   pathMatch:'full'
 },
 {
-  path: 'home',
+  path: 'home/calendar',
   component: CalendarLayoutComponent,
   canActivate: [AuthGuard],
   loadChildren: () =>
       import('@modules/calendar/calendar.module').then(m => m.CalendarLayoutModule)
-},{
+},
+{
+  path: 'home/web',
+  component: CalendarLayoutComponent,
+  canActivate: [AuthGuard],
+  loadChildren: () =>
+      import('@modules/web-pages/web-pages.module').then(m => m.WebPagesModule)
+},
+{
   path: 'auth',
   loadChildren: () =>
   import('@modules/auth/auth.module').then(m => m.AuthModule)

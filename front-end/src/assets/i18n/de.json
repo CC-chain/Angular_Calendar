@@ -12,6 +12,10 @@
   "endTime" : "Endzeit",
   "userNote" : "Benutzeranmerkung",
   "dateError" : "Startdatum sollte kleiner sein als Enddatum !!",
-  "formError" : "ist nötig !!"
+  "formError" : "ist nötig !!",
+  "Service" : "Service",
+  "Duration" : "Dauer",
+  "Price" : "Preis",
+  "Description" : "Beschreibung"
 }
 

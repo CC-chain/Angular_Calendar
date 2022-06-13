@@ -1,104 +1,16 @@
 
-<app-widgets-dropdown></app-widgets-dropdown>
-<c-card class="mb-4">
-  <c-card-body>
-    <c-row>
-      <c-col sm="5">
-        <h4 class="card-title mb-0" id="traffic">
-          Traffic
-        </h4>
-        <div class="small text-medium-emphasis">January - December 2021</div>
-      </c-col>
-      <c-col class="d-none d-md-block" sm="7">
-        <button cButton class="float-end" color="primary">
-          <svg cIcon name="cilCloudDownload"></svg>
-        </button>
-        <form [formGroup]="trafficRadioGroup">
-          <c-button-group class="float-end me-3" role="group">
-            <input
-              class="btn-check"
-              formControlName="trafficRadio"
-              type="radio"
-              value="Day"
-            />
-            <label
-              (click)="setTrafficPeriod('Day')"
-              cButton
-              cFormCheckLabel
-              color="secondary"
-              variant="outline"
-            >Day</label>
 
-            <input
-              class="btn-check"
-              formControlName="trafficRadio"
-              type="radio"
-              value="Month"
-            />
-            <label
-              (click)="setTrafficPeriod('Month')"
-              cButton
-              cFormCheckLabel
-              color="secondary"
-              variant="outline"
-            >Month</label>
+    <ng-container *ngIf="(isLoaded | async) == true">
+      <div class="overlay"></div>
+      <mat-progress-spinner [mode]="'indeterminate'"></mat-progress-spinner>
+    </ng-container>
 
-            <input
-              class="btn-check"
-              formControlName="trafficRadio"
-              type="radio"
-              value="Year"
-            />
-            <label
-              (click)="setTrafficPeriod('Year')"
-              cButton
-              cFormCheckLabel
-              color="secondary"
-              variant="outline"
-            >Year</label>
-          </c-button-group>
-        </form>
-      </c-col>
-    </c-row>
-    <c-chart [data]="mainChart.data"
-             [height]="300"
-             [ngStyle]="{'marginTop.px': 40}"
-             [options]="mainChart.options"
-             [type]="mainChart.type">
-      Main chart
-    </c-chart>
-  </c-card-body>
-  <c-card-footer>
-    <c-row class="text-center" [md]="3" [xs]="1">
-      <c-col class="mb-sm-2 mb-1 ">
-        <div class="text-medium-emphasis">Visits</div>
-        <strong>29.703 Users (40%)</strong>
-        <c-progress class="mt-2" thin>
-          <c-progress-bar color="success" value="40"></c-progress-bar>
-        </c-progress>
-      </c-col>
-      <c-col class="mb-sm-2 mb-1">
-        <div class="text-medium-emphasis">Page views</div>
-        <strong>78.706 Views (60%)</strong>
-        <c-progress class="mt-2" thin>
-          <c-progress-bar color="warning" value="60"></c-progress-bar>
-        </c-progress>
-      </c-col>
-      <c-col class="mb-sm-2 mb-2">
-        <div class="text-medium-emphasis">New Users</div>
-        <strong>22.123 Users (80%)</strong>
-        <c-progress class="mt-2" thin>
-          <c-progress-bar color="danger" value="80"></c-progress-bar>
-        </c-progress>
-      </c-col>
-    </c-row>
-  </c-card-footer>
-</c-card>
-
+<div *ngIf="(isLoaded | async) != true">
+<app-widgets-dropdown [infos]="dashboardInfos"></app-widgets-dropdown>
 <c-row>
   <c-col xs>
     <c-card class="mb-4">
-      <c-card-header>Traffic {{ "&" }} Sales</c-card-header>
+      <c-card-header>Weekly General Information</c-card-header>
       <c-card-body>
         <c-row>
           <c-col md="6" xl="6" xs="12">
@@ -107,8 +19,8 @@
                 <div
                   class="border-start border-start-4 border-start-info py-1 px-3"
                 >
-                  <div class="text-medium-emphasis small">New Clients</div>
-                  <div class="fs-5 fw-semibold">9,123</div>
+                  <div class="text-medium-emphasis small">Completed Reservations</div>
+                  <div class="fs-5 fw-semibold">{{dashboardInfos.weeklySummary?.completedReservationTotal}}</div>
                 </div>
               </c-col>
               <c-col sm="6">
@@ -116,9 +28,9 @@
                   class="border-start border-start-4 border-start-danger py-1 px-3 mb-3"
                 >
                   <div class="text-medium-emphasis small">
-                    Recurring Clients
+                    Canceled Reservations
                   </div>
-                  <div class="fs-5 fw-semibold">22,643</div>
+                  <div class="fs-5 fw-semibold">{{dashboardInfos.weeklySummary?.cancelledReservationTotal}}</div>
                 </div>
               </c-col>
             </c-row>
@@ -133,13 +45,13 @@
                 <c-progress thin>
                   <c-progress-bar
                     color="info"
-                    value="34"
+                    [value]="getPercentage(dashboardInfos.weeklySummary!,1,true)"
                   ></c-progress-bar>
                 </c-progress>
                 <c-progress thin>
                   <c-progress-bar
                     color="danger"
-                    value="78"
+                    [value]="getPercentage(dashboardInfos.weeklySummary!,1,false)"
                   ></c-progress-bar>
                 </c-progress>
               </div>
@@ -152,12 +64,13 @@
                 <c-progress thin>
                   <c-progress-bar
                     color="info"
-                    value="56"
+                    [value]="getPercentage(dashboardInfos.weeklySummary!,2,true)"
                   ></c-progress-bar>
                 </c-progress>
                 <c-progress thin>
                   <c-progress-bar
                     color="danger"
+                    [value]="getPercentage(dashboardInfos.weeklySummary!,2,false)"
                     value="94"
                   ></c-progress-bar>
                 </c-progress>
@@ -171,13 +84,13 @@
                 <c-progress thin>
                   <c-progress-bar
                     color="info"
-                    value="12"
+                    [value]="getPercentage(dashboardInfos.weeklySummary!,3,true)"
                   ></c-progress-bar>
                 </c-progress>
                 <c-progress thin>
                   <c-progress-bar
                     color="danger"
-                    value="67"
+                    [value]="getPercentage(dashboardInfos.weeklySummary!,3,false)"
                   ></c-progress-bar>
                 </c-progress>
               </div>
@@ -190,13 +103,13 @@
                 <c-progress thin>
                   <c-progress-bar
                     color="info"
-                    value="43"
+                    [value]="getPercentage(dashboardInfos.weeklySummary!,4,true)"
                   ></c-progress-bar>
                 </c-progress>
                 <c-progress thin>
                   <c-progress-bar
                     color="danger"
-                    value="91"
+                    [value]="getPercentage(dashboardInfos.weeklySummary!,4,false)"
                   ></c-progress-bar>
                 </c-progress>
               </div>
@@ -209,13 +122,13 @@
                 <c-progress thin>
                   <c-progress-bar
                     color="info"
-                    value="22"
+                    [value]="getPercentage(dashboardInfos.weeklySummary!,5,true)"
                   ></c-progress-bar>
                 </c-progress>
                 <c-progress thin>
                   <c-progress-bar
                     color="danger"
-                    value="73"
+                    [value]="getPercentage(dashboardInfos.weeklySummary!,5,false)"
                   ></c-progress-bar>
                 </c-progress>
               </div>
@@ -228,13 +141,13 @@
                 <c-progress thin>
                   <c-progress-bar
                     color="info"
-                    value="53"
+                    [value]="getPercentage(dashboardInfos.weeklySummary!,6,true)"
                   ></c-progress-bar>
                 </c-progress>
                 <c-progress thin>
                   <c-progress-bar
                     color="danger"
-                    value="82"
+                    [value]="getPercentage(dashboardInfos.weeklySummary!,6,false)"
                   ></c-progress-bar>
                 </c-progress>
               </div>
@@ -247,13 +160,13 @@
                 <c-progress thin>
                   <c-progress-bar
                     color="info"
-                    value="9"
+                    [value]="getPercentage(dashboardInfos.weeklySummary!,0,true)"
                   ></c-progress-bar>
                 </c-progress>
                 <c-progress thin>
                   <c-progress-bar
                     color="danger"
-                    value="69"
+                    [value]="getPercentage(dashboardInfos.weeklySummary!,0,false)"
                   ></c-progress-bar>
                 </c-progress>
               </div>
@@ -265,14 +178,14 @@
                 >&nbsp;</span
                 ></sup
                 >
-                <span>New clients</span>
+                <span>Reservations</span>
                 &nbsp;&nbsp;
                 <sup
                 ><span class="badge badge-pill badge-sm bg-danger"
                 >&nbsp;</span
                 ></sup
                 >
-                <span>Recurring clients</span>
+                <span>Canceled Reservations</span>
               </small>
             </div>
           </c-col>
@@ -283,16 +196,16 @@
                 <div
                   class="border-start border-start-4 border-start-warning py-1 px-3 mb-3"
                 >
-                  <div class="text-medium-emphasis small">Page views</div>
-                  <div class="fs-5 fw-semibold">78,623</div>
+                  <div class="text-medium-emphasis small">Total Users</div>
+                  <div class="fs-5 fw-semibold">{{dashboardInfos.weeklySummary?.userTotal}}</div>
                 </div>
               </c-col>
               <c-col sm="6">
                 <div
                   class="border-start border-start-4 border-start-success py-1 px-3 mb-3"
                 >
-                  <div class="text-medium-emphasis small">Organic</div>
-                  <div class="fs-5 fw-semibold">49,123</div>
+                  <div class="text-medium-emphasis small">Services</div>
+                  <div class="fs-5 fw-semibold">{{dashboardInfos.weeklySummary?.siteServiceTotal}}</div>
                 </div>
               </c-col>
             </c-row>
@@ -303,13 +216,21 @@
               <div class="progress-group-header">
                 <svg cIcon class="icon icon-lg me-2" name="cilUser"></svg>
                 <span>Male</span>
-                <span class="ms-auto font-semibold">43%</span>
+                <span class="ms-auto font-semibold">{{
+                  ((dashboardInfos.weeklySummary!.maleTotal)
+                  / (dashboardInfos.weeklySummary!.maleTotal + dashboardInfos.weeklySummary!.femaleTotal))
+                  * 100
+                }}%</span>
               </div>
               <div class="progress-group-bars">
                 <c-progress thin>
                   <c-progress-bar
                     color="warning"
-                    value="43"
+                    [value]="
+                  ((dashboardInfos.weeklySummary!.maleTotal)
+                  / (dashboardInfos.weeklySummary!.maleTotal + dashboardInfos.weeklySummary!.femaleTotal))
+                  * 100
+                "
                   ></c-progress-bar>
                 </c-progress>
               </div>
@@ -318,86 +239,45 @@
               <div class="progress-group-header">
                 <svg cIcon class="icon icon-lg me-2" name="cilUserFemale"></svg>
                 <span>Female</span>
-                <span class="ms-auto font-semibold">37%</span>
+                <span class="ms-auto font-semibold">{{
+                  ((dashboardInfos.weeklySummary!.femaleTotal)
+                  / (dashboardInfos.weeklySummary!.maleTotal + dashboardInfos.weeklySummary!.femaleTotal))
+                  * 100
+                }}%</span>
               </div>
               <div class="progress-group-bars">
                 <c-progress thin>
                   <c-progress-bar
                     color="warning"
-                    value="37"
+                    [value]="
+                  ((dashboardInfos.weeklySummary!.femaleTotal)
+                  / (dashboardInfos.weeklySummary!.maleTotal + dashboardInfos.weeklySummary!.femaleTotal))
+                  * 100
+                "
                   ></c-progress-bar>
                 </c-progress>
               </div>
             </div>
-
-            <div class="progress-group">
+            <ng-container *ngFor="let service of dashboardInfos.weeklySummary?.siteServiceSummary">
+              <div class="progress-group">
               <div class="progress-group-header">
-                <svg cIcon class="icon icon-lg me-2" name="cibGoogle"></svg>
-                <span>Organic Search</span>
-                <span class="ms-auto font-semibold">
-                  191,235 <span class="text-medium-emphasis small">(56%)</span>
+                {{service.siteServiceName}}
+                <span class="ms-auto font-bold">
+                  {{service.total}} <span class="text-medium-emphasis small">
+                    {{(((service.total) / getTotal(dashboardInfos.weeklySummary!.siteServiceSummary)) * 100).toFixed(2)}}%
+                  </span>
                 </span>
               </div>
               <div class="progress-group-bars">
                 <c-progress thin>
                   <c-progress-bar
                     color="success"
-                    value="56"
+                    [value]="((service.total) / getTotal(dashboardInfos.weeklySummary!.siteServiceSummary)) * 100"
                   ></c-progress-bar>
                 </c-progress>
               </div>
             </div>
-            <div class="progress-group">
-              <div class="progress-group-header">
-                <svg cIcon class="icon icon-lg me-2" name="cibFacebook"></svg>
-                <span>Facebook</span>
-                <span class="ms-auto font-semibold">
-                  51,223 <span class="text-medium-emphasis small">(15%)</span>
-                </span>
-              </div>
-              <div class="progress-group-bars">
-                <c-progress thin>
-                  <c-progress-bar
-                    color="success"
-                    value="15"
-                  ></c-progress-bar>
-                </c-progress>
-              </div>
-            </div>
-            <div class="progress-group">
-              <div class="progress-group-header">
-                <svg cIcon class="icon icon-lg me-2" name="cibTwitter"></svg>
-                <span>Twitter</span>
-                <span class="ms-auto font-semibold">
-                  37,564 <span class="text-medium-emphasis small">(11%)</span>
-                </span>
-              </div>
-              <div class="progress-group-bars">
-                <c-progress thin>
-                  <c-progress-bar
-                    color="success"
-                    value="11"
-                  ></c-progress-bar>
-                </c-progress>
-              </div>
-            </div>
-            <div class="progress-group">
-              <div class="progress-group-header">
-                <svg cIcon class="icon icon-lg me-2" name="cibLinkedin"></svg>
-                <span>LinkedIn</span>
-                <span class="ms-auto font-semibold">
-                  27,319 <span class="text-medium-emphasis small">(8%)</span>
-                </span>
-              </div>
-              <div class="progress-group-bars">
-                <c-progress thin>
-                  <c-progress-bar
-                    color="success"
-                    value="8"
-                  ></c-progress-bar>
-                </c-progress>
-              </div>
-            </div>
+            </ng-container>
             <div class="divider d-flex justify-content-center">
               <button
                 cButton
@@ -418,6 +298,61 @@
 <c-row>
   <c-col xs>
     <c-card class="mb-4">
+      <c-card-header style="font-weight:700;font-size: 16px;">Employees <span class="mx-2
+        "><button class="btn btn-outline-secondary btn-sm" [cModalToggle]="employeeAdd.id" >Add <i class="bi
+                  bi-plus-circle"></i> </button></span></c-card-header>
+      <c-card-body>
+        <table
+          [hover]="true"
+          [responsive]="true"
+          [striped]="true"
+          align="middle"
+          cTable
+          class="mb-0 border"
+        >
+          <thead cTableColor="light">
+          <tr>
+            <th>
+              <svg cIcon name="cilPeople"></svg>
+            </th>
+            <th>Activity</th>
+            <th>Info</th>
+            <th></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let user of employees; index as i">
+            <td>
+              <div>{{ user.firstName + " " + user.lastName }}</div>
+              <div class="small text-medium-emphasis">
+                <span></span> | Registered:
+              </div>
+            </td>
+            <td>
+              <div class="small text-medium-emphasis">Last login</div>
+              <strong>{{ user.lastLoginDate }}</strong>
+            </td>
+            <td>
+             <app-more-employee [data]="user"></app-more-employee>
+            </td>
+            <td>
+              <app-remove-employee [data]="user" (removedData)="deleteEmployee($event)"></app-remove-employee>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>
+<c-modal #employeeAdd id="employeeAdd" >
+<app-add-employee (onChangeEvent)="addEmployee($event)">
+ <button [cModalToggle]="employeeAdd.id" class="btn btn-outline-secondary" cButtonClose></button>
+</app-add-employee>
+</c-modal>
+<c-row>
+  <c-col xs>
+    <c-card class="mb-4">
       <c-card-header>Users</c-card-header>
       <c-card-body>
         <table
@@ -430,32 +365,20 @@
         >
           <thead cTableColor="light">
           <tr>
-            <th class="text-center">
+            <th>
               <svg cIcon name="cilPeople"></svg>
             </th>
-            <th>User</th>
             <th>Activity</th>
           </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let user of users; index as i">
-            <td class="text-center">
-              <c-avatar
-                size="md"
-                src="{{ user.avatar }}"
-                status="{{ user.status }}"
-              ></c-avatar>
-            </td>
+          <tr *ngFor="let user of dashboardInfos.lastActiveUsers; index as i">
             <td>
-              <div>{{ user.name }}</div>
-              <div class="small text-medium-emphasis">
-                <span>{{ user.state }}</span> | Registered:
-                {{ user.registered }}
-              </div>
+              <div>{{ user.firstName + " " + user.lastName }}</div>
             </td>
             <td>
               <div class="small text-medium-emphasis">Last login</div>
-              <strong>{{ user.activity }}</strong>
+              <strong>{{ user.lastLoginDate | date : 'medium' }}</strong>
             </td>
           </tr>
           </tbody>
@@ -464,3 +387,5 @@
     </c-card>
   </c-col>
 </c-row>
+</div>
+

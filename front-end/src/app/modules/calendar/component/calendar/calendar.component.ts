@@ -14,6 +14,7 @@ import {
   CalendarDateFormatter,
   CalendarEvent,
   CalendarEventTimesChangedEvent,
+  CalendarEventTitleFormatter,
   CalendarMonthViewDay,
   CalendarView,
   CalendarWeekViewBeforeRenderEvent,
@@ -22,11 +23,13 @@ import { AsyncEventsService } from '@modules/calendar/services/async-events.serv
 import { WeekViewHour, WeekViewHourColumn, WeekViewHourSegment } from 'calendar-utils';
 import { addMinutes, isSameDay } from 'date-fns';
 import { CustomDateFormatter } from '@modules/calendar/provider/custom-date-formatter.provider'
-import { CalendarConfig, CustomMetaInterface, DataCs } from '@app/data/schema/data';
-import { formatDate} from '@angular/common';
+import { CustomEventTitleFormatter } from '@modules/calendar/provider/custom-event-title-formatter.provider'
+import { CalendarConfig, CustomMetaInterface, DataCs, SiteOfTime } from '@app/data/schema/data';
+import { formatDate } from '@angular/common';
 import { Font, FontPickerService } from '@lib/font-picker/src/public-api';
 import { TranslateService } from '@ngx-translate/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { LoadingService } from '@app/shared/service/loading/loading.service';
 
 @Component({
   selector: 'mwl-demo-component',
@@ -45,7 +48,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
       .cal-day-selected,
       .cal-day-selected:hover {
-        background-color: deeppink !important;
+        background-color: #a5a0a0  !important;
       }
 
         .invalid-position .cal-event {
@@ -61,17 +64,23 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
       provide: CalendarDateFormatter,
       useClass: CustomDateFormatter,
     },
+    {
+      provide: CalendarEventTitleFormatter,
+      useClass: CustomEventTitleFormatter,
+    }
   ],
 })
 export class CalendarComponent implements OnInit, AfterViewInit {
   @ViewChild('modalEdit', { static: false }) modalEdit!: TemplateRef<any>;
   @ViewChild('modalRemove', { static: false }) modalRemove!: TemplateRef<any>;
   @ViewChild('modalAdd', { static: false }) modalAdd!: TemplateRef<any>;
+  @ViewChild('modalInfo', { static: false }) modalInfo!: TemplateRef<any>;
+
   @Input() _disable!: boolean;
 
   locale = 'tr';
 
-  view: CalendarView = CalendarView.Month;
+  view: CalendarView = CalendarView.Week;
 
   CalendarView = CalendarView;
 
@@ -89,7 +98,12 @@ export class CalendarComponent implements OnInit, AfterViewInit {
 
   selectedDays: any = [];
 
+  siteOfTime$!: Observable<SiteOfTime[]>
+
+  siteOfTime!: SiteOfTime[];
+
   selectedHours: {
+    id?: number,
     date: Date,
     column?: WeekViewHourColumn,
     hourSegment?: WeekViewHour,
@@ -105,9 +119,11 @@ export class CalendarComponent implements OnInit, AfterViewInit {
 
   config!: CalendarConfig;
 
+  isLoaded = this.loaded.loading$;
+
 
   constructor(public dataService: AsyncEventsService, public fontPickerService: FontPickerService,
-     public translateService : TranslateService , private modal: NgbModal) {
+    public translateService: TranslateService, private modal: NgbModal, public loaded: LoadingService,) {
   }
 
   ngOnInit() {
@@ -127,12 +143,41 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     })
   }
 
+
   fetchCalendarConfig() {
     this.calendarConfig$ = this.dataService.fetchCalendarConfig();
     this.calendarConfig$.subscribe(event => {
-      this.config = event
-      console.log(event)
+      this.config = event;
+      this.fetchSiteOfTime();
     })
+  }
+
+  fetchSiteOfTime() {
+    this.siteOfTime$ = this.dataService.fetchSiteOfTime();
+    this.siteOfTime$.subscribe(event => {
+      console.log(event)
+      this.siteOfTime = event;
+    })
+    this.loaded.show();
+    let wait = setInterval(() => {
+      if (this.siteOfTime != null && this.siteOfTime != undefined) {
+        this.siteOfTime.forEach(data => {
+          let newSiteOfDay = {
+            id: data.id,
+            date: data.date,
+            column: undefined,
+            hourSegment: undefined,
+            segment: undefined,
+          }
+          this.selectedHours.push(newSiteOfDay);
+        })
+        this.loaded.hide();
+        clearInterval(wait)
+      }
+      else {
+        console.log("gelmedi")
+      }
+    }, 300);
   }
 
   ngAfterViewInit() {
@@ -158,6 +203,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         }
       })
       this.dataService.editEvents(changedEvent.event, changedEvent.newStart, changedEvent.newEnd)
+      this.fetchEvents();
       this.refresh.next();
     }
     else {
@@ -165,7 +211,11 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     }
   }
 
-
+  selectedEvent!: CalendarEvent | null;
+  eventClicked({ event }: { event: CalendarEvent }): void {
+    this.selectedEvent = event;
+    this.modal.open(this.modalInfo, { size: "sm" });
+  }
 
 
   addEvent(event: CalendarEvent<CustomMetaInterface>) {
@@ -199,11 +249,11 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     this.dataService.handleEvent('Delete', event.item)
   }
 
-  addEventContext(event: any , duration : any) {
+  addEventContext(event: any, duration: any) {
     console.log(event)
     let newStartTime = new Date(event.item);
     let newEndTime = new Date(newStartTime.getTime() + duration * 60000)
-    this.dataService.handleEvent('Add', {newStartTime,newEndTime})
+    this.dataService.handleEvent('Add', { newStartTime, newEndTime })
   }
   setView(view: CalendarView) {
     this.view = view;
@@ -214,13 +264,20 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   }
 
 
+  addSelectedHours(data: any) {
+    this.dataService.addSiteOfTime(data);
+  }
+
+
   hourSegmentClicked(date: Date) {
     this.selectedDayViewDate = date;
     const selectedDateTime = this.selectedDayViewDate.getTime();
     const dateIndex = this.selectedHours.findIndex(
       (selectedHour) => selectedHour.date.getTime() === selectedDateTime
     );
+    console.log(dateIndex, this.selectedHours);
     if (dateIndex > -1) {
+      this.dataService.deleteSiteOfTime(this.selectedHours[dateIndex])
       this.selectedHours.splice(dateIndex, 1);
       this.addSelectedDayViewClass()
     } else {
@@ -232,7 +289,14 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       }
       this.selectedHours.push(selectedHour);
       let result = this.addSelectedDayViewClass(selectedHour);
-      console.log(result, this.selectedHours)
+      let newSiteOfTime: SiteOfTime = {
+        day: result.date.getDay(),
+        date: formatDate(result.date, 'YYYY-MM-ddTHH:mm:ss.sss', "en-us") + "Z",
+        endDate: formatDate(new Date(result.date.getTime() + this.config.hourDuration * 60000),'YYYY-MM-ddTHH:mm:ss.sss', "en-us") + "Z",
+        isFullDay: false
+      }
+      console.log(newSiteOfTime)
+      this.dataService.addSiteOfTime(newSiteOfTime);
 
     }
   }
@@ -242,26 +306,30 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     this.addSelectedDayViewClass();
   }
 
-  private addSelectedDayViewClass(selectedHour?: any) {
-    this.hourColumns.forEach((column) => {
-      column.hours.forEach((hourSegment) => {
-        hourSegment.segments.forEach((segment) => {
-          delete segment.cssClass;
-          if (
-            this.selectedHours.some((selectedHour) =>
-              segment.date.getTime() === selectedHour.date.getTime())
-          ) {
-            segment.cssClass = 'cal-day-selected';
-            if (selectedHour) {
-              selectedHour = { ...selectedHour, ['column']: column }
-              selectedHour = { ...selectedHour, ['hourSegment']: hourSegment }
-              selectedHour = { ...selectedHour, ['segment']: segment }
+  private addSelectedDayViewClass($selectedHour?: any) {
+      this.hourColumns.forEach((column) => {
+        column.hours.forEach((hourSegment) => {
+          hourSegment.segments.forEach((segment) => {
+            delete segment.cssClass;
+            let afterDate = new Date(segment.date.getTime() + this.config.hourDuration * 60000);
+            if (
+              this.selectedHours.some((selectedHour) => {
+                return segment.date.getTime() <= selectedHour.date.getTime()
+                  && (afterDate.getTime() > selectedHour.date.getTime())
+              })
+            ) {
+              segment.cssClass = 'cal-day-selected';
+              if ($selectedHour) {
+                $selectedHour = { ...$selectedHour, ['column']: column }
+                $selectedHour = { ...$selectedHour, ['hourSegment']: hourSegment }
+                $selectedHour = { ...$selectedHour, ['segment']: segment }
+              }
             }
-          }
+          });
         });
       });
-    });
-    return selectedHour;
+      console.log("asdasd", this.selectedHours)
+      return $selectedHour;
   }
 
   validateEventTimesChanged = (
@@ -271,7 +339,6 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     if (event.allDay) {
       return true;
     }
-
 
     console.log(this.events)
     // don't allow dragging events to the same times as other events
@@ -296,12 +363,13 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         return false;
       }
     }
-    let duration = 20
+    let duration = this.config.hourDuration
     console.log(this.selectedHours)
     const strictAreas = this.selectedHours.find((hour) => {
       if (newEnd) {
-        return (hour.date < newStart && newStart < addMinutes(hour.date, duration) ||
-          (hour.date < newEnd && newStart < addMinutes(hour.date, duration)))
+        console.log(hour.date, newStart, newEnd,duration)
+        return (hour.date <= newStart && newStart <= addMinutes(hour.date, duration) ||
+          (hour.date <= newEnd && newStart < addMinutes(hour.date, duration)))
       }
       else {
         return false
@@ -319,7 +387,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     return true;
   };
 
-  transformFont(value: any):Font{
+  transformFont(value: any): Font {
     let font!: Font
     console.log(value, font)
     if ((typeof value === 'function') || (typeof value === 'object')) {
@@ -384,27 +452,16 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     return font;
   }
 
-  getDays(days : WeekDay[], locale : string): WeekDay[]{
-    let tempDays = days;
-    console.log(days)
-    if(locale.substring(0,2) != "en"){
-      console.log(locale)
-      let temp = tempDays[0];
-      tempDays[0] = tempDays[tempDays.length-1];
-      tempDays[tempDays.length - 1] = temp;
-    }
-    console.log(tempDays)
-    return tempDays;
-  }
+
 }
 
 
 interface WeekDay {
-    date: Date;
-    day: number;
-    isPast: boolean;
-    isToday: boolean;
-    isFuture: boolean;
-    isWeekend: boolean;
-    cssClass?: string;
+  date: Date;
+  day: number;
+  isPast: boolean;
+  isToday: boolean;
+  isFuture: boolean;
+  isWeekend: boolean;
+  cssClass?: string;
 }

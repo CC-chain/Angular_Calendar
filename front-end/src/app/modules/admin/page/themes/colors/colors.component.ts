@@ -5,6 +5,8 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DynamicImportService } from '@shared/service/dynamic_import/dynamic-import.service'
 import { adminColorComponents, themes } from '@data/schema/admin'
 import { LoadingService } from '@shared/service/loading/loading.service'
+import { default_authLayout, default_calendarConfig } from '@app/data/schema/defaultData';
+import { isObservable } from 'rxjs';
 @Component({
   selector: 'app-colors',
   templateUrl: './colors.component.html',
@@ -48,7 +50,10 @@ export class ColorsComponent implements OnInit {
     this.loader.show();
     const $style = this.dataCsService.getStyles(dbUrl)
     $style.subscribe(styles => {
-      this.styles = styles
+      if(!isObservable(styles))
+      this.styles = styles;
+      else
+      this.styles = default_authLayout
     });
     var interval = setInterval(() => {
       if (this.styles) {
@@ -66,7 +71,12 @@ export class ColorsComponent implements OnInit {
     const $config = this.dataCsService.getCalendarConfig(dbUrl)
     $config.subscribe(
       data => {
+        if(!isObservable(data))
         this.config = data
+        else
+        this.config = default_calendarConfig
+
+        console.log(this.config, data)
       })
        var interval = setInterval(() => {
       if (this.config) {

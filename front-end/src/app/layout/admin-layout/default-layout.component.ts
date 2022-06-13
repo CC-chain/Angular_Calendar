@@ -7,10 +7,15 @@ import { navItems } from './_nav';
 })
 export class DefaultAdminLayoutComponent {
   public navItems = navItems;
-
+  siteId! : string;
   public perfectScrollbarConfig = {
     suppressScrollX: true,
   }
 
-  constructor() {}
+  constructor() {
+    let siteId = localStorage.getItem("id_site");
+    if(siteId != null){
+      this.siteId = siteId;
+    }
+  }
 }

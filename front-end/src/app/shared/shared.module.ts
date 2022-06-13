@@ -39,6 +39,8 @@ import { ConvertStylePipe } from './pipes/convert-style.pipe';
 import { DynamicContentPipe } from './pipes/dynamic-content.pipe';
 import { GetParsersPipe } from './pipes/get-parsers.pipe';
 import { FilterCustomsPipe } from './pipes/filter-customs.pipe';
+import { CurrencyPipe } from './pipes/currency.pipe';
+import { FilterWebSitesPipe } from './pipes/filter-web-sites.pipe';
 
 @NgModule({
   imports: [
@@ -55,6 +57,8 @@ import { FilterCustomsPipe } from './pipes/filter-customs.pipe';
     DynamicContentPipe,
     GetParsersPipe,
     FilterCustomsPipe,
+    CurrencyPipe,
+    FilterWebSitesPipe,
   ],
   exports: [
     CommonModule,
@@ -69,6 +73,8 @@ import { FilterCustomsPipe } from './pipes/filter-customs.pipe';
     DynamicContentPipe,
     GetParsersPipe,
     FilterCustomsPipe,
+    CurrencyPipe,
+    FilterWebSitesPipe,
   ]
 })
 export class AppSharedModule {

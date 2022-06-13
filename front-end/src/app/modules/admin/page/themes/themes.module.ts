@@ -33,6 +33,9 @@ const DEFAULT_FONT_PICKER_CONFIG: FontPickerConfigInterface = {
     FontPickerComponent,
     GetFontPipe,
   ],
+  exports: [
+   AppThemeColorComponent
+  ],
   imports: [
     NgbModule,
     CommonModule,

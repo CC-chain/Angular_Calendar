@@ -8,7 +8,7 @@
       btn-outline-secondary">Exit</button>
   </c-modal-header>
   <c-modal-footer>
-    <button type="button" class="btn btn-danger">Remove</button>
+    <button type="button" class="btn btn-danger" (click)="remove(data)">Remove</button>
     <button type="button" [cModalToggle]="fullScreenDelete.id" class="btn btn-secondary" data-dismiss="modal">Close</button>
   </c-modal-footer>
 </c-modal>

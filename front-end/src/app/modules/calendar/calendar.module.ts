@@ -20,7 +20,7 @@ import localUk from '@angular/common/locales/uk';
 import { registerLocaleData } from '@angular/common';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { GetFontPipe } from '../admin/page/themes/pipe/get-font.pipe';
+import { FontPickerConfigInterface, FontPickerModule, FONT_PICKER_CONFIG } from '@lib/font-picker/src/public-api';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 
 registerLocaleData(localeFr);
@@ -34,6 +34,9 @@ export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, "assets/i18n/", '.json');
 }
 
+const DEFAULT_FONT_PICKER_CONFIG: FontPickerConfigInterface = {
+  apiKey : 'AIzaSyCNwa0xQsLZuC3fzA7rE2ykvJBVm1YFqPI'
+}
 
 
 @NgModule({
@@ -64,6 +67,12 @@ export function createTranslateLoader(http: HttpClient) {
       },
       defaultLanguage: 'en-US',
     }),
+  ],
+  providers : [
+    {
+      provide : FONT_PICKER_CONFIG,
+      useValue : DEFAULT_FONT_PICKER_CONFIG
+    }
   ]
 })
 export class CalendarLayoutModule { }

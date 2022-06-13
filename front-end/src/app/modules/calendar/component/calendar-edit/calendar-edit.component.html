@@ -19,20 +19,26 @@
           <div *ngIf="f['start'].errors['required']">{{"startTime" | translate}} {{"formError" | translate}}</div>
         </div>
       </div>
-      <div class="form-group">
+      <div class="form-group" >
         <label>{{"endTime" | translate}}</label>
         <input
           type="datetime-local"
-          formControlName="end"
           class="form-control"
-          [ngModel]="modalData.event.end | date:'YYYY-MM-ddTHH:mm:ss.sss'"
-          (ngModelChange)="eventChange($event,'end')"
-          [ngClass]="{'is-invalid': submitted && f['end'].errors}"
+          [value]="modalData.event.end | date:'YYYY-MM-ddTHH:mm:ss.sss' "
+          disabled
           />
-        <div *ngIf="submitted && f['end'].errors" class="invalid-feedback">
-          <div *ngIf="f['end'].errors['required']">{{"endTime" | translate}} {{"formError" | translate}}</div>
+      </div>
+      <ng-container *ngIf="siteService | async ; let siteServices">
+       <div class="form-group">
+        <label>{{"Service" | translate}}</label>
+        <select (change)="eventChange($event, 'siteService')" formControlName="siteService" class="form-control">
+          <option *ngFor="let services of siteServices" [ngValue]="services.id">{{services.name}}</option>
+        </select>
+        <div *ngIf="submitted && f['siteService'].errors" class="invalid-feedback">
+          <div *ngIf="f['siteService'].errors['required']">{{"iteServices" | translate}} {{"formError" | translate}}</div>
         </div>
       </div>
+      </ng-container>
        <label *ngIf="form.errors" style="color:red">{{ "dateError" | translate}}</label>
       <div class="form-group">
         <label>{{"userNote" | translate}}</label>

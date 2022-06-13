@@ -11,10 +11,13 @@ import { StyleEditorComponent } from './login_register/style-editor.component';
 import { CustomEditorComponent } from './custom/custom-editor.component';
 import { AppSharedModule } from '@app/shared/shared.module';
 import { CustomCreatorComponent } from './custom/custom-creator.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {  ComponentCalendar } from './calendar/calendar.component';
 import { CalendarEventsEditComponent } from './calendar/calendar-events-edit/calendar-events-edit.component';
 import { CalendarEventsRemoveComponent } from './calendar/calendar-events-remove/calendar-events-remove.component';
+import { MdbCheckboxModule } from 'mdb-angular-ui-kit/checkbox';
+import { WebPagesComponent } from './webPages/web-pages.component'
+import { ThemesModule } from '../themes/themes.module';
 
 @NgModule({
   declarations: [
@@ -25,6 +28,7 @@ import { CalendarEventsRemoveComponent } from './calendar/calendar-events-remove
     ComponentCalendar,
     CalendarEventsEditComponent,
     CalendarEventsRemoveComponent,
+    WebPagesComponent,
   ],
   imports: [
     CommonModule,
@@ -38,12 +42,16 @@ import { CalendarEventsRemoveComponent } from './calendar/calendar-events-remove
     TableModule,
     FormsModule,
     TabsModule,
+    ReactiveFormsModule,
+    FormsModule,
+    MdbCheckboxModule,
     UtilitiesModule,
     ComponentsRoutingModule,
     AppSharedModule,
     DynamicHooksModule.forRoot({
     globalOptions : options }),
     AuthModule,
+    ThemesModule,
   ],
 })
 export class ComponentsModule { }

@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import {  ComponentCalendar } from './calendar/calendar.component';
+import { ComponentCalendar } from './calendar/calendar.component';
 import { LoginRegisterComponent } from './login_register/login-register.component';
+import { WebPagesComponent } from './webPages/web-pages.component';
 
 const routes: Routes = [{
   path: '',
@@ -13,14 +14,19 @@ const routes: Routes = [{
     {
       title: 'Login/Register',
     },
-    path:'login-register',
+    path: 'login-register',
     component: LoginRegisterComponent,
   },
-{
-  data: { title : 'Calendar'},
-  path:'calendar',
-  component: ComponentCalendar
-}],
+  {
+    data: { title: 'Calendar' },
+    path: 'calendar',
+    component: ComponentCalendar
+  },
+  {
+    data: { title: 'Web Pages' },
+    path: 'web-pages',
+    component: WebPagesComponent
+  }],
 }];
 
 @NgModule({

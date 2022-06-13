@@ -6,8 +6,18 @@ import { CustomCs, DataCs } from '@app/data/schema/data';
 })
 export class FilterCustomsPipe implements PipeTransform {
 
-  transform(value: CustomCs[]  , componentName : string): CustomCs[] {
-   return  value.filter(val => val.targetComponent === componentName)
+  transform(value: CustomCs[] | null, componentName: string): CustomCs[] {
+    console.log(value);
+    if (value != null) {
+      let filter = value.filter(val => {
+        if (val != null)
+          return val.targetComponent === componentName
+        else
+          return;
+      })
+      return filter
+    }
+    return [];
   }
 
 }

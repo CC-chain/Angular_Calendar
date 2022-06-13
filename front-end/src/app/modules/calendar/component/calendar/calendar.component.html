@@ -3,301 +3,346 @@
     <i class="fas fa-spin fa-spinner fa-5x"></i>
   </div>
 </ng-template>
-<div *ngIf="calendarConfig$ | async;else loading; let config">
-  <div [ngStyle]="transformFont(config.font)?.getStyles()"
-    [ngClass]="config.theme.name">
-    <app-calendar-header
-      [(view)]="view"
-      [(viewDate)]="viewDate"
-      [locale]="config.locale"
-      (viewDateChange)="fetchEvents()"
-      (viewChange)="fetchEvents()"
-      [theme]="config.theme.name"></app-calendar-header>
-    <br />
+<ng-container *ngIf="isLoaded | async">
+  <div class="overlay"></div>
+  <mat-progress-spinner [mode]="'indeterminate'"></mat-progress-spinner>
+</ng-container>
+<div *ngIf="(calendarConfig$ | async);else loading; let config">
+  <ng-container *ngIf="( isLoaded | async) != true">
+    {{selectedDays[1]}}
+    <div [ngStyle]="{'font' : config.font}"
+      [ngClass]="config.theme.name">
+      <app-calendar-header
+        [(view)]="view"
+        [(viewDate)]="viewDate"
+        [locale]="config.locale"
+        [weekStartsOn]="config.locale.substring(0,2) != 'en' ? 0 : 1"
+        (viewDateChange)="fetchEvents()"
+        (viewChange)="fetchEvents()"
+        [theme]="config.theme.name"></app-calendar-header>
+      <br />
 
-    <div *ngIf="events$ | async; else loading; let events">
+      <div *ngIf="events$ | async; else loading; let events">
 
-      <context-menu #eventMenu>
-        <ng-template contextMenuItem (execute)="editEventContext($event)">
-          {{"editEvent" | translate}}
+        <context-menu #eventMenu>
+          <ng-template contextMenuItem (execute)="editEventContext($event)">
+            {{"editEvent" | translate}}
+          </ng-template>
+          <ng-template contextMenuItem (execute)="deleteEventContext($event)">
+            {{"deleteEvent" | translate}}
+          </ng-template>
+        </context-menu>
+
+        <context-menu #segmentMenu>
+          <ng-template contextMenuItem (execute)="addEventContext($event,
+            config.hourDuration)">
+            {{"addEvent" | translate}}
+          </ng-template>
+        </context-menu>
+
+        <ng-template
+          #weekEventActionsTemplate
+          let-event="event"
+          let-trackByActionId="trackByActionId">
+          <span *ngIf="event.actions" class="cal-event-actions">
+            <a
+              class="cal-event-action"
+              href="javascript:;"
+              *ngFor="let action of event.actions; trackBy: trackByActionId"
+              (mwlClick)="action.onClick({ event: event, sourceEvent: $event })"
+              (mwlKeydownEnter)="action.onClick({ event: event, sourceEvent:
+              $event })" [ngClass]="action.cssClass"
+              [innerHtml]="action.label"
+              tabindex="0"
+              role="button"
+              [attr.aria-label]="{ action: action } | calendarA11y:
+              'actionButtonLabel'">
+            </a>
+          </span>
         </ng-template>
-        <ng-template contextMenuItem (execute)="deleteEventContext($event)">
-          {{"deleteEvent" | translate}}
-        </ng-template>
-      </context-menu>
 
-      <context-menu #segmentMenu>
-        <ng-template contextMenuItem (execute)="addEventContext($event,
-          config.hourDuration)">
-          {{"addEvent" | translate}}
-        </ng-template>
-      </context-menu>
-
-      <ng-template
-        #weekEventActionsTemplate
-        let-event="event"
-        let-trackByActionId="trackByActionId">
-        <span *ngIf="event.actions" class="cal-event-actions">
-          <a
-            class="cal-event-action"
-            href="javascript:;"
-            *ngFor="let action of event.actions; trackBy: trackByActionId"
-            (mwlClick)="action.onClick({ event: event, sourceEvent: $event })"
-            (mwlKeydownEnter)="action.onClick({ event: event, sourceEvent:
-            $event })" [ngClass]="action.cssClass"
-            [innerHtml]="action.label"
-            tabindex="0"
-            role="button"
-            [attr.aria-label]="{ action: action } | calendarA11y:
-            'actionButtonLabel'">
-          </a>
-        </span>
-      </ng-template>
-
-      <ng-template
-        #weekViewHourSegment
-        let-segment="segment"
-        let-locale="locale"
-        let-segmentHeight="segmentHeight"
-        let-isTimeLabel="isTimeLabel"
-        let-daysInWeek="daysInWeek">
-        <div
-          [attr.aria-hidden]="{}
-          | calendarA11y
-          : (daysInWeek === 1
-          ? 'hideDayHourSegment'
-          : 'hideWeekHourSegment')" class="cal-hour-segment"
-          [style.height.px]="segmentHeight"
-          [class.cal-hour-start]="segment.isStart"
-          [class.cal-after-hour-start]="!segment.isStart"
-          [ngClass]="segment.cssClass"
-          [contextMenu]="segmentMenu"
-          [contextMenuSubject]="segment.date">
-          <div class="cal-time" *ngIf="isTimeLabel">
-            {{
-            segment.displayDate
-            | calendarDate
-            : (daysInWeek === 1 ? 'dayViewHour' : 'weekViewHour')
-            : locale
-            }}
-          </div>
-        </div>
-      </ng-template>
-
-      <ng-template
-        #weekHeaderTemplate
-        let-days="days"
-        let-locale="locale"
-        let-dayHeaderClicked="dayHeaderClicked"
-        let-eventDropped="eventDropped"
-        let-trackByWeekDayHeaderDate="trackByWeekDayHeaderDate"
-        let-dragEnter="dragEnter">
-        <div class="cal-day-headers" role="row">
+        <ng-template
+          #weekViewHourSegment
+          let-segment="segment"
+          let-locale="locale"
+          let-segmentHeight="segmentHeight"
+          let-isTimeLabel="isTimeLabel"
+          let-daysInWeek="daysInWeek"
+          let-disabled=false>
           <div
-            class="cal-header"
-            *ngFor="let day of days; trackBy: trackByWeekDayHeaderDate"
-            [class.cal-past]="day.isPast"
-            [class.cal-today]="day.isToday"
-            [class.cal-future]="day.isFuture"
-            [class.cal-weekend]="day.isWeekend"
-            [ngClass]="day.cssClass"
-            (mwlClick)="dayHeaderClicked.emit({ day: day, sourceEvent: $event
-            })"
-            mwlDroppable
-            dragOverClass="cal-drag-over"
-            (drop)="eventDropped.emit({
-            event: $event.dropData.event,
-            newStart: day.date
-            })" (dragEnter)="dragEnter.emit({ date: day.date })"
-            tabindex="0"
-            role="columnheader">
-            <b>{{ day.date | calendarDate: 'weekViewColumnHeader':locale }}</b><br
-              />
-            <span>{{
-              day.date | calendarDate: 'weekViewColumnSubHeader':locale
-              }}</span>
+            [attr.aria-hidden]="{}
+            | calendarA11y
+            : (daysInWeek === 1
+            ? 'hideDayHourSegment'
+            : 'hideWeekHourSegment')" class="cal-hour-segment"
+            [style.height.px]="segmentHeight"
+            [class.cal-hour-start]="segment.isStart"
+            [class.cal-after-hour-start]="!segment.isStart"
+            [ngClass]="segment.cssClass"
+            [contextMenu]="!segment.cssClass ? segmentMenu : undefined "
+            [contextMenuSubject]="segment.date">
+            <div class="cal-time" *ngIf="isTimeLabel">
+              {{
+              segment.displayDate
+              | calendarDate
+              : (daysInWeek === 1 ? 'dayViewHour' : 'weekViewHour')
+              : locale
+              }}
+            </div>
           </div>
-        </div>
-      </ng-template>
+        </ng-template>
+
+        <ng-template
+          #weekHeaderTemplate
+          let-days="days"
+          let-locale="locale"
+          let-dayHeaderClicked="dayHeaderClicked"
+          let-eventDropped="eventDropped"
+          let-trackByWeekDayHeaderDate="trackByWeekDayHeaderDate"
+          let-dragEnter="dragEnter">
+          <div class="cal-day-headers" role="row">
+            <div
+              class="cal-header"
+              *ngFor="let day of days; trackBy: trackByWeekDayHeaderDate"
+              [class.cal-past]="day.isPast"
+              [class.cal-today]="day.isToday"
+              [class.cal-future]="day.isFuture"
+              [class.cal-weekend]="day.isWeekend"
+              [ngClass]="day.cssClass"
+              (mwlClick)="dayHeaderClicked.emit({ day: day, sourceEvent: $event
+              })"
+              mwlDroppable
+              dragOverClass="cal-drag-over"
+              (drop)="eventDropped.emit({
+              event: $event.dropData.event,
+              newStart: day.date
+              })" (dragEnter)="dragEnter.emit({ date: day.date })"
+              tabindex="0"
+              role="columnheader">
+              <b>{{ day.date | calendarDate: 'weekViewColumnHeader':locale }}</b><br
+                />
+              <span>{{
+                day.date | calendarDate: 'weekViewColumnSubHeader':locale
+                }}</span>
+            </div>
+          </div>
+        </ng-template>
 
 
-      <ng-template #weekEventTitleTemplate let-event="event" let-view="view">
-        <h1>{{event.meta.siteService.name}}</h1>
-      </ng-template>
+        <ng-template #weekEventTitleTemplate let-event="event" let-view="view">
+          <p style="margin: auto;text-align: center ; font-weight:bold">{{event.meta.siteService.name}}</p>
+        </ng-template>
 
-      <ng-template
-        #weekEventTemplate
-        let-weekEvent="weekEvent"
-        let-tooltipPlacement="tooltipPlacement"
-        let-eventClicked="eventClicked"
-        let-tooltipTemplate="tooltipTemplate"
-        let-tooltipAppendToBody="tooltipAppendToBody"
-        let-tooltipDisabled="tooltipDisabled"
-        let-tooltipDelay="tooltipDelay"
-        let-column="column"
-        let-daysInWeek="daysInWeek">
-        <div
-          class="cal-event"
-          [ngStyle]="{
-          backgroundColor: weekEvent.event.color?.secondary,
-          borderColor: weekEvent.event.color?.primary
-          }"
-          [mwlCalendarTooltip]="!tooltipDisabled
-          ? (weekEvent.event.title
-          | calendarEventTitle
-          : (daysInWeek === 1 ? 'dayTooltip' : 'weekTooltip')
-          : weekEvent.tempEvent || weekEvent.event)
-          : ''" [tooltipPlacement]="tooltipPlacement"
-          [tooltipEvent]="weekEvent.tempEvent || weekEvent.event"
-          [tooltipTemplate]="tooltipTemplate"
-          [tooltipAppendToBody]="tooltipAppendToBody"
-          [tooltipDelay]="tooltipDelay"
-          [contextMenu]="eventMenu"
-          [contextMenuSubject]="weekEvent.event"
-          (mwlClick)="eventClicked.emit({ sourceEvent: $event })"
-          (mwlKeydownEnter)="eventClicked.emit({ sourceEvent: $event })"
-          tabindex="0"
-          role="application"
-          [attr.aria-label]="{ event: weekEvent.tempEvent || weekEvent.event,
-          locale: locale }
-          | calendarA11y: 'eventDescription'">
-          <mwl-calendar-event-actions
-            [event]="weekEvent.tempEvent || weekEvent.event"
-            [customTemplate]="weekEventActionsTemplate">
-          </mwl-calendar-event-actions>
-          &ngsp;
-          <mwl-calendar-event-title
-            [event]="weekEvent.tempEvent || weekEvent.event"
-            [customTemplate]="weekEventTitleTemplate"
-            [view]="daysInWeek === 1 ? 'day' : 'week'">
-          </mwl-calendar-event-title>
-        </div>
-      </ng-template>
-
-      <ng-template
-        #weekViewHeaderTemplate
-        let-days="days"
-        let-locale="locale"
-        let-dayHeaderClicked="dayHeaderClicked"
-        let-eventDropped="eventDropped"
-        let-trackByWeekDayHeaderDate="trackByWeekDayHeaderDate"
-        let-dragEnter="dragEnter">
-        <div class="cal-day-headers" role="row">
+        <ng-template
+          #weekEventTemplate
+          let-weekEvent="weekEvent"
+          let-tooltipPlacement="tooltipPlacement"
+          let-eventClicked="eventClicked"
+          let-tooltipTemplate="tooltipTemplate"
+          let-tooltipAppendToBody="tooltipAppendToBody"
+          let-tooltipDisabled="tooltipDisabled"
+          let-tooltipDelay="tooltipDelay"
+          let-column="column"
+          let-daysInWeek="daysInWeek">
           <div
-            class="cal-header"
-            *ngFor="let day of getDays(days, locale); trackBy: trackByWeekDayHeaderDate"
-            [class.cal-past]="day.isPast"
-            [class.cal-today]="day.isToday"
-            [class.cal-future]="day.isFuture"
-            [class.cal-weekend]="day.isWeekend"
-            [ngClass]="day.cssClass ? day.cssClass : ''"
-            (mwlClick)="dayHeaderClicked.emit({ day: day, sourceEvent: $event
-            })"
-            mwlDroppable
-            dragOverClass="cal-drag-over"
-            (drop)="eventDropped.emit({
-            event: $event.dropData.event,
-            newStart: day.date
-            })"(dragEnter)="dragEnter.emit({ date: day.date })"
+            class="cal-event"
+            [ngStyle]="{
+            backgroundColor: weekEvent.event.color?.secondary,
+            borderColor: weekEvent.event.color?.primary
+            }"
+            [mwlCalendarTooltip]="!tooltipDisabled
+            ? (weekEvent.event.title
+            | calendarEventTitle
+            : (daysInWeek === 1 ? 'dayTooltip' : 'weekTooltip')
+            : weekEvent.tempEvent || weekEvent.event)
+            : ''" [tooltipPlacement]="tooltipPlacement"
+            [tooltipEvent]="weekEvent.tempEvent || weekEvent.event"
+            [tooltipTemplate]="tooltipTemplate"
+            [tooltipAppendToBody]="tooltipAppendToBody"
+            [tooltipDelay]="tooltipDelay"
+            [contextMenu]="eventMenu"
+            [contextMenuSubject]="weekEvent.event"
+            (mwlClick)="eventClicked.emit({ sourceEvent: $event })"
+            (mwlKeydownEnter)="eventClicked.emit({ sourceEvent: $event })"
             tabindex="0"
-            role="columnheader">
-            <b>{{ day.date | calendarDate: 'weekViewColumnHeader':locale }}</b><br
-              />
-            <span>{{
-              day.date | calendarDate: 'weekViewColumnSubHeader':locale
-              }}</span>
+            role="application"
+            [attr.aria-label]="{ event: weekEvent.tempEvent || weekEvent.event,
+            locale: locale }
+            | calendarA11y: 'eventDescription'">
+            <mwl-calendar-event-title
+              [event]="weekEvent.tempEvent || weekEvent.event"
+              [customTemplate]="weekEventTitleTemplate"
+              [view]="daysInWeek === 1 ? 'day' : 'week'">
+            </mwl-calendar-event-title>
           </div>
+        </ng-template>
+
+        <ng-template
+          #weekViewHeaderTemplate
+          let-days="days"
+          let-locale="locale"
+          let-dayHeaderClicked="dayHeaderClicked"
+          let-eventDropped="eventDropped"
+          let-trackByWeekDayHeaderDate="trackByWeekDayHeaderDate"
+          let-dragEnter="dragEnter">
+          <div class="cal-day-headers" role="row">
+            <div
+              class="cal-header"
+              *ngFor="let day of days; trackBy: trackByWeekDayHeaderDate"
+              [class.cal-past]="day.isPast"
+              [class.cal-today]="day.isToday"
+              [class.cal-future]="day.isFuture"
+              [class.cal-weekend]="day.isWeekend"
+              [ngClass]="day.cssClass ? day.cssClass : ''"
+              (mwlClick)="dayHeaderClicked.emit({ day: day, sourceEvent: $event
+              })"
+              mwlDroppable
+              dragOverClass="cal-drag-over"
+              (drop)="eventDropped.emit({
+              event: $event.dropData.event,
+              newStart: day.date
+              })" (dragEnter)="dragEnter.emit({ date: day.date })"
+              tabindex="0"
+              role="columnheader">
+              <b>{{ day.date | calendarDate: 'weekViewColumnHeader':locale }}</b><br
+                />
+              <span>{{
+                day.date | calendarDate: 'weekViewColumnSubHeader':locale
+                }}</span>
+            </div>
+          </div>
+        </ng-template>
+
+        <ng-template
+          #customTooltipTemplate
+          let-contents="contents"
+          let-placement="placement"
+          let-event="event">
+          <div class="cal-tooltip" [ngClass]="'cal-tooltip-' + placement">
+            <div class="cal-tooltip-arrow"></div>
+            <div class="cal-tooltip-inner">{{event.meta.siteService.name}}</div>
+          </div>
+        </ng-template>
+
+        <div [ngSwitch]="view">
+          <mwl-calendar-month-view
+            *ngSwitchCase="CalendarView.Month"
+            [viewDate]="viewDate"
+            [events]="events"
+            [refresh]="refresh"
+            [activeDayIsOpen]="false"
+            [locale]="config.locale"
+            (eventTimesChanged)="eventTimesChanged($event)">
+          </mwl-calendar-month-view>
+          <mwl-calendar-week-view
+            *ngSwitchCase="CalendarView.Week"
+            [viewDate]="viewDate"
+            [precision]="config.precision === 'days' ? 'days' : 'minutes'"
+            [events]="events"
+            [refresh]="refresh"
+            [locale]="config.locale"
+            [dayStartHour]="config.dayStartHour"
+            [dayStartMinute]="config.dayStartMinute"
+            [dayEndHour]="config.dayEndHour"
+            [dayEndMinute]="config.dayEndMinute"
+            [hourDuration]="config.hourDuration"
+            [weekStartsOn]="1"
+            [hourSegments]="1"
+            [tooltipAppendToBody]="true"
+            [tooltipPlacement]="'auto'"
+            [excludeDays]="config.excludeDays"
+            [weekendDays]="config.weekendDays"
+            (eventTimesChanged)="eventTimesChanged($event)"
+            [headerTemplate]="weekHeaderTemplate"
+            [eventTemplate]="weekEventTemplate"
+            [hourSegmentTemplate]="weekViewHourSegment"
+            [tooltipTemplate]="customTooltipTemplate"
+            [eventTitleTemplate]="weekEventTitleTemplate"
+            [headerTemplate]="weekViewHeaderTemplate"
+            (eventClicked)="eventClicked($event)"
+            (beforeViewRender)="beforeWeekOrDayViewRender($event)"
+            (hourSegmentClicked)="hourSegmentClicked($event.date)">
+          </mwl-calendar-week-view>
+          <mwl-calendar-day-view
+            *ngSwitchCase="CalendarView.Day"
+            [viewDate]="viewDate"
+            [locale]="config.locale"
+            [events]="events"
+            [refresh]="refresh"
+            [dayStartHour]="config.dayStartHour"
+            [dayStartMinute]="config.dayStartMinute"
+            [dayEndHour]="config.dayEndHour"
+            [dayEndMinute]="config.dayEndMinute"
+            [hourDuration]="config.hourDuration"
+            [hourSegments]="1"
+            [validateEventTimesChanged]="validateEventTimesChanged"
+            (eventTimesChanged)="eventTimesChanged($event)"
+            (eventClicked)="eventClicked($event)"
+            (beforeViewRender)="beforeWeekOrDayViewRender($event)"
+            (hourSegmentClicked)="hourSegmentClicked($event.date)">
+          </mwl-calendar-day-view>
         </div>
-      </ng-template>
-
-
-      <div [ngSwitch]="view">
-        <mwl-calendar-month-view
-          *ngSwitchCase="CalendarView.Month"
-          [viewDate]="viewDate"
-          [events]="events"
-          [refresh]="refresh"
-          [activeDayIsOpen]="false"
-          [locale]="config.locale"
-          (eventTimesChanged)="eventTimesChanged($event)">
-        </mwl-calendar-month-view>
-        <mwl-calendar-week-view
-          *ngSwitchCase="CalendarView.Week"
-          [viewDate]="viewDate"
-          [precision]="config.precision === 'days' ? 'days' : 'minutes'"
-          [events]="events"
-          [refresh]="refresh"
-          [locale]="config.locale"
-          [dayStartHour]="config.dayStartHour"
-          [dayStartMinute]="config.dayStartMinute"
-          [dayEndHour]="config.dayEndHour"
-          [dayEndMinute]="config.dayEndMinute"
-          [hourDuration]="config.hourDuration"
-          [hourSegments]="1"
-          [excludeDays]="config.excludeDays"
-          [weekendDays]="config.weekendDays"
-          (eventTimesChanged)="eventTimesChanged($event)"
-          [hourSegmentTemplate]="weekViewHourSegment"
-          [headerTemplate]="weekHeaderTemplate"
-          [eventTemplate]="weekEventTemplate"
-          [eventTitleTemplate]="weekEventTitleTemplate"
-          [headerTemplate]="weekViewHeaderTemplate"
-          (beforeViewRender)="beforeWeekOrDayViewRender($event)"
-          (hourSegmentClicked)="hourSegmentClicked($event.date)">
-        </mwl-calendar-week-view>
-        <mwl-calendar-day-view
-          *ngSwitchCase="CalendarView.Day"
-          [viewDate]="viewDate"
-          [locale]="config.locale"
-          [events]="events"
-          [refresh]="refresh"
-          [dayStartHour]="config.dayStartHour"
-          [dayStartMinute]="config.dayStartMinute"
-          [dayEndHour]="config.dayEndHour"
-          [dayEndMinute]="config.dayEndMinute"
-          [hourDuration]="config.hourDuration"
-          [hourSegments]="1"
-          [validateEventTimesChanged]="validateEventTimesChanged"
-          (eventTimesChanged)="eventTimesChanged($event)"
-          (beforeViewRender)="beforeWeekOrDayViewRender($event)"
-          (hourSegmentClicked)="hourSegmentClicked($event.date)">
-        </mwl-calendar-day-view>
+        <ng-template #modalInfo let-close="close">
+          <div class="modal-header">
+            <button type="button" class="close" (click)="close() ; selectedEvent=
+              null">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row" style="font-size: 16px;">
+              <span style="font-weight: bolder;">{{"Service" | translate}} :</span>
+              <span>{{selectedEvent!.meta.siteService.name}}</span>
+            </div>
+            <div class="row" style="font-size: 16px;">
+              <span style="font-weight: bolder;">{{"Duration" | translate}} :</span>
+              <span>{{selectedEvent!.meta.siteService.duration}}</span>
+            </div>
+            <div class="row" style="font-size: 16px;">
+              <span style="font-weight: bolder;">{{"Price" | translate}} :</span>
+              <span>{{selectedEvent!.meta.siteService.price}}{{selectedEvent!.meta.siteService.currency}}</span>
+            </div>
+            <div class="row" style="font-size: 16px;">
+              <span style="font-weight: bolder;">{{"Description"|translate}} :</span>
+              <span>{{selectedEvent!.meta.siteService.description}}</span>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template #modalEdit let-close="close">
+          <app-calendar-edit [modalData]="dataService.modalData"
+            (onChangeEvent)="editEvents($event)">
+            <button type="button" class="close" (click)="close()">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </app-calendar-edit>
+        </ng-template>
+        <ng-template #modalRemove let-close="close">
+          <div class="modal-header">
+            <h3 class="modal-title">{{"removing" | translate}}
+              {{dataService.modalData.event.title}}</h3>
+            <button type="button" class="close btn" (click)="close()">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>{{"areYouSure" | translate}}</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger"
+              (click)="deleteEvent(dataService.modalData.event)">Remove</button>
+            <button type="button" class="btn btn-secondary" (click)="close()">Close</button>
+          </div>
+        </ng-template>
+        <ng-template #modalAdd let-close="close">
+          <app-calendar-edit [modalData]="dataService.modalData"
+            (onChangeEvent)="addEvent($event)">
+            <button type="button" class="close" (click)="close()">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </app-calendar-edit>
+        </ng-template>
       </div>
 
-      <ng-template #modalEdit let-close="close">
-        <app-calendar-edit [modalData]="dataService.modalData"
-          (onChangeEvent)="editEvents($event)">
-          <button type="button" class="close" (click)="close()">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </app-calendar-edit>
-      </ng-template>
-      <ng-template #modalRemove let-close="close">
-        <div class="modal-header">
-          <h3 class="modal-title">{{"removing" | translate}}
-            {{dataService.modalData.event.title}}</h3>
-          <button type="button" class="close btn" (click)="close()">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <p>{{"areYouSure" | translate}}</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger"
-            (click)="deleteEvent(dataService.modalData.event)">Remove</button>
-          <button type="button" class="btn btn-secondary" (click)="close()">Close</button>
-        </div>
-      </ng-template>
-      <ng-template #modalAdd let-close="close">
-        <app-calendar-edit [modalData]="dataService.modalData"
-          (onChangeEvent)="addEvent($event)">
-          <button type="button" class="close" (click)="close()">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </app-calendar-edit>
-      </ng-template>
-
     </div>
-  </div>
+  </ng-container>
 </div>

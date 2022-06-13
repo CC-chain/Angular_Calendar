@@ -1,0 +1,5 @@
+<ng-container *ngFor="let custom of ((customs | async) | filterWebSites : activeRoute) ">
+  <ng-container *ngIf="custom">
+<ngx-dynamic-hooks [content]="custom.content + customsStr" [context]="custom" [parsers]="custom | getParsers"></ngx-dynamic-hooks>
+  </ng-container>
+</ng-container>

@@ -62,7 +62,9 @@ export const adminColorComponents = [
   },
   {
     id : 2 ,
-    name : 'Calendar'
+    name : 'Calendar',
+     component: 'CalendarLayoutComponent',
+    url: 'Component/CalendarConfiguration',
   },
   {
     id : 3,

@@ -1,10 +1,7 @@
 import { Injectable } from '@angular/core';
-import { of, Observable, throwError, map } from 'rxjs';
-import * as moment from "moment";
-import { User } from '@data/schema/user';
+import { map } from 'rxjs';
 import { IData, LoginContextInterface, UserAuthentication } from '@app/data/schema/data';
 import { DataCsService } from '@app/data/service/data-cs.service';
-import { tap } from 'rxjs';
 
 
 
@@ -63,5 +60,6 @@ export class AuthService {
   logout() {
     localStorage.removeItem("id_token");
     localStorage.removeItem("expires_at");
+    localStorage.removeItem("id_user");
   }
 }

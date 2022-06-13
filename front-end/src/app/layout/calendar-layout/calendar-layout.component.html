@@ -1,6 +1,6 @@
 <div>
-  <div class="mat-app-background">
-    <app-header></app-header>
+  <div class="mat-app-background"  [ngStyle]="getFirst((styles | async))">
+    <app-header [sites]="(sites | async) != null ? (sites | async)! : undefined"></app-header>
 
       <div class="container">
         <router-outlet></router-outlet>

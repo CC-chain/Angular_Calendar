@@ -47,10 +47,8 @@ export class AppThemeColorComponent {
         curObj[key] = this.styleElement[key];
       }
     }
-    console.log("last",curObj);
     this.styleElementSubject.next(curObj);
     this.styleElementChange.emit(this.styleElement);
-    console.log("firs2",JSON.stringify(this.styleElement))
 
   }
 

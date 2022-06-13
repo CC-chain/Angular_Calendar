@@ -3,7 +3,8 @@
     (click)="getCalendarConfiguration()">
     Configurations
   </a>
-  <a [cTabContent]="tabContent" [routerLink] [tabPaneIdx]="1" cNavLink>
+  <a [cTabContent]="tabContent" [routerLink] [tabPaneIdx]="1" cNavLink
+  (click)="getSiteService()">
     Events
   </a>
 </c-nav>
@@ -187,29 +188,27 @@
       <c-card-body>
         <form cForm class="row g-3 my-2">
           <div class="mx-auto" style="width: 95%">
-            <app-calendar-events-edit [editOrAdd]="false"></app-calendar-events-edit>
+            <app-calendar-events-edit [config]="config" [editOrAdd]="false" (dataChange)="addSiteService($event)"></app-calendar-events-edit>
             <table cTable color="" [striped]="true" hover class="my-3">
               <thead>
                 <tr cTableColor="primary">
                   <th scope="col" class="text-center">#</th>
                   <th scope="col" class="text-center">Name</th>
                   <th scope="col"class="text-center">Price</th>
-                  <th scope="col" class="text-center">Options</th>
+                  <th scope="col" class="text-center">Duration</th>
                   <th scope="col" class="text-center">Edit</th>
                   <th scope="col" class="text-center">Delete</th>
                 </tr>
               </thead>
               <tbody>
-                <tr style="font-size: 15px;">
-                  <th scope="row" class="text-center">1</th>
-                  <td class="text-center">Sakal Tıraş</td>
-                  <td class="text-center">13 TL</td>
-                  <td class="text-center"><i class="bi bi-gear-fill"
-                      type="button" style="color:grey"></i></td>
-                  <td class="text-center"><app-calendar-events-edit [data]="{id:
-                      '1',name: 'Hello', price : '13Tl'}" [editOrAdd]="true"></app-calendar-events-edit></td>
+                <tr style="font-size: 15px;" *ngFor="let event of events">
+                  <th scope="row" class="text-center">{{event.id}}</th>
+                  <td class="text-center">{{event.name}}</td>
+                  <td class="text-center">{{event.price != undefined && event.currency ? (event.price + (event.currency | currency)) : 'NaN'}}</td>
+                  <td class="text-center">{{event.duration}}</td>
+                  <td class="text-center"><app-calendar-events-edit [config]="config" [data]="event" (dataChange)="changeSiteService($event)" [editOrAdd]="true"></app-calendar-events-edit></td>
                   <td class="text-center"><app-calendar-events-remove
-                      [data]="{id: '1',name: 'Hello', price : '13Tl'}"></app-calendar-events-remove></td>
+                      [data]="event" (removedData)="removeSiteService($event)"></app-calendar-events-remove></td>
                 </tr>
               </tbody>
             </table>

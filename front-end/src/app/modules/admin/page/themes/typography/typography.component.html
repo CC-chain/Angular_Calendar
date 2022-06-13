@@ -34,7 +34,6 @@
                     <ng-container *ngIf="isLoaded">
                       <c-col xl='2' md='4' sm='6' xs='12' class=''>
                         <app-font-picker
-                          [font]="(styleEl.font | getFont) ? (styleEl.font | getFont) : font"
                           [$styleElement]="styleEl | modelToDto :
                           compChild?.dto || ['name','font']"
                           (styleElementChange)="editStyles($event,styleEl,compChild?.url
@@ -63,13 +62,13 @@
   <c-tab-pane>
     <c-card>
       <c-card-body>
-        <app-font-picker [font]="(config.font | getFont) ? (config.font | getFont) : font"
+        <app-font-picker
           (styleElementChange)="editCalendarConfig($event,'Component/CalendarConfiguration')">
         </app-font-picker>
         <div class="d-grid gap-2 mx-auto">
           <button type="button" [cModalToggle]="fullScreen.id" cButton
             class="btn btn-outline-primary btn-block text-center"
-            (click)="loadForm('CalendarComponentLayout')">Refresh
+            (click)="loadForm('CalendarComponent')">Refresh
             Calendar</button>
         </div>
       </c-card-body>

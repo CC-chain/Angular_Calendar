@@ -1,7 +1,7 @@
 <c-modal-header>
     <h2 cModalTitle style="font-weight: bolder;">Custom Component Creation &nbsp; <input type="text" placeholder="Name..." [(ngModel)]="nameEl"/></h2>
 
-    <button [cModalToggle]="modalId" class="btn btn-light" cButtonClose>Exit</button>
+    <button [cModalToggle]="modalId" class="btn btn-light" cButtonClose (click)="clearScripts()" >Exit</button>
 </c-modal-header>
 <c-modal-body style="background-color: white">
   <c-row class="mb-3">

@@ -1,0 +1,23 @@
+<i class="bi bi-three-dots" [cModalToggle]="fullScreenDelete.id"
+  style="" type="button"></i>
+
+<c-modal #fullScreenDelete [id]="'more' + data.id">
+  <c-modal-body style="text-align:left">
+    <div class="row" style="font-size: 16px;">
+      <span style="font-weight: bolder;">Name and Surname : </span>
+      <span>{{data.firstName}} {{data.lastName}}</span>
+    </div>
+    <div class="row" style="font-size: 16px;">
+      <span style="font-weight: bolder;">Gender :</span>
+      <span>{{data.gender == 1 ? "Male" : "Female"}}</span>
+    </div>
+    <div class="row" style="font-size: 16px;">
+      <span style="font-weight: bolder;">Phone :</span>
+      <span>{{data.phoneNumber}}</span>
+    </div>
+    <div class="row" style="font-size: 16px;">
+      <span style="font-weight: bolder;">Email : </span>
+      <span>{{data.email}}</span>
+    </div>
+  </c-modal-body>
+</c-modal>

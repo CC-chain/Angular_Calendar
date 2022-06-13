@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ThemeService } from '@core/service/theme.service';
 import { environment } from '@env';
+import { ActivatedRoute, Router} from '@angular/router';
+import { AuthService } from '@core/service/auth.service';
+import { CustomCs } from '@app/data/schema/data';
 
 @Component({
   selector: 'app-header',
@@ -9,18 +12,11 @@ import { environment } from '@env';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
-  public version = environment.version;
-  public repoUrl = 'https://github.com/mathisGarberg/angular-folder-structure';
-  colorList: string[]= [];
-  public isDarkTheme$!: Observable<boolean>;
 
-  navItems = [
-    { link: '/dashboard/home', title: 'Home' },
-    { link: '/about', title: 'About' },
-    { link: '/contact', title: 'Contact' }
-  ];
+  @Input() sites! : CustomCs[] | undefined;
 
-  constructor(private themeService: ThemeService) {}
+  constructor(private themeService: ThemeService, private router : Router, private active : ActivatedRoute,
+    private authService : AuthService) {}
 
   ngOnInit() {
 
@@ -28,6 +24,10 @@ export class HeaderComponent implements OnInit {
 
   toggleTheme(checked: boolean) {
     this.themeService.setDarkTheme(checked);
+  }
+
+  logout(){
+    this.authService.logout();
   }
 
 }

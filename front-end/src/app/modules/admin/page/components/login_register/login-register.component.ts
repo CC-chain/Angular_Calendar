@@ -1,5 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { Component, Inject, OnInit, Renderer2, ViewChild, ViewContainerRef } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { CustomCs, DataCs } from '@app/data/schema/data';
 import { DataCsService } from '@app/data/service/data-cs.service';
 import { LoginComponent } from '@app/modules/auth/page/login/login.component';
@@ -7,6 +8,7 @@ import { CustomComponent } from '@app/modules/custom/custom/custom.component';
 import { DynamicImportService } from '@app/shared/service/dynamic_import/dynamic-import.service';
 import { LoadingService } from '@app/shared/service/loading/loading.service';
 import { HookParserEntry, OutletOptions } from 'ngx-dynamic-hooks';
+import { isObservable } from 'rxjs';
 
 @Component({
   selector: 'app-login-register',
@@ -17,16 +19,18 @@ export class LoginRegisterComponent implements OnInit {
   @ViewChild("layoutComponent", { read: ViewContainerRef })
   layoutComponent!: ViewContainerRef;
   styles!: DataCs[];
-  customs!: CustomCs[];
+  customs: CustomCs[] = [];
+  imageUrl!: string | undefined;
 
   constructor(private _renderer2: Renderer2,
     @Inject(DOCUMENT) private _document: Document,
     private customCs: DataCsService,
     private dynamicImport: DynamicImportService,
     private dataCsService: DataCsService,
-    public loaded: LoadingService) { }
-  isLoaded = this.loaded.loading$;
-
+    public loaded: LoadingService,
+    private sant : DomSanitizer) { }
+    isLoaded = this.loaded.loading$;
+    file!: File;
   async loadForm(layout: string = "") {
     if (/[Ll]ayout/.test(layout))
       setTimeout(() => this.dynamicImport.loadComponent(layout, this.layoutComponent), 250);
@@ -38,7 +42,7 @@ export class LoginRegisterComponent implements OnInit {
 
   public editStyles(styleObj: any, dbUrl: string) {
     console.log('edit', styleObj, dbUrl)
-    this.styles.map((stylesObj : any) => {
+    this.styles.map((stylesObj: any) => {
 
       if (stylesObj.name === styleObj.name) {
         Object.keys(stylesObj).map((key) => {
@@ -49,7 +53,7 @@ export class LoginRegisterComponent implements OnInit {
       }
     });
 
-  this.dataCsService.editStyles(this.styles,dbUrl).subscribe(data => console.log(data))
+    this.dataCsService.editStyles(this.styles, dbUrl).subscribe(data => console.log(data))
   }
 
   public getStyles(dbUrl: string) {
@@ -71,21 +75,17 @@ export class LoginRegisterComponent implements OnInit {
   }
 
   getCustoms(targetComponent: string, dbUrl?: string) {
-    if (!this.customs) {
-      console.log('girdi Customs')
       this.loaded.show();
       this.dataCsService.getCustoms(dbUrl ? dbUrl : 'Component/Custom').subscribe((value) => {
+        if(!isObservable(value))
         this.customs = value;
         this.isAllLoaded(true, 'customs');
       });
-    } else {
-      this.isAllLoaded(true, 'customs')
-    }
   }
 
-    public editCustoms(customObj: any, dbUrl: string) {
+  public editCustoms(customObj: any, dbUrl: string) {
     console.log('edit', customObj, dbUrl)
-    this.customs.map((customsObj : any) => {
+    this.customs.map((customsObj: any) => {
 
       if (customsObj.name === customObj.name) {
         Object.keys(customsObj).map((key) => {
@@ -96,19 +96,19 @@ export class LoginRegisterComponent implements OnInit {
       }
     });
 
-  this.dataCsService.editCustoms(this.customs,dbUrl).subscribe(data => console.log(data))
+    this.dataCsService.editCustoms(this.customs, dbUrl).subscribe(data => console.log(data))
   }
 
   addCustoms(customObj: any, dbUrl: string) {
-  this.customs = [...this.customs,customObj]
-  console.log(this.customs)
-  this.dataCsService.editCustoms(this.customs,dbUrl).subscribe(data => console.log(data))
+    this.customs = [...this.customs, customObj]
+    console.log(this.customs)
+    this.dataCsService.editCustoms(this.customs, dbUrl).subscribe(data => console.log(data))
   }
 
   deleteCustom(customObj: any, dbUrl: string) {
-  this.customs = this.customs.filter((item) => item.name !== customObj.name )
-  console.log(this.customs)
-  this.dataCsService.editCustoms(this.customs,dbUrl).subscribe(data => console.log(data))
+    this.customs = this.customs.filter((item) => item.name !== customObj.name)
+    console.log(this.customs)
+    this.dataCsService.editCustoms(this.customs, dbUrl).subscribe(data => console.log(data))
   }
 
   flags = {
@@ -128,9 +128,27 @@ export class LoginRegisterComponent implements OnInit {
 
   ngOnInit(): void {
     setTimeout(() => this.dynamicImport.loadComponent('AuthLayoutComponent', this.layoutComponent), 250);
-        this.loaded.show();
-    setTimeout(() => this.loaded.hide(),1500);
+    this.loaded.show();
+    setTimeout(() => this.loaded.hide(), 1500);
   }
 
+  onPhotoChange(value: any) {
+    this.file = value.target.files[0];
+    this.imageUrl = this.sant.bypassSecurityTrustUrl(window.URL.createObjectURL(this.file)) as string;
+  }
+
+  uploadPhoto(style : DataCs){
+     if (this.file && localStorage.getItem("id_site")) {
+      let siteId = localStorage.getItem("id_site")!
+      this.dataCsService.addImage(this.file, siteId, (this.file as File).name.toString(), "Image/UploadImage")
+        .subscribe((data: any) => {
+          if (data.success) {
+            let newStyle = style;
+            newStyle.backgroundImage = this.dataCsService.dataCsUrl.match(/^(.*\/\/)(.*?)\//g)![0] + "Images/" + (this.file as File).name.toString();
+            this.editStyles(newStyle,"Component/AuthLayout");
+          }
+        })
+    }
+  }
 
 }
