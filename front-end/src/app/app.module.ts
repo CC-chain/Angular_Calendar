@@ -45,9 +45,13 @@ import { HttpClientModule } from '@angular/common/http';
 import { CalendarLayoutModule } from './modules/calendar/calendar.module';
 import { DynamicImportService } from './shared/service/dynamic_import/dynamic-import.service';
 import { NgxNavbarModule } from 'ngx-bootstrap-navbar';
+import { DynamicHooksModule } from 'ngx-dynamic-hooks';
+import { CustomModule } from '@modules/custom/custom.module';
+import { options } from './core/configurations/dynamic-hooks';
+import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
 
 const DEFAULT_FONT_PICKER_CONFIG: FontPickerConfigInterface = {
-  apiKey : 'AIzaSyCNwa0xQsLZuC3fzA7rE2ykvJBVm1YFqPI'
+  apiKey: 'AIzaSyCNwa0xQsLZuC3fzA7rE2ykvJBVm1YFqPI'
 }
 
 const APP_CONTAINERS = [
@@ -73,6 +77,7 @@ const APP_CONTAINERS = [
     CoreModule,
     AppSharedModule,
     ContextMenuModule.forRoot(),
+    CustomModule,
     HttpClientModule,
     ReactiveFormsModule,
     AvatarModule,
@@ -81,6 +86,11 @@ const APP_CONTAINERS = [
     ButtonGroupModule,
     NgxNavbarModule,
     ButtonModule,
+    DynamicHooksModule.forRoot(
+      {
+        globalOptions: options
+      }
+    ),
     CardModule,
     DropdownModule,
     FooterModule,
@@ -98,6 +108,7 @@ const APP_CONTAINERS = [
     FontPickerModule,
     PerfectScrollbarModule,
     CalendarLayoutModule,
+    NgxIntlTelInputModule,
   ],
   providers: [
     {
@@ -108,14 +119,14 @@ const APP_CONTAINERS = [
     Title,
     DynamicImportService,
     {
-      provide : FONT_PICKER_CONFIG,
-      useValue : DEFAULT_FONT_PICKER_CONFIG
+      provide: FONT_PICKER_CONFIG,
+      useValue: DEFAULT_FONT_PICKER_CONFIG
     }
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  getLayouts(){
+  getLayouts() {
     return AuthLayoutComponent;
   }
- }
+}

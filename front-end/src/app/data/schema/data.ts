@@ -25,7 +25,9 @@ export class CustomCs {
     public script: string,
     public style: string,
     public targetComponent: string,
-    public dependentComponents: string) { }
+    public dependentComponents: string,
+    public user? : User) { }
+
 }
 
 export class MetaTags {
@@ -63,6 +65,15 @@ export interface LoginContextInterface {
   email: string;
   password: string;
   token: string;
+}
+
+export interface RegisterContextInterface{
+  firstName: string,
+  lastName: string,
+  email : string,
+  phoneNumber : string,
+  password: string,
+  gender : number,
 }
 
 
@@ -117,11 +128,13 @@ export interface SiteService {
 }
 
 export interface User {
-  id: number,
+  id?: number,
   firstName: string,
   lastName: string,
-  lastLoginDate: Date,
-  phoneNumber: string
+  lastLoginDate?: Date,
+  gender : number,
+  phoneNumber: string,
+  email?: string,
 }
 
 export interface Image {
@@ -188,4 +201,15 @@ export interface SiteServiceSummary {
 export interface GetMonthly {
   month: number,
   total: number
+}
+
+export interface ChangeEmail {
+  id : number,
+  email : string
+}
+
+export interface ChangePassword {
+  id : number,
+  oldPassword : string,
+  newPassword: string,
 }

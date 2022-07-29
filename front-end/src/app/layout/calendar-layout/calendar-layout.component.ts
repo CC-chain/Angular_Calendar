@@ -1,11 +1,11 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { ThemeService } from '@app/core/service/theme.service';
-import { CustomCs, DataCs } from '@app/data/schema/data';
+import { CustomCs, DataCs, User } from '@app/data/schema/data';
 import { default_authLayout } from '@app/data/schema/defaultData';
 import { DataCsService } from '@app/data/service/data-cs.service';
 import { Font } from '@lib/font-picker/src/public-api';
-import { map, Observable, of } from 'rxjs';
+import { isObservable, map, Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-calendar-layout',
@@ -16,13 +16,15 @@ export class CalendarLayoutComponent implements OnInit {
   @ViewChild("calendarComponent", { read: ViewContainerRef })
   public calendarComponent!: ViewContainerRef;
   styles: Observable<DataCs[]> = of(default_authLayout);
+  customs!: Observable<CustomCs[]>;
   sites!: Observable<CustomCs[]>
-
+  user!: Observable<User>;
   constructor(private dataCsService : DataCsService){}
 
   ngOnInit(): void {
+    this.getUser();
     this.getStyles();
-    this.getWebSites();
+    this.getCustoms();
   }
 
   private getStyles() {
@@ -31,6 +33,13 @@ export class CalendarLayoutComponent implements OnInit {
       console.log(styles)
     });
   }
+
+    getUser(){
+    let id = localStorage.getItem('id_user');
+    if(id)
+    this.user = this.dataCsService.getUser(Number(id),"User/Get")
+  }
+
 
   getFirst(dataCs: any) {
     if (dataCs)
@@ -41,5 +50,10 @@ export class CalendarLayoutComponent implements OnInit {
   getWebSites(){
     this.sites = this.dataCsService.getCustoms('Component/WebPage');
     this.sites.subscribe(data  => console.log(data));
+  }
+
+  getCustoms(){
+    this.customs = this.dataCsService.getCustoms('Component/Custom');
+    this.customs.subscribe(data => console.log(data));
   }
 }

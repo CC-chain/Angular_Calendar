@@ -1,7 +1,10 @@
 import { DOCUMENT } from '@angular/common';
 import { Component, ElementRef, EventEmitter, Inject, Input, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
-import { CustomCs } from '@app/data/schema/data';
+import { CustomCs, User } from '@app/data/schema/data';
 import { CustomComponent } from '@app/modules/custom/custom/custom.component';
+import { DynamicLogoutButtonComponent } from '@app/modules/custom/dynamic-components/dynamic-logout-button.component';
+import { DynamicProfileComponent } from '@app/modules/custom/dynamic-components/dynamic-profile.component';
+import { DynamicUserInfoComponent } from '@app/modules/custom/dynamic-components/dynamic-user-info.component';
 import { SelectorHookParserConfig } from 'ngx-dynamic-hooks';
 import { Subject } from 'rxjs';
 
@@ -11,21 +14,30 @@ import { Subject } from 'rxjs';
   styleUrls: ['./custom-creator.component.scss']
 })
 export class CustomCreatorComponent implements OnInit {
-
   @Input() modalId!: string | undefined ;
   @Input() targetComponent: string = "";
   @Input() layout : string = "AuthLayoutComponent";
+  @Input() user!: User;
   @Output() customElementChange = new EventEmitter();
   htmlEl: string = "";
   scriptEl: string = "";
   styleEl : string = "";
   idEl : string = "";
   nameEl: string = "";
-  customs = "";
+  customs = `\n  <app-custom [script]="context.script" [style]="context.style" [contextID]="context.id"> </app-custom> `
   @Input()opened : boolean = false;
   customHook: SelectorHookParserConfig[] = [
     {
       component: CustomComponent
+    },
+    {
+      component : DynamicLogoutButtonComponent
+    },
+    {
+      component : DynamicUserInfoComponent
+    },
+    {
+      component : DynamicProfileComponent
     }
   ]
   constructor(private _renderer2: Renderer2,
@@ -73,6 +85,10 @@ export class CustomCreatorComponent implements OnInit {
   }
 
   getCustomInfos(){
+    console.log(this.user)
+    if(this.user)
+    return {script : this.scriptEl , style : this.styleEl , id : this.idEl , user : this.user}
+
     return {script : this.scriptEl , style : this.styleEl , id : this.idEl }
   }
 }

@@ -1,0 +1,57 @@
+<ng-container *ngIf="isLoaded | async">
+  <div class="overlay"></div>
+  <mat-progress-spinner [mode]="'indeterminate'"></mat-progress-spinner>
+</ng-container>
+<ng-container *ngIf="((isLoaded | async) != true)">
+  <c-card style="font-weight: bold;">
+    <c-card-body>
+      <div>
+        <h2 cCardTitle>Header Components <button type="button"
+            [cModalToggle]="customHeaderComponents.id" class="btn
+            btn-outline-primary btn-sm" style="margin-left:5px"><i class="bi
+              bi-plus-circle"></i></button></h2>
+      </div>
+      <c-row>
+        <ng-container *ngFor="let custom of customs | filterCustoms :
+          'Header'">
+          <c-col xl='2' md='4' sm='6' xs='12' class=''>
+            <app-custom-editor [$customElement]="getUpdatedCustom(custom)"
+              (customElementChange)="editCustoms($event,'Component/Custom')"
+              (customElementDelete)="deleteCustom($event,'Component/Custom')"></app-custom-editor>
+          </c-col>
+        </ng-container>
+      </c-row>
+    </c-card-body>
+  </c-card>
+   <c-card style="font-weight: bold;">
+    <c-card-body>
+      <div>
+        <h2 cCardTitle>Footer Components <button type="button"
+            [cModalToggle]="customFooterComponents.id" class="btn
+            btn-outline-primary btn-sm" style="margin-left:5px"><i class="bi
+              bi-plus-circle"></i></button></h2>
+      </div>
+      <c-row>
+        <ng-container *ngFor="let custom of customs | filterCustoms :
+          'Footer'">
+          <c-col xl='2' md='4' sm='6' xs='12' class=''>
+            <app-custom-editor [$customElement]="getUpdatedCustom(custom)"
+              (customElementChange)="editCustoms($event,'Component/Custom')"
+              (customElementDelete)="deleteCustom($event,'Component/Custom')"></app-custom-editor>
+          </c-col>
+        </ng-container>
+      </c-row>
+    </c-card-body>
+  </c-card>
+  <c-modal #customHeaderComponents id="header1" [fullscreen]="true">
+  <app-custom-creator [user]="user" [modalId]="customHeaderComponents.id" [layout]="'CalendarLayoutComponent'"
+    [targetComponent]="'Header'"
+    (customElementChange)="addCustoms($event,'Component/Custom')"></app-custom-creator>
+</c-modal>
+<c-modal #customFooterComponents id="footer1" [fullscreen]="true">
+  <app-custom-creator [user]="user" [modalId]="customFooterComponents.id" [layout]="'CalendarLayoutComponent'"
+    [targetComponent]="'Footer'"
+    (customElementChange)="addCustoms($event,'Component/Custom')"></app-custom-creator>
+</c-modal>
+</ng-container>
+

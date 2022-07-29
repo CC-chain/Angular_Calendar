@@ -7,11 +7,11 @@ import { CustomCs } from '@app/data/schema/data';
 export class FilterWebSitesPipe implements PipeTransform {
 
   transform(value: CustomCs[] | null, componentName: string): CustomCs[] {
-    console.log(value);
+    console.log(value,componentName);
     if (value != null) {
       let filter = value.filter(val => {
         if (val != null)
-          return val.name === componentName
+          return val.name === componentName.toLowerCase()
         else
           return;
       })

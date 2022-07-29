@@ -8,10 +8,14 @@ import { map, Observable, isObservable } from 'rxjs';
 export class ConvertStylePipe implements PipeTransform {
 
   transform(value: DataCs[] | null , name : string): any {
-    console.log("convert",value, isObservable(value) ,name);
     if(value && !isObservable(value)){
-      console.log("girdi", value.find(value => value.name === name))
-      return value.find(value => value.name === name);
+      let newValue = value.find(value => value.name === name);
+      if(newValue){
+        newValue.backgroundImage = "url('"+newValue.backgroundImage+"')"
+        console.log(newValue);
+        return newValue;
+      }
+      return {};
     }
     else{
     return {};

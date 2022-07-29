@@ -1,6 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { Component, EventEmitter, Inject, Input, OnInit, Output, Renderer2 } from '@angular/core';
-import { CustomCs } from '@app/data/schema/data';
+import { CustomCs, User } from '@app/data/schema/data';
 import { faRemove } from '@fortawesome/free-solid-svg-icons';
 import { Subject } from 'rxjs';
 
@@ -13,10 +13,12 @@ export class CustomEditorComponent implements OnInit {
   @Input() public get $customElement(): CustomCs {
     return this.customElement;
   }
-  @Input() opened = false;
   public set $customElement(value: CustomCs) {
     this.customElementSubject.next(value);
   }
+
+  @Input() opened = false;
+  @Input() user : User | undefined;
   @Output() customElementChange = new EventEmitter();
   @Output() customElementDelete = new EventEmitter();
   public customElement!: CustomCs;

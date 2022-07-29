@@ -1,0 +1,18 @@
+﻿global using Microsoft.EntityFrameworkCore;
+global using Microsoft.AspNetCore.Identity;
+global using AutoMapper;
+global using Serilog.Core;
+global using Infrastructure;
+global using Core.Extensions;
+global using TokenOptions = Core.Jwt.TokenOptions;
+global using Core.Encryption;
+global using Core.Utilities.Results;
+global using Domain.Enumerations;
+global using Domain.Entities;
+global using Domain.Constants;
+global using User = Domain.Entities.User;
+global using Role = Domain.Entities.Role;
+global using Microsoft.AspNetCore.Http;
+global using System.Security.Claims;
+global using Newtonsoft.Json;
+global using StackExchange.Redis;

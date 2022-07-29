@@ -21,6 +21,7 @@
         (viewChange)="fetchEvents()"
         [theme]="config.theme.name"></app-calendar-header>
       <br />
+      <!-- -->
 
       <div *ngIf="events$ | async; else loading; let events">
 

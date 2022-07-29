@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CalendarConfig, CustomCs, CustomMetaInterface, DataCs, Employee, IData, LoginContextInterface, Role, Site, SiteOfTime, SiteService, SiteServiceDay, User, UserAuthentication } from '@data/schema/data';
+import { CalendarConfig, ChangeEmail, ChangePassword, CustomCs, CustomMetaInterface, DataCs, Employee, IData, LoginContextInterface, Role, Site, SiteOfTime, SiteService, SiteServiceDay, User, UserAuthentication } from '@data/schema/data';
 import { CalendarEvent } from 'angular-calendar';
 import { catchError, map, Observable, of, retry, throwError, shareReplay } from 'rxjs';
 
@@ -80,8 +80,8 @@ export class DataCsService {
         if (!curData.success) {
           return throwError(() => curData.message);
         }
-        let newData =  curData.data.filter((data : CalendarEvent<CustomMetaInterface>) => {
-          if(data.meta && data.meta.isCancelled)
+        let newData = curData.data.filter((data: CalendarEvent<CustomMetaInterface>) => {
+          if (data.meta && data.meta.isCancelled)
             return data.meta.isCancelled != true
           else
             return true;
@@ -108,7 +108,7 @@ export class DataCsService {
   }
 
   deleteCalendar(id: number, dbUrl: string): Observable<any> {
-    return this.http.post(this.dataCsUrl + dbUrl + "?id=" + id,"").pipe(
+    return this.http.post(this.dataCsUrl + dbUrl + "?id=" + id, "").pipe(
       catchError((error: HttpErrorResponse) => {
         console.log(error)
         return throwError(() => error)
@@ -156,9 +156,11 @@ export class DataCsService {
   }
 
   getLogin(user: any): Observable<UserAuthentication> {
-    let header = new HttpHeaders("SiteId : 1")
-    console.log(JSON.stringify(user), 123123123123, this.dataCsUrl + "Account/Login")
     return this.http.post<UserAuthentication>(this.dataCsUrl + "Account/Login", user)
+  }
+
+  getRegister(user : any): Observable<IData>{
+    return this.http.post<IData>(this.dataCsUrl + "Account/Register",user);
   }
 
   getSite(): Observable<Site[]> {
@@ -309,8 +311,8 @@ export class DataCsService {
     return this.http.delete(this.dataCsUrl + dbUrl + "?id=" + siteServiceDayId)
   }
 
-  getUser(dbUrl: string): Observable<User[]> {
-    return this.http.get<User[]>(this.dataCsUrl + dbUrl).pipe(
+  getUser(id: number, dbUrl: string): Observable<User> {
+    return this.http.get<User>(this.dataCsUrl + dbUrl + "?id=" + id).pipe(
       map((data: any) => {
         let curData: IData = <IData>data;
         if (!curData.success) {
@@ -369,8 +371,8 @@ export class DataCsService {
     return this.http.delete(this.dataCsUrl + dbUrl + "?id=" + id)
   }
 
-  getDashboard<T>( dbUrl: string){
-     return this.http.get<T>(this.dataCsUrl + dbUrl).pipe(
+  getDashboard<T>(dbUrl: string) {
+    return this.http.get<T>(this.dataCsUrl + dbUrl).pipe(
       map((data: any) => {
         let curData: IData = <IData>data;
         if (!curData.success) {
@@ -387,4 +389,10 @@ export class DataCsService {
     );
   }
 
+  editPassword(data: ChangePassword, dbUrl: string) {
+    return this.http.post(this.dataCsUrl + dbUrl, data);
+  }
+  editEmail(data: ChangeEmail, dbUrl: string) {
+    return this.http.post(this.dataCsUrl + dbUrl, data);
+  }
 }

@@ -11,22 +11,22 @@ import { Observable } from 'rxjs';
 })
 export class WebPagesComponent implements OnInit {
 
-  customs! : Observable<CustomCs[]>
+  customs!: Observable<CustomCs[]>
   customsStr = `\n  <app-custom [script]="context.script" [style]="context.style" [contextID]="context.id"> </app-custom> `
   activeRoute = "";
-  constructor(private route : ActivatedRoute,
-    private router : Router,
-    private dataService : DataCsService) {
-      this.route.params.subscribe(params => this.getActiveRouterValue(params));
-     }
+  constructor(private route: ActivatedRoute,
+    private router: Router,
+    private dataService: DataCsService) {
+    this.route.params.subscribe(params => this.getActiveRouterValue(params));
+  }
 
   ngOnInit(): void {
     this.customs = this.dataService.getCustoms("Component/WebPage");
   }
 
-  getActiveRouterValue(params : any){
-    if(params['term'])
-    this.activeRoute = params['term'];
+  getActiveRouterValue(params: any) {
+    if (params['term'])
+      this.activeRoute = params['term'];
   }
 
 

@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators, AbstractControl, FormArray } from '@angular/forms';
 import { tap, delay, finalize, catchError, filter, timeout } from 'rxjs/operators';
 import { BehaviorSubject, Observable, of, Subject, Subscription } from 'rxjs';
-import {default_login} from '@data/schema/defaultData'
+import { default_login } from '@data/schema/defaultData'
 
 import { AuthService } from '@core/service/auth.service';
 import { DataCsService } from '@app/data/service/data-cs.service';
@@ -25,7 +25,7 @@ export class LoginComponent implements OnInit {
   error!: string;
   isLoading!: boolean;
   loginForm!: FormGroup;
-   customsStr = `\n  <app-custom [script]="context.script" [style]="context.style" [contextID]="context.id"> </app-custom> `
+  customsStr = `\n  <app-custom [script]="context.script" [style]="context.style" [contextID]="context.id"> </app-custom> `
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
@@ -42,8 +42,6 @@ export class LoginComponent implements OnInit {
   get f() {
     return this.loginForm.controls;
   }
-
-
 
   login() {
     this.isLoading = true;
@@ -84,26 +82,23 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  isValid(data : any) {
+  isValid(data: any) {
     console.log(data)
   }
 
-  getSelected(siteId : any){
-    if(siteId && localStorage.getItem("id_site")){
-
-    console.log(siteId.toString() === localStorage.getItem("id_site"))
-     return  siteId.toString() === localStorage.getItem("id_site");
+  getSelected(siteId: any) {
+    if (siteId && localStorage.getItem("id_site")) {
+      return siteId.toString() === localStorage.getItem("id_site");
     }
     return false
   }
 
   ngOnInit() {
-    if(localStorage.getItem("id_site")){
+    if (localStorage.getItem("id_site")) {
       this.siteId = localStorage.getItem("id_site");
     }
     this.styles = this.dataCsService.getStyles('Component/Login');
     this.sites = this.dataCsService.getSite();
     this.customs = this.dataCsService.getCustoms('Component/Custom');
-    console.log(this.styles)
   }
 }

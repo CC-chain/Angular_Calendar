@@ -217,9 +217,9 @@
                 <svg cIcon class="icon icon-lg me-2" name="cilUser"></svg>
                 <span>Male</span>
                 <span class="ms-auto font-semibold">{{
-                  ((dashboardInfos.weeklySummary!.maleTotal)
+                  (((dashboardInfos.weeklySummary!.maleTotal)
                   / (dashboardInfos.weeklySummary!.maleTotal + dashboardInfos.weeklySummary!.femaleTotal))
-                  * 100
+                  * 100).toFixed(2)
                 }}%</span>
               </div>
               <div class="progress-group-bars">
@@ -227,9 +227,9 @@
                   <c-progress-bar
                     color="warning"
                     [value]="
-                  ((dashboardInfos.weeklySummary!.maleTotal)
+                  (((dashboardInfos.weeklySummary!.maleTotal)
                   / (dashboardInfos.weeklySummary!.maleTotal + dashboardInfos.weeklySummary!.femaleTotal))
-                  * 100
+                  * 100).toFixed(2)
                 "
                   ></c-progress-bar>
                 </c-progress>
@@ -240,9 +240,9 @@
                 <svg cIcon class="icon icon-lg me-2" name="cilUserFemale"></svg>
                 <span>Female</span>
                 <span class="ms-auto font-semibold">{{
-                  ((dashboardInfos.weeklySummary!.femaleTotal)
+                  (((dashboardInfos.weeklySummary!.femaleTotal)
                   / (dashboardInfos.weeklySummary!.maleTotal + dashboardInfos.weeklySummary!.femaleTotal))
-                  * 100
+                  * 100).toFixed(2)
                 }}%</span>
               </div>
               <div class="progress-group-bars">
@@ -250,9 +250,9 @@
                   <c-progress-bar
                     color="warning"
                     [value]="
-                  ((dashboardInfos.weeklySummary!.femaleTotal)
+                  (((dashboardInfos.weeklySummary!.femaleTotal)
                   / (dashboardInfos.weeklySummary!.maleTotal + dashboardInfos.weeklySummary!.femaleTotal))
-                  * 100
+                  * 100).toFixed(2)
                 "
                   ></c-progress-bar>
                 </c-progress>
@@ -324,9 +324,6 @@
           <tr *ngFor="let user of employees; index as i">
             <td>
               <div>{{ user.firstName + " " + user.lastName }}</div>
-              <div class="small text-medium-emphasis">
-                <span></span> | Registered:
-              </div>
             </td>
             <td>
               <div class="small text-medium-emphasis">Last login</div>
@@ -353,7 +350,7 @@
 <c-row>
   <c-col xs>
     <c-card class="mb-4">
-      <c-card-header>Users</c-card-header>
+      <c-card-header style="font-weight:700;font-size: 16px;">Last 10 Active Customers</c-card-header>
       <c-card-body>
         <table
           [hover]="true"

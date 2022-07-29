@@ -13,21 +13,18 @@ import { CustomCs } from '@app/data/schema/data';
 })
 export class HeaderComponent implements OnInit {
 
-  @Input() sites! : CustomCs[] | undefined;
-
-  constructor(private themeService: ThemeService, private router : Router, private active : ActivatedRoute,
-    private authService : AuthService) {}
-
+  @Input() customs! : any;
+  @Input() user! : any;
+  customsStr = `\n  <app-custom [script]="context.script" [style]="context.style" [contextID]="context.id"> </app-custom> `
   ngOnInit() {
 
   }
 
-  toggleTheme(checked: boolean) {
-    this.themeService.setDarkTheme(checked);
-  }
+  getCustomInfos(custom : CustomCs){
+    console.log(this.user)
+    if(this.user)
+    return {script : custom.script , style : custom.style , id : custom.id , user : this.user}
 
-  logout(){
-    this.authService.logout();
+    return {script : custom.script , style : custom.style , id : custom.id}
   }
-
 }

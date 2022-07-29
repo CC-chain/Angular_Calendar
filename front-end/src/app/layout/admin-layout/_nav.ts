@@ -34,14 +34,15 @@ export const navItems: INavData[] = [
     iconComponent: { name: 'cil-lock-locked' }
   },
   {
+    name: 'Header / Footer',
+    url: '/admin/components/header-footer',
+    iconComponent: { name: 'cil-library' }
+  },
+  {
     name: 'Web Pages',
     url: '/admin/components/web-pages',
     iconComponent: { name: 'cil-file'}
   },
-  {
-    name: 'Widgets',
-    url: '/admin/components/widgets',
-    iconComponent: { name: 'cil-library' }
-  }
+
 
 ]

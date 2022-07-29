@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { CustomCs, User } from '@app/data/schema/data';
 
 @Component({
   selector: 'app-footer',
@@ -7,10 +8,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FooterComponent implements OnInit {
 
-  currentYear = new Date().getUTCFullYear();
+  @Input() customs! : CustomCs[] | undefined;
+  @Input() user! : any;
   constructor() { }
+  customsStr = `\n  <app-custom [script]="context.script" [style]="context.style" [contextID]="context.id"> </app-custom> `
+  ngOnInit() {
 
-  ngOnInit(): void {
   }
 
+   getCustomInfos(custom : CustomCs){
+    console.log(this.user)
+    if(this.user)
+    return {script : custom.script , style : custom.style , id : custom.id , user : this.user}
+
+    return {script : custom.script , style : custom.style , id : custom.id}
+  }
 }

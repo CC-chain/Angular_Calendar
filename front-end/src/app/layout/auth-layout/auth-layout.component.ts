@@ -29,9 +29,12 @@ export class AuthLayoutComponent implements OnInit {
   });
 }
 
-getFirst(dataCs : any){
-  if(dataCs)
-  return dataCs[0];
+getFirst(dataCs : DataCs[] | null){
+  if(dataCs){
+    let newData = dataCs[0];
+    newData.backgroundImage = "url('"+newData.backgroundImage+"')"
+    return newData
+  }
   else return {};
 }
 

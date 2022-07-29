@@ -1,41 +1,92 @@
-<div class="card col-md-6 mt-3 mx-auto" [ngStyle]="styles | async |
-  convertStyle:'Register Container'">
-  <div class="card-body">
-    <form>
-      <div class="form-group">
-        <label class="d-block">
-          <input type="text" class="form-control" [placeholder]="'Firstname'" [ngStyle]="styles | async |
-  convertStyle:'Register Forms'">
+<ng-container *ngIf="!!(styles | async)">
+  <div class="card col-md-6 mt-3 mx-auto" [ngStyle]="styles | async |
+    convertStyle:'Register Container'">
+    <div class="card-body">
+      <form (ngSubmit)="register()" [formGroup]="registerForm">
+        <div class="form-group">
+          <label class="d-block">
+             <label>First Name</label>
+            <input type="text" class="form-control" formControlName="firstName"
+              [placeholder]="'Firstname'" [ngStyle]="styles | async |
+              convertStyle:'Register Forms'">
+          </label>
+        </div>
+        <div class="form-group">
+           <label>Last Name</label>
+          <label class="d-block">
+            <input type="text" class="form-control" formControlName="lastName"
+              [placeholder]="'Lastname'" [ngStyle]="styles | async |
+              convertStyle:'Register Forms'">
+          </label>
+        </div>
+        <div class="form-group">
+           <label>Email</label>
+          <label class="d-block">
+            <input type="text" class="form-control" formControlName="email"
+              [placeholder]="'Email'" [ngStyle]="styles | async |
+              convertStyle:'Register Forms'">
+          </label>
+        </div>
+         <div class="form-group">
+        <label>Phone Number</label>
+        <div style="width : 100%">
+        <ngx-intl-tel-input
+        [cssClass]="'form-control'"
+        [preferredCountries]="preferredCountries"
+        [enableAutoCountrySelect]="true"
+        [enablePlaceholder]="true"
+        [searchCountryFlag]="true"
+        [searchCountryField]="[
+          SearchCountryField.Iso2,
+          SearchCountryField.Name
+        ]"
+        [selectFirstCountry]="false"
+        [selectedCountryISO]="CountryISO.Turkey"
+        [maxLength]="15"
+        [phoneValidation]="true"
+        [separateDialCode]="separateDialCode"
+        [numberFormat]="PhoneNumberFormat.National"
+        name="phoneNumber"
+        formControlName="phoneNumber"
+      >
+        </ngx-intl-tel-input>
+        </div>
+      </div>
+       <div class="form-group">
+        <label>Gender</label>
+        <label style="margin-left : 5px">
+          <input type="radio" [value]="1"  formControlName="gender">
+            <span>Male</span>
+        </label>
+        <label>
+          <input type="radio" [value]="2" formControlName="gender">
+            <span>Female</span>
         </label>
       </div>
-      <div class="form-group">
-        <label class="d-block">
-          <input type="text" class="form-control" [placeholder]="'Lastname'"  [ngStyle]="styles | async |
-  convertStyle:'Register Forms'">
-        </label>
-      </div>
-      <div class="form-group">
-        <label class="d-block">
-          <input type="text" class="form-control" [placeholder]="'Username'"  [ngStyle]="styles | async |
-  convertStyle:'Register Forms'">
-        </label>
-      </div>
-      <div class="form-group">
-        <label class="d-block">
-          <input type="text" class="form-control" [placeholder]="'Password'"  [ngStyle]="styles | async |
-  convertStyle:'Register Forms'">
-        </label>
-      </div>
-      <div class="form-group">
-        <button class="btn " type="submit" [ngStyle]="styles |
-            async | convertStyle:'Register Button'" [disabled]="_disable">
-          <span>Sign Up </span>
-        </button>
-      </div>
-      <a [routerLink]="['/auth/login']">Got an account already? Log in here!</a>
-    </form>
+        <div class="form-group">
+           <label>Password</label>
+          <label class="d-block">
+            <input type="password" class="form-control"
+              formControlName="password" [placeholder]="'Password'"
+              [ngStyle]="styles | async |
+              convertStyle:'Register Forms'">
+          </label>
+        </div>
+        <div class="form-group">
+          <button class="btn btn-primary" type="submit" [ngStyle]="styles |
+            async | convertStyle:'Register Button'">
+            <span>Sign Up </span>
+          </button>
+        </div>
+        <a [routerLink]="['/auth/login']">Got an account already? Log in here!</a>
+      </form>
+    </div>
   </div>
-</div>
-<ng-container *ngFor="let custom of customs">
-<ngx-dynamic-hooks [content]="custom.content + customsStr" [context]="custom" [parsers]="custom | getParsers"></ngx-dynamic-hooks>
+  <ng-container *ngFor="let custom of ((customs | async) | filterCustoms :
+    'RegisterComponent')">
+    <ng-container *ngIf="custom">
+      <ngx-dynamic-hooks [content]="custom.content + customsStr"
+        [context]="custom" [parsers]="custom | getParsers"></ngx-dynamic-hooks>
+    </ng-container>
+  </ng-container>
 </ng-container>

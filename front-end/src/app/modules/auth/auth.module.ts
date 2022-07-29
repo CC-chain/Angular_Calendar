@@ -6,6 +6,7 @@ import { AppSharedModule } from '@shared/shared.module';
 import { HttpClientModule } from '@angular/common/http';
 import { DynamicHooksModule } from 'ngx-dynamic-hooks';
 import { options } from '@core/configurations/dynamic-hooks';
+import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
 @NgModule({
   declarations: [
     LoginComponent,
@@ -20,6 +21,7 @@ import { options } from '@core/configurations/dynamic-hooks';
         globalOptions : options
       }
     ),
+    NgxIntlTelInputModule,
   ],
   exports: [
     LoginComponent,

@@ -1,13 +1,15 @@
 <div>
-  <div class="mat-app-background"  [ngStyle]="getFirst((styles | async))">
-    <app-header [sites]="(sites | async) != null ? (sites | async)! : undefined"></app-header>
+    <app-header [customs]="((customs | async) != null ? ((customs | async) | filterCustoms: 'Header') : undefined)"
+    [user]="((user | async) != null ? (user | async) : undefined)"></app-header>
 
+  <div class="mat-app-background"  [ngStyle]="getFirst((styles | async))">
       <div class="container">
         <router-outlet></router-outlet>
         <ng-template #calendarComponent></ng-template>
       </div>
-
-    <app-footer></app-footer>
   </div>
+
+    <app-footer [customs]="(customs | async) != null ? ((customs | async) | filterCustoms: 'Footer') : undefined"
+     [user]="((user | async) != null ? (user | async) : undefined)"></app-footer>
 </div>
 

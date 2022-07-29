@@ -3,6 +3,9 @@ import { CustomCs } from '@app/data/schema/data';
 import { LoginComponent } from '@app/modules/auth/page/login/login.component';
 import { RegisterComponent } from '@app/modules/auth/page/register/register.component';
 import { CustomComponent } from '@app/modules/custom/custom/custom.component';
+import { DynamicLogoutButtonComponent } from '@app/modules/custom/dynamic-components/dynamic-logout-button.component';
+import { DynamicProfileComponent } from '@app/modules/custom/dynamic-components/dynamic-profile.component';
+import { DynamicUserInfoComponent } from '@app/modules/custom/dynamic-components/dynamic-user-info.component';
 import { SelectorHookParserConfig } from 'ngx-dynamic-hooks';
 
 
@@ -14,9 +17,25 @@ const imports = [
   {
     name: 'RegisterComponent',
     comp: RegisterComponent,
-  },{
+  }
+]
+
+const dependents = [
+  {
     name: 'CustomComponent',
-    comp : CustomComponent,
+    comp : CustomComponent
+  },
+  {
+    name : 'DynamicLogoutComponent',
+    comp : DynamicLogoutButtonComponent
+  },
+  {
+    name : 'DynamicUserInfoComponent',
+    comp : DynamicUserInfoComponent
+  },
+  {
+    name : 'DynamicProfileComponent',
+    comp : DynamicProfileComponent
   }
 ]
 
@@ -34,15 +53,11 @@ export class GetParsersPipe implements PipeTransform {
         customHook.push({
           component: targetcomp.comp
         })
-      let dependentComps = value.dependentComponents.split(',');
-      console.log(dependentComps)
-      dependentComps.forEach(comp => {
-          let dependentComp = imports.find((imps) => imps.name === comp.trim())
-          if(dependentComp)
+        dependents.forEach(dependentComp => {
           customHook.push({
             component : dependentComp.comp
           })
-      })
+        })
     }
     console.log(customHook, value)
     return customHook;
